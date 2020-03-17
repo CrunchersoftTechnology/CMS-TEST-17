@@ -1,0 +1,151 @@
+﻿@model IEnumerable<CMS.Web.ViewModels.QuestionDataViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New Question", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ClassId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SubjectId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ChapterId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.QuestionType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.QuestionLevel)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.QuestionInfo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OptionA)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OptionB)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OptionC)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OptionD)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Hint)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsQuestionAsImage)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsOptionAsImage)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsHintAsImage)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Answer)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.Numerical_Answer)
+        </th>
+
+
+        <th>
+            @Html.DisplayNameFor(model => model.Unit)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.QuestionYear)
+        </th>
+
+        @*<th>
+                @Html.DisplayNameFor(model => model.QuestionId)
+            </th>*@
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClassName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubjectName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ChapterName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuestionType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuestionLevel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuestionInfo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OptionA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OptionB)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OptionC)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OptionD)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Hint)
+            </td>
+
+            <td>
+                <img src="@Url.Content(!string.IsNullOrEmpty(item.QuestionImagePath)? item.QuestionImagePath : "~/QuestionData/blankphoto.png")" width="100" height="100" alt="Model.PhotoPath" />
+            </td>
+            <td>
+                <img src="@Url.Content(!string.IsNullOrEmpty(item.OptionImagePath)? item.OptionImagePath : "~/QuestionData/blankphoto.png")" width="100" height="100" alt="Model.PhotoPath" />
+            </td>
+
+            <td>
+                <img src="@Url.Content(!string.IsNullOrEmpty(item.HintImagePath)? item.HintImagePath : "~/QuestionData/blankphoto.png")" width="100" height="100" alt="Model.PhotoPath" />
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Answer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Numerical_Answer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Unit)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuestionYear)
+            </td>
+
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.QuestionId)
+                </td>*@
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.QuestionId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.QuestionId })
+            </td>
+        </tr>
+    }
+
+</table>

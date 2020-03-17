@@ -1,0 +1,35 @@
+﻿@model IEnumerable<CMS.Web.ViewModels.BranchAdminViewModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Branch Admin List</h2>
+
+<p>
+    @Html.ActionLink("Create New Branch Admin", "Create")
+</p>
+
+<div class="well">
+    <div class="form-inline">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Name"
+                   data-mvcgrid-type="filter" data-mvcgrid-option="BranchAdminName" />
+        </div>
+        <button type="button" class="btn btn-default" data-mvcgrid-apply-filter="click">Search</button>
+        <input type="submit" value="Reset" id="Submit" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "BranchAdmin")'" />
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_MVCGridToolbar", new CMS.Web.Models.MVCGridToolbarModel()
+   {
+       MVCGridName = "BranchAdminGrid",
+       PageSize = true,
+       ColumnVisibility = true,
+       Export = true,
+       GlobalSearch = false
+   })
+        @Html.MVCGrid("BranchAdminGrid")
+    </div>
+</div>

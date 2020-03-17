@@ -1,0 +1,32 @@
+﻿@model IEnumerable<CMS.Web.ViewModels.PDFUploadViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    #qdel {
+        top: 0px;
+        left: 0px;
+        cursor: pointer;
+        color: green;
+    }
+</style>
+<br />
+<h2>Student Upload List</h2>
+<p>
+    @Html.ActionLink("Upload New PDF", "Create")
+</p>
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_MVCGridToolbar", new CMS.Web.Models.MVCGridToolbarModel()
+   {
+       MVCGridName = "PDFUploadGrid",
+       PageSize = true,
+       ColumnVisibility = true,
+       Export = true,
+       GlobalSearch = false
+   })
+        @Html.MVCGrid("PDFUploadGrid")
+    </div>
+</div>

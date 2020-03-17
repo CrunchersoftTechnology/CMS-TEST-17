@@ -1,0 +1,91 @@
+﻿@model IEnumerable<CMS.Web.ViewModels.BatchViewModel>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Index";
+}
+<h2>Batch List</h2>
+<div class="form-horizontal">
+    @if (ViewBag.userRole == "Admin" || ViewBag.userRole=="Client")
+    {
+        <div>
+            @Html.ActionLink("Create New Batch", "Create")
+        </div>
+    }
+    <br />
+</div>
+
+<div class="well">
+    <div class="form-inline">
+        <div class="form-group">
+            @Html.DropDownList("ClassList", new SelectList(ViewBag.ClassList, "Value", "Text"),
+        "All Classes", new { @class = "form-control", @data_mvcgrid_type = "filter", @data_mvcgrid_option = "ClassName", @onchange = "FillSubjects(this.value)" })
+        </div>
+        @*<div class="form-group">
+            @Html.DropDownList("SubjectId", new SelectList(Enumerable.Empty<SelectListItem>(), "SubjectId", "Name"),
+        "Select Subject", new { @class = "form-control", @data_mvcgrid_type = "filter", @data_mvcgrid_option = "SubjectName" })
+        </div>*@
+
+        <button type="button" class="btn btn-default" data-mvcgrid-apply-filter="click">Search</button>
+        <input type="submit" value="Reset" id="Submit" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Batch")'" />
+    </div>
+
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_MVCGridToolbar", new CMS.Web.Models.MVCGridToolbarModel()
+   {
+       MVCGridName = "BatchGrid",
+       PageSize = true,
+       ColumnVisibility = true,
+       Export = true,
+       GlobalSearch = false
+   })
+        @Html.MVCGrid("BatchGrid", new { userRole = ViewBag.userId })
+    </div>
+</div>
+@section scripts
+        {
+    <script>
+        $(document).ready(function () {
+            $("#ClassList").val(@ViewBag.ClassId);
+
+            if (parseInt(@ViewBag.ClassId) > 0) {
+                FillSubjects(@ViewBag.ClassId);
+            }
+        });
+
+        function FillSubjects(classId) {
+            //var classId = $('#ClassList').val();
+
+            if ($('#ClassList :selected').text() != "All Classes") {
+                $("#SubjectDiv").show().addClass("inline");
+                $.ajax({
+                    url: '/Subject/GetSubjects',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { classId: classId },
+                    success: function (subjects) {
+
+                        $("#SubjectId").html(""); // clear before appending new list
+                        $("#SubjectId").append($('<option selected></option>').val("").html("Select Subject"));
+                        $.each(subjects, function (i, sub) {
+                            $("#SubjectId").append(
+                            $('<option></option>').val(sub.SubjectId).html(sub.Name));
+                        });
+                        if (parseInt(@ViewBag.SubjectId) > 0) {
+                            $("#SubjectId").val(@ViewBag.SubjectId);
+                            console.log("go")
+                        }
+
+                    }
+                });
+            }
+            else {
+                //  $("#SubjectId").html("");
+                $("#SubjectId").append($('<option selected></option>').val("").html("Select Subject"));
+            }
+        }
+
+    </script>
+}

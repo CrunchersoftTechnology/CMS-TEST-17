@@ -1,0 +1,123 @@
+﻿@model CMS.Web.ViewModels.ClientAdminViewModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Create Client Admin</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(m => m.Clients, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblClientId" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.ClientId, new SelectList(Model.Clients, "Value", "Text"),
+                    "Select Client", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ClientId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblName" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblEmail" })
+            <span class="control-label glyphicon glyphicon-info-sign" title="Add correct email id , will be required
+              while LOG IN, you can't edit it after adding. " id="tooltipemail"></span>
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ConfirmEmail, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblConfirmEmail" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ConfirmEmail, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.ConfirmEmail, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContactNo, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblContactNo" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ContactNo, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @maxlength = "10" } })
+                @Html.ValidationMessageFor(model => model.ContactNo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblActive" })
+            <span class="control-label glyphicon glyphicon-info-sign" title="Check the active status if Client Admin
+                is part of institute or class.
+                Uncheck if Client Admin is not
+                willing to continue the class." id="tooltipActive"></span>
+            <div class="col-md-3">
+                <div class="checkbox checkbox-inline check-box">
+                    @Html.EditorFor(model => model.Active)
+                    @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to Client Admins List", "Index")
+</div>
+
+@section Scripts {
+    <script>
+    $(document).ready(function () {
+
+        $("#ContactNo").keypress(function (e) {
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                //display error message
+
+                $("#errmsg").html("Digits Only").show().fadeOut("slow");
+                alert("Please enter the 10 digits number");
+                return false;
+
+            }
+        });
+        $("#tooltipemail").tooltip({ track: true });
+        $("#tooltipActive").tooltip({ track: true });
+        $('#Name').on('change', function () {
+            RequiredValidation('#Name', '#lblName')
+        });
+        $('#ClientId').on('change', function () {
+            RequiredValidation('#ClientId', '#lblClientId')
+        });
+        $('#Email').on('change', function () {
+            RequiredValidation('#Email', '#lblEmail')
+        });
+        $('#ConfirmEmail').on('change', function () {
+            RequiredValidation('#ConfirmEmail', '#lblConfirmEmail')
+        });
+        $('#ContactNo').on('change', function () {
+            RequiredValidation('#ContactNo', '#lblContactNo')
+        });
+
+    });
+    </script>
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,78 @@
+﻿@model CMS.Web.ViewModels.BrochureViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    #download {
+        top: 0px;
+        left: 0px;
+        cursor: pointer;
+        color: green;
+    }
+</style>
+
+<h2>Upload Brochure</h2>
+<br />
+
+
+@using (Html.BeginForm("Create", "Brochure", FormMethod.Post, new
+{
+    enctype = "multipart/form-data"
+}))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+
+        <div class="form-group">
+            @Html.Label("Download latest Brochure", htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @if (@ViewBag.IsFileExists == "yes")
+                {
+                    <a href='/Brochure/DownloadBrochure'>
+                        <span id="download" class="glyphicon glyphicon-download-alt" data-value="1" }></span><span> @ViewBag.FileName</span>
+                    </a>
+                }
+                else
+                {
+                    <span  id="download">No File</span>
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                @Html.Label("Select Brochure", htmlAttributes: new { @class = "control-label col-md-3" })
+                <span class="control-label glyphicon glyphicon-info-sign" title="Brochure will be  sent to the user(student,teacher)
+                after registration." id="tooltipName"></span>
+                <div class="col-md-3">
+                    @Html.TextBoxFor(m => m.FilePath, new { @type = "file", @class = "inline" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-9">
+                    @Html.ValidationMessageFor(model => model.FilePath, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-9">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+<script>
+    $(document).ready(function () {
+        $("#tooltipName").tooltip({ track: true });
+        });
+        </script>
+    @Scripts.Render("~/bundles/jqueryval")
+}

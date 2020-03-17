@@ -1,0 +1,22 @@
+﻿@model IEnumerable<CMS.Web.ViewModels.UploadInbuiltquestionbankViewModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h2>Inbuiltquestionbank List</h2>
+<p>
+    @Html.ActionLink("Upload New Inbuiltquestionbank", "Create")
+</p>
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_MVCGridToolbar", new CMS.Web.Models.MVCGridToolbarModel()
+   {
+       MVCGridName = "UploadInbuiltquestionbankGrid",
+       PageSize = true,
+       ColumnVisibility = false,
+       Export = false,
+       GlobalSearch = false
+   })
+        @Html.MVCGrid("UploadInbuiltquestionbankGrid")
+    </div>
+</div>

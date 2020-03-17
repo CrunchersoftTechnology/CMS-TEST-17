@@ -1,0 +1,22 @@
+﻿@model IEnumerable<CMS.Web.ViewModels.UploadTextbooksViewModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h2>Textbooks List</h2>
+<p>
+    @Html.ActionLink("Upload New Textbooks", "Create")
+</p>
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_MVCGridToolbar", new CMS.Web.Models.MVCGridToolbarModel()
+   {
+       MVCGridName = "UploadTextbooksGrid",
+       PageSize = true,
+       ColumnVisibility = false,
+       Export = false,
+       GlobalSearch = false
+   })
+        @Html.MVCGrid("UploadTextbooksGrid")
+    </div>
+</div>

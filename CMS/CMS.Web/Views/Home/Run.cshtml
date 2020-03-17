@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewBag.Title = "Run";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+<h2>Run</h2>
+
+    <label>@ViewBag.result</label>
+
+<input type="submit" value="Run" class="btn btn-default" />
+}

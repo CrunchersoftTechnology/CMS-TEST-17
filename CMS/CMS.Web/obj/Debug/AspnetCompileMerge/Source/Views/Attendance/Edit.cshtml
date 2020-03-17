@@ -1,0 +1,258 @@
+﻿/@model CMS.Web.ViewModels.AttendanceViewModel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Edit Attendance</h2>
+
+@Html.HiddenFor(m => m.ClassName)
+@Html.HiddenFor(m => m.BatchName)
+@Html.HiddenFor(m => m.InTime)
+@Html.HiddenFor(m => m.OutTime)
+
+@Html.AntiForgeryToken()
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(m => m.AttendanceId)
+    <div id="message">
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Date, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control datepicker", autocomplete = "off", @type = "text", @placeholder = "DD-MM-YYYY", @maxlength = "10" } })
+            @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    @if (Model.CurrentUserRole == "Admin")
+    {
+        <div class="form-group">
+            @Html.LabelFor(model => model.Branches, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.BranchId, new SelectList(ViewBag.BranchList, "BranchId", "Name"),
+             "Select Class", new { @class = "form-control", @disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.BranchId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    }
+    else if (Model.CurrentUserRole == "BranchAdmin")
+    {
+        <div class="form-group">
+            @Html.LabelFor(m => m.BranchName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.BranchName, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                @Html.ValidationMessageFor(model => model.BranchId, "", new { @class = "text-danger" })
+                @Html.HiddenFor(m => m.BranchId)
+            </div>
+        </div>
+    }
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Classes, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.ClassId, new SelectList(ViewBag.ClassList, "ClassId", "Name"),
+             "Select Class", new { @class = "form-control", @onchange = "FillBatches(this.value)", @disabled = "disabled" })
+            @Html.ValidationMessageFor(model => model.ClassId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Batches, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.BatchId, new SelectList(ViewBag.BatchList, "Value", "Text"),
+             "Select Batch", new { @class = "form-control", @onchange = "GetStudent()", @disabled = "disabled" })
+            @Html.ValidationMessageFor(model => model.BatchId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Teachers, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.UserId, new SelectList(ViewBag.TeacherList, "Value", "Text"),
+             "Select Teacher", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.UserId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Activity, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Activity, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Activity, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.StudentAttendence, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <table id="studentList" class="table"></table>
+            @Html.HiddenFor(m => m.StudentAttendence)
+            @Html.ValidationMessageFor(model => model.StudentAttendence, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input id="update" type="button" value="Update" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Back to Attendance List", "Index")
+</div>
+
+@section Scripts
+{
+    <script>
+        var JSONObjectInTime = [];
+        var JSONObjectOutTime = [];
+
+        $(document).ready(function () {
+            JSONObjectInTime = $("#InTime").val() != "" ? jQuery.parseJSON($("#InTime").val()) : [];
+            JSONObjectOutTime = $("#OutTime").val() != "" ? jQuery.parseJSON($("#OutTime").val()) : [];
+
+            function topFunction() {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }
+
+            $("#update").on('click', function () {
+                var selected = $(document).find("#present.active");
+                var studentId = '';
+                var arrSelected = [];
+                selected.each(function () {
+                    arrSelected.push($(this).attr('data-value'));
+                });
+
+                studentId = arrSelected.toString();
+                $("#StudentAttendence").val(studentId);
+
+                var jqxhr = $.post("/Attendance/UpdateAttendance",
+                    {
+                        AttendanceId: $("#AttendanceId").val(),
+                        ClassId: $("#ClassId").val(),
+                        BatchId: $("#BatchId").val(),
+                        Date: $("#Date").val(),
+                        Activity: $("#Activity").val(),
+                        UserId: $("#UserId").val(),
+                        StudentAttendence: $("#StudentAttendence").val(),
+                        BranchId: $("#BranchId").val(),
+                        ClassName: $('#ClassId :selected').text(),
+                        BatchName: $('#BatchId :selected').text(),
+                    }, function (data) {
+                        var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+                        $("#message").html("");
+                        $("#message").append(divMessage);
+                        if (data.Success == true) {
+                            $('#msg').html('<div>' + data.Results[0].Message + '</div>');
+                            $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                            //   window.location.href = "/Attendance/Index"
+                        }
+                        else {
+                            var m = "";
+                            for (var i = 0; i < data.Results.length; i++) {
+                                m = m + data.Results[i].Message + ".</br>";
+                            }
+                            $('#msg').html('<div>' + m + '</div>');
+                            $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                        }
+                    }).done(function () {
+
+                    }).fail(function () {
+                        $('#msg').html('<div>Something went wrong! Please try again.</div>');
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                    }).always(function () {
+                    });
+                topFunction();
+            });
+
+            GetStudent();
+
+            $("#ClassId").val(@ViewBag.ClassId);
+            $("#BatchId").val(@ViewBag.BatchId);
+            $("#BranchId").val(@ViewBag.BranchId);
+            $("#UserId").val('@ViewBag.UserId');
+        });
+
+        function FillBatches(classId) {
+            if ($('#ClassId :selected').text() != "Select Class") {
+                $.ajax({
+                    url: '/Student/GetBatch',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { classId: classId },
+                    success: function (subjects) {
+                        var select = $("#BatchId");
+                        select.children().remove();
+                        $("#BatchId").html(""); // clear before appending new list
+                        $("#BatchId").append($('<option></option>').val("").html("Select Batch"));
+                        $.each(subjects, function (i, sub) {
+                            $("#BatchId").append("<option value='" + sub.BatchId + "'>" + sub.BatchName + "</option>");
+                        });
+                        $("#BatchId").val(@ViewBag.BatchId);
+                        $("#studentList").html("");
+                    }
+                });
+            }
+        }
+
+        function GetStudent() {
+            var classId = $("#ClassId").val();
+            var batchId = $("#BatchId").val();
+            var branchId = $("#BranchId").val();
+            var date = $('#Date').val();
+            if ($('#BatchId :selected').text() != "Select Batch") {
+
+                $.ajax({
+                    url: '/Attendance/GetStudent',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { classId: classId, batchId: batchId, branchId: branchId, Date: date },
+                    success: function (data) {
+                        $("#studentList").html(""); // clear before appending new list
+                        var divStudent = "";
+                        var selected = $("#StudentAttendence").val();
+                        var selectedArr = selected.split(',');
+                        var arrSelected = [];
+                        for (i = 0; i < selectedArr.length; i++) {
+                            arrSelected.push(selectedArr[i]);
+                        }
+                        var dataInTime = JSON.parse(JSON.stringify(JSONObjectInTime));
+                        var dataOutTime = JSON.parse(JSON.stringify(JSONObjectOutTime));
+                        $.each(data, function (i, student) {
+                            var sid = "" + student.SId;
+                            var indexInTime = dataInTime.map(function (d) { return d['SId']; }).indexOf(student.SId);
+                            var indexOutTime = dataOutTime.map(function (d) { return d['SId']; }).indexOf(student.SId);
+                            var inTime = "-";
+                            var outTime = "-";
+                            if (indexInTime >= 0) {
+                                inTime = dataInTime[indexInTime].PunchTime;
+                            }
+                            if (indexOutTime >= 0) {
+                                outTime = dataOutTime[indexOutTime].PunchTime;
+                            }
+
+                            var indexSid = arrSelected.indexOf(sid);
+                            if (indexSid >= 0)
+                                divStudent += "<tr><td class='col-md-6'><div>" + student.FirstName + " " + student.MiddleName + " " + student.LastName + "</div></td><td class='col-md-4'><div><div class='btn-group btn-group-md' role='radiogroup' aria-label='...'><button id='present' type='button' class='btn btn-default active atdbtn' data-value='" + student.SId + "'>Present</button><button id='absent' type='button' class='btn btn-default atdbtn' data-value='" + student.SId + "'>Absent</button></div></div></td><td class='col-md-1'>" + inTime + "</td><td class='col-md-1'>" + outTime + "</td></tr>";
+                            else
+                                divStudent += "<tr><td class='col-md-6'><div>" + student.FirstName + " " + student.MiddleName + " " + student.LastName + "</div></td><td class='col-md-4'><div><div class='btn-group btn-group-md' role='radiogroup' aria-label='...'><button id='present' type='button' class='btn btn-default atdbtn' data-value='" + student.SId + "'>Present</button><button id='absent' type='button' class='btn btn-default active atdbtn' data-value='" + student.SId + "'>Absent</button></div></div></td><td>-</td><td>-</td></tr>";
+                        });
+
+                        divStudent = "<tbody>" + divStudent + "</tbody>";
+                        $("#studentList").append(divStudent);
+                        $(".atdbtn").unbind("click");
+                        $(".atdbtn").bind("click", btnClick);
+                    }
+                });
+            }
+        }
+
+        function btnClick(event) {
+            $(this).addClass("active").siblings().removeClass("active");
+        }
+    </script>
+}

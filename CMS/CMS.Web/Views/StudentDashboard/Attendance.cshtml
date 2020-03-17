@@ -1,0 +1,34 @@
+﻿@model IEnumerable<CMS.Web.ViewModels.AttendanceViewModel>
+
+@{
+    ViewBag.Title = "Attendance";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+
+<h2>Attendance</h2>
+<div class="well">
+    <div class="form-inline">
+        @*<div class="form-group">
+            <input type="text" class="form-control" placeholder="Teacher Name"
+                   data-mvcgrid-type="filter" data-mvcgrid-option="TeacherName" />
+        </div>*@
+        <div class="form-group">
+            @Html.Editor("Date", new { htmlAttributes = new { @class = "form-control datepicker", autocomplete = "off", @type = "date", @data_mvcgrid_type = "filter", @data_mvcgrid_option = "Date" } })
+        </div>
+        <button type="button" class="btn btn-default" data-mvcgrid-apply-filter="click">Search</button>
+        <input type="submit" value="Reset" id="Submit" class="btn btn-primary" onclick="location.href='@Url.Action("Attendance", "StudentDashboard")'" />
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_MVCGridToolbar", new CMS.Web.Models.MVCGridToolbarModel()
+   {
+       MVCGridName = "StudentAdmissionGrid",
+       PageSize = true,
+       ColumnVisibility = true,
+       Export = true,
+       GlobalSearch = false
+   })
+        @Html.MVCGrid("StudentAdmissionGrid", new { classId = ViewBag.classId, branchId = ViewBag.branchId, studentBatches = ViewBag.studentBatches ,sId = ViewBag.sId })
+    </div>
+</div>

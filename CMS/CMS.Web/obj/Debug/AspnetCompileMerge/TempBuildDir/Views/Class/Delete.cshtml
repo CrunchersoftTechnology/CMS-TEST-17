@@ -1,0 +1,34 @@
+﻿@model CMS.Web.ViewModels.ClassViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Delete";
+}
+<br />
+<h2>Delete Class</h2>
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <hr />
+    @using (Html.BeginForm())
+    {
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+
+        </dl>
+
+
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.ClassId)
+        @Html.HiddenFor(model => model.Name)
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to Classes List", "Index")
+        </div>
+    }
+</div>

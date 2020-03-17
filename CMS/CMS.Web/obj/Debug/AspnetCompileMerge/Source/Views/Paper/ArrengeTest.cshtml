@@ -1,0 +1,384 @@
+﻿@model CMS.Web.ViewModels.TestPaperDeleteViewModel
+
+@{
+    ViewBag.Title = "ArrengeTest";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Arrange Test</h2>
+<div id="message">
+</div>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.SelectedBatches)
+    @Html.HiddenFor(m => m.SelectedBranches)
+    @Html.HiddenFor(m => m.ClassId)
+    @Html.HiddenFor(m => m.Title)
+    @Html.HiddenFor(m => m.TestType)
+    @Html.HiddenFor(m => m.TestPaperId)
+    @Html.HiddenFor(m => m.Media)
+    @Html.HiddenFor(m => m.SubjectName)
+    @Html.HiddenFor(m => m.ClassName)
+
+    <div class="form-horizontal">
+        <hr />
+        <div class="form-group">
+            @Html.LabelFor(m => m.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.TestType, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TestType, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Branches, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.BranchId, new SelectList(Model.Branches, "Value", "Text"),
+                  new { @class = "form-control", @onchange = "SelectBranch(this.value)", @multiple = "multiple" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ClassName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ClassName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Batches, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.BatchId, new SelectList(Model.Batches, "Value", "Text"),
+                  new { @class = "form-control", @onchange = "SelectBatch(this.value)", @multiple = "multiple" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.SubjectName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SubjectName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Date, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control datepicker", @autocomplete = "off", @type = "text", @maxlength = "10", @placeholder = "DD-MM-YYYY" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.StartTime, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblInTime" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.StartTime, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.EndTime, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblOutTime" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>*@
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.TimeDuration, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TimeDuration, new { htmlAttributes = new { @class = "form-control", @maxlength = "4", @onkeypress = "limitKeypress(event,this.value,5)", @placeholder = "Time in Minutes" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox checkbox-inline">
+                    @Html.EditorFor(model => model.Email)
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SMS, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox checkbox-inline">
+                    @Html.EditorFor(model => model.SMS)
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AppNotification, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox checkbox-inline">
+                    @Html.EditorFor(model => model.AppNotification)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2">
+            <button type="button" id="btnSend" class="btn btn-default">Arrange Test</button>
+        </div>
+    </div>
+}
+<br />
+<br />
+<div>
+    @Html.ActionLink("Back to Test Paper List", "Index")<br /> <br />
+    @Html.ActionLink("Go to Arrange Test List", "ArrengeTestList")
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#tooltipName").tooltip({ track: true });
+
+            $('#BranchId').on('change', function () {
+                RequiredValidation('#BranchId', '#lblBranchId')
+            });
+
+            $('#BatchId').on('change', function () {
+                RequiredValidation('#BatchId', '#lblBatchId')
+            });
+
+            $('#BranchId').multiselect({
+                includeSelectAllOption: true
+            });
+
+            $('#BatchId').multiselect({
+                includeSelectAllOption: true
+            });
+
+            $('#StartTime').timepicki();
+            $('#EndTime').timepicki();
+
+
+            if($("#TimeDuration").val() == "0"){
+                $("#TimeDuration").val("");
+            }
+
+            $("#btnSend").on('click', function () {
+                if ($("#BranchId").val() != "") {
+                    if ($("#BatchId").val() == "") {
+                        CreateAlertMessage();
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                        $('#msg').html('<div>Batch field is required.</div>');
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                        $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                    }
+                    else if($("#Date").val() == "") {
+                        CreateAlertMessage();
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                        $('#msg').html('<div>Date field is required.</div>');
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                        $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                    }
+                    else if($("#StartTime").val() == "") {
+                        CreateAlertMessage();
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                        $('#msg').html('<div>Start Time field is required.</div>');
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                        $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                    }
+                    else if(parseInt($("#TimeDuration").val()) < 1) {
+                        CreateAlertMessage();
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                        $('#msg').html('<div>Time Duration field is invalid.</div>');
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                        $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                    }
+                    else
+                    {
+                        var selecteddate = $("#Date").val().split('-');
+                        var date = new Date(selecteddate[1]+"/"+selecteddate[0]+"/"+selecteddate[2]);
+                        var todaydate = new Date();
+                        var todaydatem = new Date((todaydate.getMonth() + 1) + "/" + todaydate.getDate() + "/" + todaydate.getFullYear());
+
+                        console.log(todaydatem.toString() + "\n" + date.toString());
+
+                        var hours = todaydate.getHours();
+                        var minutes = todaydate.getMinutes();
+                        var ampm = hours >= 12 ? 'PM' : 'AM';
+                        hours = hours % 12;
+                        hours = hours ? hours : 12; // the hour '0' should be '12'
+                        minutes = minutes < 10 ? '0'+minutes : minutes;
+                        var strTime = hours + ':' + minutes + ' ' + ampm;
+
+                        var monthNames = ["January", "February", "March", "April", "May", "June",
+                              "July", "August", "September", "October", "November", "December"];
+
+                        var datedetails = monthNames[todaydate.getMonth()] + " " + todaydate.getDate() + ", " + todaydate.getFullYear() + " ";
+                        var stt = new Date(datedetails + strTime);
+                        stt = stt.getTime();
+                        var endt = new Date(datedetails + $("#StartTime").val());
+                        endt = endt.getTime();
+                        var diff = ( endt - stt ) / 1000 / 60 / 60;
+
+                        if(todaydatem > date){
+                            CreateAlertMessage();
+                            $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                            $('#msg').html('<div>Date must be greater or equal today date.</div>');
+                            $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                            $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                        }
+                        else if(parseInt(diff) < 1 && todaydatem == date) {
+                            CreateAlertMessage();
+                            $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                            $('#msg').html('<div>Time duration must be greater than current time.</div>');
+                            $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                            $('html, body').animate({ scrollTop: "0px" }, 'fast');                            
+                        }
+                        else{
+                            console.log("test");
+                            SendTest();
+                        }
+                    }
+                }
+                else {
+                    CreateAlertMessage();
+                    $('#msg').html('<div>Branch field is required.</div>');
+                    $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                    $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                }
+            });
+        });
+
+        function limitKeypress(event, value, maxLength) {
+            if (value != undefined && value.toString().length >= maxLength ) {
+                event.preventDefault();
+            }
+        }
+
+        function SendTest() {
+
+            if ($("#Email").is(":checked") || $("#SMS").is(":checked") || $("#AppNotification").is(":checked"))
+            {
+                var media = "";
+                if ($("#Email").is(":checked"))
+                    media += "Email";
+                if ($("#SMS").is(":checked"))
+                    media += ", SMS";
+                if ($("#AppNotification").is(":checked"))
+                    media += ", AppNotification";
+
+                if (media.charAt(0) === ',')
+                    media = media.slice(1);
+                $("#Media").val(media);
+
+                var testDate = $("#Date").val().split("-")[1] + "-" + $("#Date").val().split("-")[0] + "-" + $("#Date").val().split("-")[2];
+                $.ajax({
+                    url: '/Paper/SendTestPaper',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: {
+                        Email: $("#Email").is(":checked"),
+                        SMS: $("#SMS").is(":checked"),
+                        AppNotification: $("#AppNotification").is(":checked"),
+                        SelectedBatches: $("#SelectedBatches").val(),
+                        SelectedBranches: $("#SelectedBranches").val(),
+                        Media: $("#Media").val(),
+                        Title:$('#Title').val(),
+                        TestType: $("#TestType").val(),
+                        ClassId: @ViewBag.classId,
+                        TestPaperId:@ViewBag.TestPaperId,
+                        ClassName:$('#ClassName').val(),
+                        SubjectName:$('#SubjectName').val(),
+                        Date: testDate,
+                        StartTime:$("#StartTime").val(),
+                        TimeDuration:$("#TimeDuration").val()
+                    },
+
+                    success: function (data) {
+                        var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+                        $("#message").html("");
+                        $("#message").append(divMessage);
+                        if (data.Success == true) {
+                            CreateAlertMessage();
+                            var m = "";
+                            for (var i = 0; i < data.Results.length; i++) {
+                                m = m + data.Results[i].Message + "</br>";
+                            }
+                            $('#msg').html('<div>' + m + '</div>');
+                            $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                            $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                            $("#BranchId,#BatchId").multiselect('refresh');
+                            var selected = $("#BranchId,#BatchId").find("option:selected");
+                            selected.each(function () {
+                                $(this).removeAttr('selected').prop('selected', false);
+                            });
+                            $('#BranchId ,#BatchId')
+                            .multiselect({
+                                allSelectedText: 'All',
+                                includeSelectAllOption: true
+                            });
+                            $("#BranchId,#BatchId").multiselect('refresh');
+                            $("#SelectedBatches, #SelectedBranches, #Date, #StartTime, #TimeDuration").val("");
+                            $("#Email, #SMS ,#AppNotification").prop('checked', false);
+                            //  window.location.href = "/Paper/ArrengeTest?Id=";
+                        }
+                        else
+                        {
+                            var m = "";
+                            for (var i = 0; i < data.Results.length; i++) {
+                                m = m + data.Results[i].Message + "</br>";
+                            }
+                            $('#msg').html('<div>' + m + '</div>');
+                            $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                            $('html, body').animate({ scrollTop: "0px" }, 'fast');  
+                        }
+                    }
+                });
+            }
+            else {
+                CreateAlertMessage();
+                $('#msg').html('<div>Please select atleast one media.</div>');
+                $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                $('html, body').animate({ scrollTop: "0px" }, 'fast');
+            }
+        }
+
+        function SelectBranch(branchId) {
+            var selected = $("#BranchId").find("option:selected");
+            var arrSelected = [];
+            selected.each(function () {
+                arrSelected.push($(this).val());
+            });
+            var selectedBranch = arrSelected.toString();
+            $("#SelectedBranches").val(selectedBranch);
+
+            if ($("#BranchId option:selected").length == 0) {
+                // DestroyBranches();
+            }
+        }
+        function SelectBatch(batchId) {
+            var selected = $("#BatchId").find("option:selected");
+            var arrSelected = [];
+            selected.each(function () {
+                arrSelected.push($(this).val());
+            });
+            var selectedBatches = arrSelected.toString();
+            $("#SelectedBatches").val(selectedBatches);
+
+            if ($("#BatchId option:selected").length == 0) {
+                //DestroyBranches();
+            }
+        }
+
+        function CreateAlertMessage() {
+            var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+            $("#message").html("");
+            $("#message").append(divMessage);
+        }
+    </script>
+    @Scripts.Render("~/bundles/StudentJS")
+    @Styles.Render("~/Content/StudentCSS")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/batchscript")
+    @Styles.Render("~/Content/batchcss")
+}

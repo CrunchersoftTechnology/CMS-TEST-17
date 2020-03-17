@@ -1,0 +1,97 @@
+﻿
+@{
+    ViewBag.Title = "Chapters";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    .block {
+        
+       
+    }
+
+    .panel-heading-sm{
+    height: 28px;
+    padding: 4px 10px;
+}
+
+.panel-body-sm{
+   padding: 5px 10px;
+}
+</style>
+<div class="text-center">Physics</div>
+<div class="row">
+    <div class="col-md-2 block">
+        <div class="panel panel-success">
+            <div class="panel-heading panel-heading-sm">
+                <h3 class="panel-title">Panel title</h3>
+            </div>
+            <div class="panel-body panel-body-sm">
+                Panel content
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 block">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Panel title</h3>
+            </div>
+            <div class="panel-body">
+                Panel content
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 block">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Panel title</h3>
+            </div>
+            <div class="panel-body">
+                Panel content
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 block">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Panel title</h3>
+            </div>
+            <div class="panel-body">
+                Panel content
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 block">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Panel title</h3>
+            </div>
+            <div class="panel-body">
+                Panel content
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 block">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Panel title</h3>
+            </div>
+            <div class="panel-body">
+                Panel content
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+
+    @section scripts{
+        <script>
+            $(document).ready(function () {
+                $(".btn-group > .btn").click(function () {
+                    $(this).addClass("active").siblings().removeClass("active");
+                });
+            });
+
+        </script>
+    }
+

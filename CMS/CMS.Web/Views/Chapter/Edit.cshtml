@@ -1,0 +1,92 @@
+﻿@model CMS.Web.ViewModels.ChapterViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit Chapter</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(x => x.ClassName)
+    @Html.HiddenFor(x => x.SubjectName)
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ChapterId)
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Classes, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.ClassId, new SelectList(ViewBag.SelectedClass, "Value", "Text"), new { @class = "form-control", @onchange = "FillSubjects(this.value)" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Subjects, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.SubjectId, new SelectList(Enumerable.Empty<SelectListItem>()), "Select Subject", new { @class = "form-control", @onchange = "getBatches()" })
+                @Html.ValidationMessageFor(model => model.SubjectId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Weightage, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Weightage, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.Weightage, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Update" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to Chapters List", "Index")
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#ClassId").val(@ViewBag.ClassId);
+            FillSubjects(@ViewBag.ClassId);
+        });
+
+        function FillSubjects(classId) {
+            $.ajax({
+                url: '/Subject/GetSubjects',
+                type: "GET",
+                dataType: "JSON",
+                data: { classId: classId },
+                success: function (subjects) {
+                    $("#ClassName").val($('#ClassId :selected').text());
+                    $("#SubjectId").html(""); // clear before appending new list
+                    $("#SubjectId").append($('<option></option>').val("").html("Select Subject"));
+                    $.each(subjects, function (i, sub) {
+                        $("#SubjectId").append(
+                            $('<option></option>').val(sub.SubjectId).html(sub.Name));
+                    });
+                    $("#SubjectId").val(@ViewBag.SubjectId);
+                    $("#SubjectName").val($('#SubjectId :selected').text());
+                }
+            });
+        }
+
+    </script>
+}

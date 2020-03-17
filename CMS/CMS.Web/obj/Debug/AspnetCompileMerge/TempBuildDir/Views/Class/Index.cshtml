@@ -1,0 +1,72 @@
+﻿@model IEnumerable<CMS.Web.ViewModels.ClassViewModel>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Index";
+}
+<h2>Class List</h2>
+@section scripts{
+    @*<script type="text/javascript">
+
+            //$("#dialog-confirm").hide();
+            $(function () {
+                $(".deleteConfirm").click(function (e) {
+                    e.preventDefault();
+                    var url = $(this).attr('href');
+                    $("#dialog-confirm").dialog({
+                        resizable: false,
+                        height: 220,
+                        width: 475,
+                        modal: true,
+                        buttons: {
+                            "OK": function () {
+
+                                //$(this).dialog("close");
+
+                                window.location.href = url;  //<-------
+                            },
+                            "Cancel": function () {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+                    $("#dialog-confirm").dialog("open"); // <------- open dialog this way.
+                });
+            });
+        </script>*@
+
+    <script>
+        $('#myModal').on('shown.bs.modal', function () {
+            $('#myInput').focus()
+        })
+    </script>
+}
+<br />
+
+<p>
+    @Html.ActionLink("Create New Class", "Create")
+</p>
+<div id="dialog-confirm"></div>
+<div class="well">
+    <div class="form-inline">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Class Name"
+                   data-mvcgrid-type="filter" data-mvcgrid-option="ClassName" />
+        </div>
+        <button type="button" class="btn btn-default" data-mvcgrid-apply-filter="click">Search</button>
+        <input type="submit" value="Reset" id="Submit" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Class")'" />
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        @* Show code from index page in  mvc grid toolbar *@
+        @Html.Partial("_MVCGridToolbar", new CMS.Web.Models.MVCGridToolbarModel()
+   {
+       MVCGridName = "ClassGrid",
+       PageSize = true,
+       ColumnVisibility = true,
+       Export = true,
+       GlobalSearch = false
+   })
+        @Html.MVCGrid("ClassGrid", new { userRole = ViewBag.userId })
+    </div>
+</div>

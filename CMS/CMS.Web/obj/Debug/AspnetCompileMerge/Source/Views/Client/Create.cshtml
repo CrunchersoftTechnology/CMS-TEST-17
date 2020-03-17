@@ -1,0 +1,76 @@
+﻿
+@model CMS.Web.ViewModels.ClientViewModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .astricReomove {
+        content: " *";
+        color: #e32;
+        position: absolute;
+        margin: 0px 0px 0px -20px;
+        font-size: large;
+        padding: 0 5px 0 0;
+    }
+</style>
+<h2>Create Client</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblName" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblAddress" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+
+}
+
+<div>
+    @Html.ActionLink("Back to Clients List", "Index")
+</div>
+
+@section Scripts {
+
+    <script>
+    $(document).ready(function () {
+        $('#Name').on('change', function () {
+            RequiredValidation('#Name', '#lblName')
+        });
+        $('#Address').on('change', function () {
+            RequiredValidation('#Address', '#lblAddress')
+        });
+    });
+    </script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+

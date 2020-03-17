@@ -1,0 +1,259 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{131E222C-BC59-4978-B259-FB9A2F73AD18}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CMS.Domain.Storage</RootNamespace>
+    <AssemblyName>CMS.Domain.Storage</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CMSDbContext.cs" />
+    <Compile Include="DbInitializer.cs" />
+    <Compile Include="Helpers\CollectionHelpers.cs" />
+    <Compile Include="Mappings\ApplicationUserMap.cs" />
+    <Compile Include="Mappings\AttendanceMap.cs" />
+    <Compile Include="Mappings\BatchMap.cs" />
+    <Compile Include="Mappings\BoardMap.cs" />
+    <Compile Include="Mappings\ChapterMap.cs" />
+    <Compile Include="Mappings\ClassMap.cs" />
+    <Compile Include="Mappings\InstallmentMap.cs" />
+    <Compile Include="Mappings\MachineMap.cs" />
+    <Compile Include="Mappings\MasterFeeMap.cs" />
+    <Compile Include="Mappings\PDFCategoryMap.cs" />
+    <Compile Include="Mappings\PDFUploadMap.cs" />
+    <Compile Include="Mappings\QuestionMap.cs" />
+    <Compile Include="Mappings\StudentMap.cs" />
+    <Compile Include="Mappings\SubjectMap.cs" />
+    <Compile Include="Mappings\TeacherMap.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Projections\AdmissionProjection.cs" />
+    <Compile Include="Projections\AnnouncementProjection.cs" />
+    <Compile Include="Projections\ApplicationUserProjection.cs" />
+    <Compile Include="Projections\ArrangeTestProjection.cs" />
+    <Compile Include="Projections\ArrangeTestResultProjection.cs" />
+    <Compile Include="Projections\AssignmentProjection.cs" />
+    <Compile Include="Projections\AttendanceSerialMachine.cs" />
+    <Compile Include="Projections\AttendanceProjection.cs" />
+    <Compile Include="Projections\BatchProjection.cs" />
+    <Compile Include="Projections\BoardProjection.cs" />
+    <Compile Include="Projections\BranchAdminProjection.cs" />
+    <Compile Include="Projections\BranchProjection.cs" />
+    <Compile Include="Projections\ChapterProjection.cs" />
+    <Compile Include="Projections\ClassProjection.cs" />
+    <Compile Include="Projections\ClientAdminProjection.cs" />
+    <Compile Include="Projections\ClientProjection.cs" />
+    <Compile Include="Projections\ConfigureProjection.cs" />
+    <Compile Include="Projections\DailyPracticePaperProjection.cs" />
+    <Compile Include="Projections\InbuiltquestionbankProjection.cs" />
+    <Compile Include="Projections\InstallmentProjection.cs" />
+    <Compile Include="Projections\MachineProjection.cs" />
+    <Compile Include="Projections\MasterFeeProjection.cs" />
+    <Compile Include="Projections\NewsProjection.cs" />
+    <Compile Include="Projections\NotesProjection.cs" />
+    <Compile Include="Projections\NotificationProjection.cs" />
+    <Compile Include="Projections\OfflineTestPaperProjection.cs" />
+    <Compile Include="Projections\OfflineTestStudentMarksProjection.cs" />
+    <Compile Include="Projections\PDFCategoryProjection.cs" />
+    <Compile Include="Projections\PDFUploadProjection.cs" />
+    <Compile Include="Projections\PendingStudentAdmissionProjection.cs" />
+    <Compile Include="Projections\PracticepapersProjection.cs" />
+    <Compile Include="Projections\QuestionCountProjection.cs" />
+    <Compile Include="Projections\QuestionDetailWithCountProjection.cs" />
+    <Compile Include="Projections\QuestionModel.cs" />
+    <Compile Include="Projections\QuestionpapersProjection.cs" />
+    <Compile Include="Projections\QuestionProjection.cs" />
+    <Compile Include="Projections\ReferencebooksProjection.cs" />
+    <Compile Include="Projections\SchoolProjection.cs" />
+    <Compile Include="Projections\StudentAttendanceProjection.cs" />
+    <Compile Include="Projections\StudentFeedbackProjection.cs" />
+    <Compile Include="Projections\StudentTimetableProjection.cs" />
+    <Compile Include="Projections\TestProjection.cs" />
+    <Compile Include="Projections\TextbooksProjection.cs" />
+    <Compile Include="Projections\UploadAssignmentsProjection.cs" />
+    <Compile Include="Projections\UploadInbuiltquestionbankProjection.cs" />
+    <Compile Include="Projections\UploadNotesProjection.cs" />
+    <Compile Include="Projections\UploadOfflineMarksProjection.cs" />
+    <Compile Include="Projections\UploadPracticepapersProjection.cs" />
+    <Compile Include="Projections\UploadQuestionpapersProjection.cs" />
+    <Compile Include="Projections\UploadReferencebooksProjection.cs" />
+    <Compile Include="Projections\UploadTextbooksProjection.cs" />
+    <Compile Include="Services\AnnouncementService.cs" />
+    <Compile Include="Projections\StudentAttendanceDetails.cs" />
+    <Compile Include="Services\ApiService.cs" />
+    <Compile Include="Services\ArrangeTestResultService.cs" />
+    <Compile Include="Services\AspNetRoles.cs" />
+    <Compile Include="Services\BranchAdminService.cs" />
+    <Compile Include="Services\ClientAdminService.cs" />
+    <Compile Include="Services\ClientService.cs" />
+    <Compile Include="Services\ConfigureService.cs" />
+    <Compile Include="Services\DailyPracticePaperService.cs" />
+    <Compile Include="Services\IAnnouncementService.cs" />
+    <Compile Include="Services\IApiService.cs" />
+    <Compile Include="Services\IArrangeTestResult.cs" />
+    <Compile Include="Services\IAspNetRoles.cs" />
+    <Compile Include="Services\IBranchAdminService.cs" />
+    <Compile Include="Services\IClientAdminService.cs" />
+    <Compile Include="Services\IClientService.cs" />
+    <Compile Include="Services\IConfigureServices.cs" />
+    <Compile Include="Services\IDailyPracticePaperService.cs" />
+    <Compile Include="Services\ILocalDateTimeService.cs" />
+    <Compile Include="Services\INotificationService.cs" />
+    <Compile Include="Services\IOfflineTestPaper.cs" />
+    <Compile Include="Services\IOfflineTestStudentMarksService.cs" />
+    <Compile Include="Services\IStudentFeedbackService.cs" />
+    <Compile Include="Services\IStudentTimetableService.cs" />
+    <Compile Include="Services\IUploadAssignmentsService.cs" />
+    <Compile Include="Services\IUploadInbuiltquestionbankService.cs" />
+    <Compile Include="Services\IUploadNotesService.cs" />
+    <Compile Include="Services\IUploadPracticepapersService.cs" />
+    <Compile Include="Services\IUploadQuestionpapersService.cs" />
+    <Compile Include="Services\IUploadReferencebooksService.cs" />
+    <Compile Include="Services\IUploadTextbooksService.cs" />
+    <Compile Include="Services\LocalDateTimeService.cs" />
+    <Compile Include="Services\NotificationService.cs" />
+    <Compile Include="Services\OfflineTestPaperService.cs" />
+    <Compile Include="Services\OfflineTestStudentMarksService.cs" />
+    <Compile Include="Services\SchoolService.cs" />
+    <Compile Include="Projections\StudentProjection.cs" />
+    <Compile Include="Projections\SubjectProjection.cs" />
+    <Compile Include="Projections\TeacherProjection.cs" />
+    <Compile Include="Projections\TestPaperProjection.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository.cs" />
+    <Compile Include="Services\ApplicationUserService.cs" />
+    <Compile Include="Services\AttendanceService.cs" />
+    <Compile Include="Services\BatchService.cs" />
+    <Compile Include="Services\BoardService.cs" />
+    <Compile Include="Services\BranchService.cs" />
+    <Compile Include="Services\ChapterService.cs" />
+    <Compile Include="Services\ClassService.cs" />
+    <Compile Include="Services\IApplicationUserService.cs" />
+    <Compile Include="Services\IAttendanceService.cs" />
+    <Compile Include="Services\IBatchService.cs" />
+    <Compile Include="Services\IBoardService.cs" />
+    <Compile Include="Services\IBranchService.cs" />
+    <Compile Include="Services\IChapterService.cs" />
+    <Compile Include="Services\IClassService.cs" />
+    <Compile Include="Services\IMachineService.cs" />
+    <Compile Include="Services\IMasterFeeService.cs" />
+    <Compile Include="Services\IInstallmentService.cs" />
+    <Compile Include="Services\InstallmentService.cs" />
+    <Compile Include="Services\IPDFCategoryService.cs" />
+    <Compile Include="Services\IPDFUploadService.cs" />
+    <Compile Include="Services\IQuestionService.cs" />
+    <Compile Include="Services\ISchoolService.cs" />
+    <Compile Include="Services\IStudentService.cs" />
+    <Compile Include="Services\ISubjectService.cs" />
+    <Compile Include="Services\ITeacherService.cs" />
+    <Compile Include="Services\ITestPaperService.cs" />
+    <Compile Include="Services\MachineService.cs" />
+    <Compile Include="Services\MasterFeeService.cs" />
+    <Compile Include="Services\PDFCategoryService.cs" />
+    <Compile Include="Services\PDFUploadService.cs" />
+    <Compile Include="Services\QuestionService.cs" />
+    <Compile Include="Services\StudentFeedbackService.cs" />
+    <Compile Include="Services\StudentService.cs" />
+    <Compile Include="Services\StudentTimetableService.cs" />
+    <Compile Include="Services\SubjectService.cs" />
+    <Compile Include="Services\TeacherService.cs" />
+    <Compile Include="Services\TestPaperService.cs" />
+    <Compile Include="Services\UploadAssignmentsService.cs" />
+    <Compile Include="Services\UploadInbuiltquestionbankService.cs" />
+    <Compile Include="Services\UploadNotesService.cs" />
+    <Compile Include="Services\UploadPracticepapersService.cs" />
+    <Compile Include="Services\UploadQuestionpapersService.cs" />
+    <Compile Include="Services\UploadReferencebooksService.cs" />
+    <Compile Include="Services\UploadTextbooksService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="bin\Debug\CMS.Domain.Storage.dll.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CMS.Common\CMS.Common.csproj">
+      <Project>{4483ACD1-C99B-4610-A7B9-C76DFE384819}</Project>
+      <Name>CMS.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CMS.Domain\CMS.Domain.csproj">
+      <Project>{5631DEE7-94B7-4A22-AA71-CC17B42FCDED}</Project>
+      <Name>CMS.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\CMS.Common.dll" />
+    <Content Include="bin\Debug\CMS.Common.pdb" />
+    <Content Include="bin\Debug\CMS.Domain.dll" />
+    <Content Include="bin\Debug\CMS.Domain.pdb" />
+    <Content Include="bin\Debug\CMS.Domain.Storage.dll" />
+    <Content Include="bin\Debug\CMS.Domain.Storage.pdb" />
+    <Content Include="bin\Debug\EntityFramework.dll" />
+    <Content Include="bin\Debug\EntityFramework.SqlServer.dll" />
+    <Content Include="bin\Debug\EntityFramework.SqlServer.xml" />
+    <Content Include="bin\Debug\EntityFramework.xml" />
+    <Content Include="bin\Debug\Microsoft.AspNet.Identity.Core.dll" />
+    <Content Include="bin\Debug\Microsoft.AspNet.Identity.Core.xml" />
+    <Content Include="bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll" />
+    <Content Include="bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

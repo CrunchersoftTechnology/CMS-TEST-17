@@ -1,0 +1,31 @@
+﻿@using CMS.Common;
+@{
+    ViewBag.Title = "GetNews";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+<h2>News</h2>
+<br />
+@if (ViewBag.newsResult.Count == 0)
+{
+    <h2>No News found!</h2>
+}
+else
+{
+    int i = 1;
+    foreach (var item in ViewBag.newsResult)
+    {
+        <div class="row">
+            <br />
+            <div class="col-sm-4">
+                <a href='@System.Configuration.ConfigurationManager.AppSettings[Constants.urlNewsPDF]@item.FileName' target="_blank">
+                    @item.Title
+                    <br />
+                </a>
+                @item.CreatedOn.ToString("dd/MM/yyyy")
+            </div>
+        </div>
+        <br />
+        <br />
+        i += 1;
+    }
+}

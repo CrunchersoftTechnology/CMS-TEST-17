@@ -1,0 +1,143 @@
+﻿@model CMS.Web.ViewModels.UploadOfflineMarksViewModel
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div>
+    <hr />
+    <div id="message">
+    </div>
+    <div class="form-horizontal">
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" } })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.TotalMarks, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TotalMarks, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.StudentOfflineMarks, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <table id="studentList" class="table"></table>
+                @Html.HiddenFor(m => m.StudentOfflineMarks)
+                @Html.ValidationMessageFor(model => model.StudentOfflineMarks, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Delete" id="Delete" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Back to Upload Marks List", "Index")<br />
+</p>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#OfflineTestPaperId").val('@ViewBag.offlineTestPaperId')
+
+            GetStudent('@ViewBag.offlineTestPaperId');
+
+            $("#Delete").on('click', function () {
+                JSONObjMarks = [];
+                var offlineTestMarksId = $("#studentList").find("td #offlineTestMarksId");
+
+                var data = JSON.parse(JSON.stringify(JSONObjMarks));
+
+                var sId = [];
+                var MarksId = [];
+
+                offlineTestMarksId.each(function () {
+                    MarksId.push($(this).val());
+                    sId.push($(this).attr("datavalue"));
+                });
+
+                for (var i = 0; i < MarksId.length; i++) {
+                    var item = {};
+                    item["UserId"] = sId[i];
+                    item["OfflineTestStudentMarksId"] = MarksId[i];
+                    JSONObjMarks.push(item);
+                }
+                var data = (JSON.stringify(JSONObjMarks));
+                $("#StudentOfflineMarks").val(data);
+
+                var jqxhr = $.post("/UploadOfflineMarks/DeleteUploadMarks",
+                 {
+                     StudentOfflineMarks: $("#StudentOfflineMarks").val(),
+                     OfflineTestPaperId: $("#OfflineTestPaperId").val(),
+                     Title: $("#Title").val(),
+                     TotalMarks: $("#TotalMarks").val(),
+                     SMS: $("#SMS").is(":checked"),
+                     AppNotification: $("#AppNotification").is(":checked"),
+                 }, function (data) {
+                     var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+                     $("#message").html("");
+                     $("#message").append(divMessage);
+
+                     if (data.Success == true) {
+                         $('#msg').html('<div>' + data.Results[0].Message + '</div>');
+                         $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                         window.location.href = "/UploadOfflineMarks/Index"
+                         $("#TotalMarks").val('');
+                         $("#Title").val('');
+                         $("#studentList").html(""); // clear before appending new list
+                         $("#StudentOfflineMarks").html("");
+                     }
+                     else {
+                         var m = "";
+                         for (var i = 0; i < data.Results.length; i++) {
+                             //FillClasses
+                             m = m + data.Results[i].Message + ".</br>";
+                         }
+                         $('#msg').html('<div>' + m + '</div>');
+                         $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                     }
+                 }).done(function () {
+
+                 }).fail(function () {
+                     $('#msg').html('<div>Something went wrong! Please try again.</div>');
+                     $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                 }).always(function () {
+                 });
+            });
+        });
+        function GetStudent(offlineTestPaperId) {
+            if ($('#OfflineTestPaperId :selected').text() != "Select Paper") {
+                $.ajax({
+                    url: '/UploadOfflineMarks/GetStudentMarksList',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { id: offlineTestPaperId },
+                    success: function (data) {
+                        $("#studentList").html(""); // clear before appending new list
+                        $("#StudentOfflineMarks").html("");
+                        var divStudent = "";
+                        divStudent += "<tr><td><div class='col-md-8'><b>Student Name</b></div></td><td><div class='col-md-4'><div aria-label='...'><label><b>Marks</b></label></td><td><label><b>Percentage</b></label></div></div></td></tr>";
+                        $.each(data, function (i, student) {
+                            $("#TotalMarks").val(student.TotalMarks);
+                            $("#Title").val(student.Title);
+                            if (student.IsPresent) {
+                                divStudent += "<tr><td><div class='col-md-8'>" + student.StudentName + "</div></td><td><div class='col-md-4'><div aria-label='...' id='studDiv'><input type='text' datavalue='" + student.UserId + "' name='PaperMarks' id='PaperMarks' class='StudMark' value='" + student.ObtainedMarks + "' autocomplete='off' disabled/></td><td><input type='text' name='PaperPercentage' class='StudPercentage' datavalue='" + student.UserId + "' id='PaperPercentage' value='" + student.Percentage + "' disabled/></td> <td><input type='checkbox' name='Absent' id='Absent' class='StudAbsent' datavalue='" + student.UserId + "'><td/><td><input type='hidden' name='studEmail' id='studEmail' value='" + student.EmailId + "'></td><td><input type='hidden' name='studContact' id='studContact' value='" + student.StudentContact + "'></td><td><input type='hidden' name='studParentId' id='studParentId' value='" + student.parentAppPlayerId + "'></td><td><input type='hidden' name='offlineTestMarksId' id='offlineTestMarksId' value='" + student.OfflineTestStudentMarksId + "'></td></div></div></td></tr>";
+                            }
+                            else {
+                                divStudent += "<tr><td><div class='col-md-8'>" + student.StudentName + "</div></td><td><div class='col-md-4'><div aria-label='...' id='studDiv'><input type='text' datavalue='" + student.UserId + "' name='PaperMarks' id='PaperMarks' class='StudMark' value='" + student.ObtainedMarks + "' autocomplete='off' disabled/></td><td><input type='text' name='PaperPercentage' class='StudPercentage' datavalue='" + student.UserId + "' id='PaperPercentage' value='" + student.Percentage + "' disabled/> <td><input type='checkbox' name='Absent' id='Absent' class='StudAbsent' datavalue='" + student.UserId + "' checked><td/><td><input type='hidden' name='studEmail' id='studEmail' value='" + student.EmailId + "'></td><td><input type='hidden' name='studContact' id='studContact' value='" + student.StudentContact + "'></td><td><input type='hidden' name='studParentId' id='studParentId' value='" + student.parentAppPlayerId + "'></td><td><input type='hidden' name='offlineTestMarksId' id='offlineTestMarksId' value='" + student.OfflineTestStudentMarksId + "'></td></div></div></td></tr>";
+                            }
+                        });
+                        divStudent = "<tbody>" + divStudent + "</tbody>";
+                        $("#studentList").append(divStudent);
+                    }
+                });
+            }
+        }
+    </script>
+}

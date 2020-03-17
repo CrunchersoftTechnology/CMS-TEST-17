@@ -1,0 +1,106 @@
+﻿@model CMS.Web.ViewModels.ArrangeTestResultViewModel
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    tr th,tr td{
+        width: auto;
+        padding: 1% 2%;
+    }
+</style>
+
+<h2>Arrange Test Result Details</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.StudentName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StudentName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TestPaperTitle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TestPaperTitle)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TestDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TestDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TimeDuration)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TimeDuration)@Html.Label("Minutes")
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StartTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StartTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ObtainedMarks)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ObtainedMarks)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OutOfMarks)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OutOfMarks)
+        </dd>
+    </dl>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Question No.</th>
+                <th>Correct Answer</th>
+                <th>Student Answer</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ 
+                int i = 1;
+            }
+            @foreach (var question in ViewBag.QuestionsDetails)
+            {
+                <tr>
+                    <td>@i</td>
+                    <td>@question.CorrectAnswer</td>
+                    <td>@question.StudentAnswer</td>
+                    <td>@question.Status</td>
+                </tr>
+                i = i + 1;
+            }
+        </tbody>
+    </table>
+</div>
+<br />
+<p>
+    @Html.ActionLink("Back to Arrange Test Results List", "Index")
+</p>

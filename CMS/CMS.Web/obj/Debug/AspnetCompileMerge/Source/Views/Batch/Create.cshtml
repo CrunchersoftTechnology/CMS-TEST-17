@@ -1,0 +1,164 @@
+﻿@model CMS.Web.ViewModels.BatchViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Create";
+}
+
+<head>
+    <style>
+        #CrateClass {
+            background: url(../../img/linkImg.png) no-repeat top left;
+            display: block;
+            width: 25px;
+            height: 25px;
+            text-indent: -9999px; /*/* hides the link text */
+        }
+    </style>
+</head>
+<h2>Create Batch</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.ClassName)
+    @Html.HiddenFor(m => m.CurrentUserRole)
+    @Html.HiddenFor(m => m.ClientName)
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @if (Model.CurrentUserRole == "Admin")
+        {
+            <div class="form-group">
+                @Html.LabelFor(m => m.Clients, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblClientId" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.ClientId, new SelectList(Model.Clients, "Value", "Text"),
+                    "Select Branch", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ClientId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        }
+        else if (Model.CurrentUserRole == "Client")
+        {
+            <div class="form-group">
+                @Html.LabelFor(m => m.ClientName, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblClientName" })
+                <div class="col-md-10">
+                    @Html.EditorFor(m => m.ClientName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.ValidationMessageFor(model => model.ClientId, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(m => m.ClientId)
+                </div>
+            </div>
+        }
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Classes, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblClassName" })
+            <span class="control-label glyphicon glyphicon-plus-sign" title="Click on this button to add new 
+           class." id="tooltipClsName" onclick="@("window.location.href='" + @Url.Action("Create", "Class") + "'");"></span>
+            <div class="col-md-3">
+                @Html.DropDownListFor(model => model.ClassId, (SelectList)Model.Classes, "Select Class", new { @class = "form-control"@*, @onchange = "FillSubjects(this.value)"*@ })
+                @Html.ValidationMessageFor(model => model.ClassId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Name, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblName" })
+            <span class="control-label glyphicon glyphicon-info-sign" title="Batch name, will be required 
+             while registering new student. (Batch Name Ex. Morning, Afternoon)" id="tooltipName"></span>
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.InTime, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblInTime" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.InTime, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.InTime, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.OutTime, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblOutTime" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.OutTime, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.OutTime, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to Batches List", "Index")
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#tooltipClsName").tooltip({ track: true });
+            $("#tooltipSubName").tooltip({ track: true });
+            $("#tooltipName").tooltip({ track: true });
+            @*if (parseInt(@ViewBag.ClassId) > 0) {
+                $("#ClassId").val(@ViewBag.ClassId);
+                FillSubjects(@ViewBag.ClassId);
+            }
+            if (parseInt(@ViewBag.SubjectId) > 0) {
+                FillSubjects(@ViewBag.ClassId);
+            }*@
+            $('#InTime').timepicki();
+            $('#OutTime').timepicki();
+        });
+
+        @*function FillSubjects(classId) {
+            if ($('#ClassId :selected').text() != "Select Class") {
+                $.ajax({
+                    url: '/Subject/GetSubjects',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { classId: classId },
+                    success: function (subjects) {
+                        $("#SubjectId").html(""); // clear before appending new list
+                        $("#SubjectId").append($('<option></option>').val("").html("Select Subject"));
+                        $.each(subjects, function (i, sub) {
+                            $("#SubjectId").append(
+                                $('<option></option>').val(sub.SubjectId).html(sub.Name));
+                        });
+                        $("#SubjectId").val(@ViewBag.SubjectId);
+                    }
+                });
+            }
+            else {
+                $("#SubjectId").html("");
+            }
+        }*@
+        $('#ClassId').on('change', function () {
+            RequiredValidation('#ClassId', '#lblClassName')
+        });
+        //$('#SubjectId').on('change', function () {
+        //    RequiredValidation('#SubjectId', '#lblSubjects')
+        //});
+        $('#Name').on('change', function () {
+            RequiredValidation('#Name', '#lblName')
+        });
+        //$('#InTime').on('change', function () {
+        //    RequiredValidation('#InTime', '#lblInTime')
+        //});
+        //$('#OutTime').on('change', function () {
+        //    RequiredValidation('#OutTime', '#lblOutTime')
+        //});
+
+    </script>
+    @Scripts.Render("~/bundles/batchscript")
+    @Styles.Render("~/Content/batchcss")
+}
+
+

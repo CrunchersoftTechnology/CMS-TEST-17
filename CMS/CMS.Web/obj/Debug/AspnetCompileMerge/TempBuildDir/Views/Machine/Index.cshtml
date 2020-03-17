@@ -1,0 +1,26 @@
+﻿@model IEnumerable<CMS.Web.ViewModels.MachineViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Machine List</h2>
+
+<p>
+    @Html.ActionLink("Create New Machine", "Create")
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_MVCGridToolbar", new CMS.Web.Models.MVCGridToolbarModel()
+   {
+       MVCGridName = "MachineGrid",
+       PageSize = true,
+       ColumnVisibility = true,
+       Export = true,
+       GlobalSearch = false
+   })
+        @Html.MVCGrid("MachineGrid", new { userRole = ViewBag.userId })
+    </div>
+</div>

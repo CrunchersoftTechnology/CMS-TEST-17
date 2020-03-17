@@ -1,0 +1,494 @@
+﻿﻿@model CMS.Web.ViewModels.OfflineTestPaperViewModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Create Exam Schedule</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m => m.SelectedBranches)
+    @Html.HiddenFor(m => m.CurrentUserRole)
+    @Html.HiddenFor(m => m.SelectedBatches)
+    @Html.HiddenFor(m => m.ClassName)
+    @Html.HiddenFor(m => m.SubjectName)
+    @Html.HiddenFor(m => m.SelectedBatchesName)
+    @Html.HiddenFor(m => m.Media)
+
+    <div class="form-horizontal">
+        <hr />
+        <div id="message">
+        </div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @if (Model.CurrentUserRole == "Admin")
+        { <div class="form-group">
+            @Html.LabelFor(m => m.Branches, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.BranchId, new SelectList(Model.Branches, "Value", "Text"),
+             new { @class = "form-control", @onchange = "FillClasses(this.value)", @multiple = "multiple", @autocomplete = "off" })
+            </div>
+        </div>
+
+        <div class="form-group" id="classDetail">
+            @Html.LabelFor(m => m.ClassId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.ClassId, new SelectList(Enumerable.Empty<SelectListItem>
+                 (),
+                 "ClassId", "ClassName"), "Select Class", new { @class = "form-control", @onchange = "FillSubjectByClassId(this.value)" })
+            </div>
+        </div>
+        }
+        else if (Model.CurrentUserRole == "Client")
+        {
+            <div class="form-group" id="classDetail">
+                @Html.LabelFor(m => m.Branches, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.BranchId, new SelectList(Model.Branches, "Value", "Text"), "Select Class",
+new { @class = "form-control", @onchange = "FillClasses(this.value)" })
+                </div>
+            </div>
+
+
+            <div class="form-group" id="classDetail">
+                @Html.LabelFor(m => m.Classes, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.ClassId, new SelectList(Model.Classes, "Value", "Text"), "Select Class",
+new { @class = "form-control", @onchange = "FillSubjectByClassId(this.value)" })
+                </div>
+            </div>
+
+        }
+        else if (Model.CurrentUserRole == "BranchAdmin")
+        {
+            <div class="form-group">
+                @Html.LabelFor(m => m.BranchName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(m => m.BranchName, new
+               {
+                   htmlAttributes = new
+                   {
+                       @class = "form-control",
+                       @readonly = "readonly"
+                   }
+               })
+                    @Html.HiddenFor(m => m.BranchId)
+                </div>
+            </div>
+
+            <div class="form-group" id="classDetail">
+                @Html.LabelFor(m => m.Classes, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.ClassId, new SelectList(Model.Classes, "Value", "Text"), "Select Class",
+new { @class = "form-control", @onchange = "FillSubjectByClassId(this.value)" })
+                </div>
+            </div>
+        }
+
+        <div class="form-group" id="classDetail">
+            @Html.LabelFor(m => m.SubjectId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.SubjectId, new SelectList(Enumerable.Empty<SelectListItem>
+                (),
+                "SubjectId", "Name"), "Select Subject", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group" id="batchDetail">
+            @Html.LabelFor(m => m.BatchId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.BatchId, new SelectList(Enumerable.Empty<SelectListItem>
+                (), "BatchId", "BatchName"),
+                new { @class = "form-control", @multiple = "multiple", @onchange = "getSelectedBatches()" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.TotalMarks, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblTotalMarks" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TotalMarks, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" }, @autocomplete = "off" })
+                @Html.ValidationMessageFor(model => model.TotalMarks, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TestDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TestDate, new { htmlAttributes = new { @class = "form-control datepicker", autocomplete = "off", @type = "text", @maxlength = "10", @placeholder = "DD-MM-YYYY" } })
+                @Html.ValidationMessageFor(model => model.TestDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TestInTime, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblInTime" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TestInTime, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TestInTime, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.TestOutTime, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblOutTime" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TestOutTime, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TestOutTime, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.Label("(By default mail send to student)", new { @class = "text-default", @style = "font-weight:bold" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.SMS, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox checkbox-inline">
+                    @Html.EditorFor(model => model.SMS)
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AppNotification, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox checkbox-inline">
+                    @Html.EditorFor(model => model.AppNotification)
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" id="send" value="Send" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to Exam Schedule List", "Index")
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#TestInTime').timepicki();
+            $('#TestOutTime').timepicki();
+            $('#TotalMarks').on('change', function () {
+                RequiredValidation('#TotalMarks', '#lblTotalMarks')
+            });
+            $('#BranchId').on('change', function () {
+                RequiredValidation('#BranchId', '#lblBranch')
+            });
+
+            if ($("#CurrentUserRole").val() == "Admin") {
+                $('#BranchId').multiselect({
+                    includeSelectAllOption: true
+                });
+            }
+
+            $('#BatchId').multiselect({
+                includeSelectAllOption: true
+            });
+
+            if ($("#TestDate").val() == "0001-01-01")
+                $("#TestDate").val('');
+
+            $("#ClassName").text($("#ClassId").text());
+
+            $("#send").on('click', function () {
+                if ($("#Title").val() != "") {
+                    if ($("#CurrentUserRole").val() == "BranchAdmin" && $("#BranchId").val() == "") {
+                        CreateAlertMessage();
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                        $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                        $('#msg').html('<div>Branch field is required.</div>');
+                    }
+                    if ($("#BranchId option:selected").length == 0 && $("#CurrentUserRole").val() == "Admin") {
+                        CreateAlertMessage();
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                        $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                        $('#msg').html('<div>Branch field is required.</div>');
+                    }
+                    else if ($("#ClassId").val() == "") {
+                        CreateAlertMessage();
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                        $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                        $('#msg').html('<div>Class field is required.</div>');
+                    }
+                    else if ($("#SubjectId").val() == 0) {
+                        CreateAlertMessage();
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                        $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                        $('#msg').html('<div>subject field is required.</div>');
+                    }
+                    else if ($("#BatchId").val() == "") {
+                        CreateAlertMessage();
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                        $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                        $('#msg').html('<div>Batch field is required.</div>');
+                    }
+                    else if ($("#TotalMarks").val() == 0) {
+                        CreateAlertMessage();
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                        $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                        $('#msg').html('<div>Total Marks field is required.</div>');
+                    }
+                    else if ($("#TestDate").val() == "0001-01-01") {
+                        CreateAlertMessage();
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                        $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                        $('#msg').html('<div>Test Date field is required.</div>');
+                    }
+                    else {
+                        SendNotification();
+                    }
+                    // $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                    $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                }
+                else {
+                    CreateAlertMessage();
+                    $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                    $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                    $('#msg').html('<div>Title field is required.</div>');
+                }
+            });
+
+            if ($("#SelectedBranches").val() != "") {
+                if ($("#CurrentUserRole").val() == "BranchAdmin") {
+                    getMultipleClassBranchById();
+                }
+            }
+        });
+
+        function CreateAlertMessage() {
+            var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+            $("#message").html("");
+            $("#message").append(divMessage);
+        }
+
+        function FillClasses(branchId) {
+            var selected = $("#BranchId").find("option:selected");
+            var arrSelected = [];
+            selected.each(function () {
+                arrSelected.push($(this).val());
+            });
+            var selectedBranch = arrSelected.toString();
+            $("#SelectedBranches").val(selectedBranch);
+            if ($("#ClassId option:selected").length == 0) {
+                $("#ClassId").html("");
+                $("#ClassId").append($('<option></option>').val(0).html("Select Class"));
+            }
+            else {
+                getMultipleClassBranchById();
+            }
+        }
+
+        function getSelectedBatches() {
+            var selected = $("#BatchId").find("option:selected");
+            var arrSelected = [];
+            selected.each(function () {
+                arrSelected.push($(this).val());
+            });
+            var selectedSubject = arrSelected.toString();
+            $("#SelectedBatches").val(selectedSubject);
+        }
+
+        function getMultipleClassBranchById() {
+            $.ajax({
+                url: '/StudentTimetable/GetClassesByMultipleBranches',
+                type: "GET",
+                dataType: "JSON",
+                data: { selectedBranch: $("#SelectedBranches").val() },
+                async: false,
+                success: function (data) {
+                    $("#ClassId").html(""); // clear before appending new list
+                    $("#ClassId").append($('<option></option>').val("").html("Select Class"));
+                    $.each(data.classes, function (i, cls) {
+                        $("#ClassId").append(
+                            $('<option></option>').val(cls.ClassId).html(cls.ClassName));
+                    });
+                }
+            });
+        }
+
+        function FillSubjectByClassId(classId) {
+            if ($("#ClassId").val() == "") {
+                $("#SubjectId").html("");
+                $("#SubjectId").append($('<option></option>').val(0).html("Select Subject"));
+            }
+            else {
+                $.ajax({
+                    url: '/OfflineTestPaper/GetSubjetctByClassId',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { classId: $("#ClassId").val() },
+                    async: false,
+                    success: function (data) {
+                        $("#SubjectId").html(""); // clear before appending new list
+                        $("#SubjectId").append($('<option></option>').val(0).html("Select Subject"));
+                        $.each(data.subjects, function (i, sub) {
+                            $("#SubjectId").append(
+                                $('<option></option>').val(sub.SubjectId).html(sub.Name));
+                        });
+                    }
+                });
+
+                getBatchOnSubjectId();
+            }
+        }
+
+        function getBatchOnSubjectId() {
+            if ($("#ClassId").val() != "") {
+                $.ajax({
+                    url: '/OfflineTestPaper/GetBatchBySubjectId',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { classId: $("#ClassId").val() },
+                    success: function (data) {
+                        var select = $("#BatchId");
+                        select.children().remove();
+                        $("#BatchId").html(""); // clear before appending new list
+                        $("#BatchId").multiselect('destroy');
+                        $.each(data.batches, function (i, sub) {
+                            $("#BatchId").append("<option value='" + sub.BatchId + "'>" + sub.BatchName + "</option>");
+                        });
+                        //$("#BatchId").multiselect('rebuild');
+                        $('#BatchId')
+                        .multiselect({
+                            allSelectedText: 'All',
+                            includeSelectAllOption: true
+                        });
+                        if ($("#SelectedBatches").val() != "") {
+                            var arr = $("#SelectedBatches").val().split(',');
+                            arr.forEach(function (i) {
+                                $("#BatchId").multiselect('select', i)
+                            });
+                        }
+
+                    }
+                });
+            }
+        }
+
+        function DestroyBatches() {
+            $("#BatchId").html("");
+            $("#BatchId").multiselect('destroy');
+            $("#BatchId").multiselect('rebuild');
+        }
+
+        function DestroyBranch() {
+            $("#BranchId").html("");
+            $("#BranchId").multiselect('destroy');
+            $("#BranchId").multiselect('rebuild');
+        }
+
+        function clear() {
+            $("#SMS, #AppNotification").prop("checked", false);
+            $("#Title, #TestDate,#TestInTime,#TestOutTime,#TotalMarks").val("");
+            $("#Media").val("");
+            $("#SelectedBatchesName").text("");
+            var selected = $("#BranchId,#BatchId").find("option:selected");
+            selected.each(function () {
+                $("#BranchId,#BatchId").multiselect('deselect', $(this).val())
+            });
+        }
+
+        function SendNotification() {
+            //if ($("#SMS").is(":checked") || $("#AppNotification").is(":checked")) {
+            var media = "";
+            if ($("#SMS").is(":checked"))
+                media += ", SMS";
+            if ($("#AppNotification").is(":checked"))
+                media += ", AppNotification";
+
+            if (media.charAt(0) === ',')
+                media = media.slice(1);
+            $("#Media").val(media);
+
+            var selected = $("#BatchId").find("option:selected");
+            var arrSelected = [];
+            selected.each(function () {
+                arrSelected.push($(this).text());
+            });
+            var selectedBatch = arrSelected.toString();
+            $("#SelectedBatchesName").text(selectedBatch);
+            //console.log("done");
+            testDate = $("#TestDate").val().split('-')[1] + "-" + $("#TestDate").val().split('-')[0] +
+                "-" + $("#TestDate").val().split('-')[2];
+
+            $.ajax({
+                url: '/OfflineTestPaper/SendOffineTestPaperNotification',
+                type: "GET",
+                dataType: "JSON",
+                data: {
+                    Title: $("#Title").val(),
+                    ClassId: $("#ClassId").val(),
+                    SMS: $("#SMS").is(":checked"),
+                    AppNotification: $("#AppNotification").is(":checked"),
+                    SelectedBatches: $("#SelectedBatches").val(),
+                    SelectedBranches: $("#SelectedBranches").val(),
+                    TestDate: testDate,
+                    TestInTime: $("#TestInTime").val(),
+                    TestOutTime: $("#TestOutTime").val(),
+                    TotalMarks: $("#TotalMarks").val(),
+                    SubjectId: $("#SubjectId").val(),
+                    Media: $("#Media").val(),
+                    className: $("#ClassId :selected").text(),
+                    subjectName: $("#SubjectId :selected").text(),
+                    SelectedBatchesName: $("#SelectedBatchesName").text(),
+                },
+                async: false,
+                success: function (data) {
+                    if (data.Success == true) {
+                        var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+                        $("#message").html("");
+                        $("#message").append(divMessage);
+                        var m = "";
+                        for (var i = 0; i < data.Results.length; i++) {
+                            m = m + data.Results[i].Message + "</br>";
+                        }
+                        $('#msg').html('<div>' + m + '</div>');
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                        $("#dialog-form").dialog("close");
+                        $("#Title").text($("#Title").val());
+                        $("#BranchId option:contains(Select Branch)").attr('selected', true);
+                        $("#ClassId option:contains(Select Class)").attr('selected', true);
+                        $("#SubjectId option:contains(Select Subject)").attr('selected', true);
+                        clear();
+                        $('html, body').animate({ scrollTop: "0px" });
+                    }
+                    else {
+                        var m = "";
+                        for (var i = 0; i < data.Results.length; i++) {
+                            m = m + data.Results[i].Message + "</br>";
+                        }
+                        CreateAlertMessage();
+                        $('#msg').html('<div>' + m + '</div>');
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                    }
+                }
+            });
+            //}
+            //else {
+            //    CreateAlertMessage();
+            //    $('#msg').html('<div>Please select atleast one media.</div>');
+            //    $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+            //    $('html, body').animate({ scrollTop: "0px" }, 'fast');
+            //}
+
+        }
+    </script>
+    @Scripts.Render("~/bundles/StudentJS")
+    @Styles.Render("~/Content/StudentCSS")
+    @Scripts.Render("~/bundles/batchscript")
+    @Styles.Render("~/Content/batchcss")
+}

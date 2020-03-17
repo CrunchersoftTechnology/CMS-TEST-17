@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4483ACD1-C99B-4610-A7B9-C76DFE384819}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CMS.Common</RootNamespace>
+    <AssemblyName>CMS.Common</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CMSResult.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Enums\BloodGroup.cs" />
+    <Compile Include="Enums\FeedbackFor.cs" />
+    <Compile Include="Enums\Gender.cs" />
+    <Compile Include="Enums\PaymentNo.cs" />
+    <Compile Include="Enums\TestType.cs" />
+    <Compile Include="Enums\TimetableCategory.cs" />
+    <Compile Include="Enums\WeekDays.cs" />
+    <Compile Include="GridModels\AnnouncementGridModel.cs" />
+    <Compile Include="GridModels\ArrangeTestGridModel.cs" />
+    <Compile Include="GridModels\ArrangeTestResultGridModel.cs" />
+    <Compile Include="GridModels\AttendanceGridModel.cs" />
+    <Compile Include="GridModels\BatchGridModel.cs" />
+    <Compile Include="GridModels\BoardGridModel.cs" />
+    <Compile Include="GridModels\BranchAdminGridModel.cs" />
+    <Compile Include="GridModels\BranchGridModel.cs" />
+    <Compile Include="GridModels\ChapterGridModel.cs" />
+    <Compile Include="GridModels\ClientAdminGridModel.cs" />
+    <Compile Include="GridModels\ClientGridModel.cs" />
+    <Compile Include="GridModels\ConfigureGridView.cs" />
+    <Compile Include="GridModels\DailyPracticePaperGridModel.cs" />
+    <Compile Include="GridModels\ExcludeAttribute.cs" />
+    <Compile Include="GridModels\InstallmentGridModel.cs" />
+    <Compile Include="GridModels\MachineGridModel.cs" />
+    <Compile Include="GridModels\MasterFeeGridModel.cs" />
+    <Compile Include="GridModels\NotificationGridModel.cs" />
+    <Compile Include="GridModels\OfflineTestPaperGridModel.cs" />
+    <Compile Include="GridModels\OfflineTestStudentMarksGridModel.cs" />
+    <Compile Include="GridModels\PDFCategoryGridModel.cs" />
+    <Compile Include="GridModels\ClassGridModel.cs" />
+    <Compile Include="GridModels\SchoolGridModel.cs" />
+    <Compile Include="GridModels\PDFUploadGridModel.cs" />
+    <Compile Include="GridModels\StudentGridModel.cs" />
+    <Compile Include="GridModels\StudentTimetableGridModel.cs" />
+    <Compile Include="GridModels\SubjectGridModel.cs" />
+    <Compile Include="GridModels\TeacherGridModel.cs" />
+    <Compile Include="GridModels\TestPaperGridModel.cs" />
+    <Compile Include="GridModels\UploadAssignmentsGridModel.cs" />
+    <Compile Include="GridModels\UploadInbuiltquestionbankGridModel.cs" />
+    <Compile Include="GridModels\UploadNotesGridModel.cs" />
+    <Compile Include="GridModels\UploadPracticepapersGridModel.cs" />
+    <Compile Include="GridModels\UploadQuestionpapersGridModel.cs" />
+    <Compile Include="GridModels\UploadReferencebooksGridModel.cs" />
+    <Compile Include="GridModels\UploadTextbooksGridModel.cs" />
+    <Compile Include="Helpers\DateTimeHelper.cs" />
+    <Compile Include="ImageValidation.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

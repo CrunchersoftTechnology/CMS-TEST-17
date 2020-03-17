@@ -1,0 +1,364 @@
+﻿@model CMS.Web.ViewModels.QuestionDataViewModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@using (Html.BeginForm("Create", "Question", FormMethod.Post, new
+{ enctype = "multipart/form-data" }))
+{
+    <h4>Add new question</h4>
+    <div class="form-inline">
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        <div class="form-group form-group-sm">
+            @Html.LabelFor(m => m.Classes, htmlAttributes: new { @class = "control-label col-md-10" })
+            <div class="col-md-pull-10">
+                @Html.DropDownListFor(model => model.ClassId, new SelectList(Model.Classes, "Value", "Text"),
+                    "Select Class", new { @class = "form-control", @onchange = "FillSubjects(this.value)" })
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            @Html.LabelFor(m => m.Subjects, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-pull-10">
+                @Html.DropDownListFor(model => model.SubjectId, new SelectList(Enumerable.Empty<SelectListItem>()),
+                  "Select Subject", new { @class = "form-control", @onchange = "FillChapters(this.value)" })
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            @Html.LabelFor(m => m.Chapters, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-pull-10">
+                @Html.DropDownListFor(model => model.ChapterId, new SelectList(Enumerable.Empty<SelectListItem>()),
+                  "Select Chapter", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            @Html.LabelFor(model => model.QuestionLevel, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-pull-10">
+                @Html.EnumDropDownListFor(m => m.QuestionLevel, "Select Level", new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            @Html.LabelFor(model => model.QuestionType, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-pull-10">
+                @Html.EnumDropDownListFor(m => m.QuestionType, "Select Type", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+    <hr />
+
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <div class="form-group form-group-sm">
+            @Html.Label("Question to be Displayed", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <span id="QuestionBox">$\mbox{}$</span>
+                <div class="sp1"><strong>A :</strong>&nbsp; <span id="OptionBoxA">$\mbox{}$</span></div>
+                <div class="sp1"><strong>B :</strong> &nbsp;<span id="OptionBoxB">$\mbox{}$</span></div>
+                <div class="sp1"><strong>C :</strong>&nbsp; <span id="OptionBoxC">$\mbox{}$</span></div>
+                <div class="sp1"><strong>D :</strong>&nbsp; <span id="OptionBoxD">$\mbox{}$</span></div>
+                <div class="sp1"><strong>Hint :</strong>&nbsp; <span id="HintBox">$\mbox{}$</span></div>
+                <div class="sp1"><strong>Numerical_Answer :</strong>&nbsp; <span id="Numerical_AnswerBox">$\mbox{}$</span></div>
+                <div class="sp1"><strong>Unit :</strong>&nbsp; <span id="UnitBox">$\mbox{}$</span></div>
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            @Html.LabelFor(model => model.QuestionInfo, htmlAttributes: new { @class = "control-label col-md-2" })
+
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IsQuestionAsImage, new { htmlAttributes = new { @class = "checkbox checkbox-inline" } })
+                @Html.LabelFor(model => model.IsQuestionAsImage, htmlAttributes: new { @class = "" })
+                <div id="QuestionImageFileDiv" class="none">
+                    @Html.TextBoxFor(m => m.QuestionImageFile, new { @type = "file", @class = "inline" })
+                </div>
+                @Html.EditorFor(model => model.QuestionInfo, new { htmlAttributes = new { @class = "form-control full-width-input" } })
+                @Html.ValidationMessageFor(model => model.QuestionInfo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            @Html.LabelFor(model => model.OptionA, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IsOptionAsImage, new { htmlAttributes = new { @class = "checkbox checkbox-inline" } })
+                @Html.LabelFor(model => model.IsOptionAsImage, htmlAttributes: new { @class = "" })
+                <div id="OptionImageFileDiv" class="none">
+                    @Html.TextBoxFor(m => m.OptionImageFile, new { @type = "file", @class = "inline" })
+                </div>
+                @Html.EditorFor(model => model.OptionA, new { htmlAttributes = new { @class = "form-control full-width-input" } })
+                @Html.ValidationMessageFor(model => model.OptionA, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            @Html.LabelFor(model => model.OptionB, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.OptionB, new { htmlAttributes = new { @class = "form-control full-width-input" } })
+                @Html.ValidationMessageFor(model => model.OptionB, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            @Html.LabelFor(model => model.OptionC, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.OptionC, new { htmlAttributes = new { @class = "form-control full-width-input" } })
+                @Html.ValidationMessageFor(model => model.OptionC, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            @Html.LabelFor(model => model.OptionD, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.OptionD, new { htmlAttributes = new { @class = "form-control full-width-input" } })
+                @Html.ValidationMessageFor(model => model.OptionD, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            @Html.LabelFor(model => model.Hint, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IsHintAsImage, new { htmlAttributes = new { @class = "checkbox checkbox-inline" } })
+                @Html.LabelFor(model => model.IsHintAsImage, htmlAttributes: new { @class = "" })
+                <div id="HintImageFileDiv" class="none">
+                    @Html.TextBoxFor(m => m.HintImageFile, new { @type = "file", @class = "inline" })
+                </div>
+                @Html.EditorFor(model => model.Hint, new { htmlAttributes = new { @class = "form-control full-width-input" } })
+                @Html.ValidationMessageFor(model => model.Hint, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            @Html.LabelFor(model => model.Answer, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EnumDropDownListFor(m => m.Answer, "Select Answer", new { @class = "form-control" })*@
+                @Html.EditorFor(model => model.Answer, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+
+        <div class="form-group form-group-sm">
+            @Html.LabelFor(model => model.Numerical_Answer, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Numerical_Answer, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            @Html.LabelFor(model => model.Unit, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Unit, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+
+        <div class="form-group form-group-sm">
+            @Html.LabelFor(model => model.QuestionYear, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.QuestionYear, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+       
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+
+}
+
+<div>
+    @Html.ActionLink("Back to Questions List", "Index")
+</div>
+
+@section Scripts {
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+        tex2jax:{inlineMath:[['$','$'],['\\(','\\)']]}
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+
+            if (parseInt(@ViewBag.ClassId) > 0) {
+                $("#ClassId").val(@ViewBag.ClassId);
+                $("#SubjectId").val(@ViewBag.SubjectId);
+                $("#ChapterId").val(@ViewBag.ChapterId);
+            }
+            if (parseInt(@ViewBag.SubjectId) > 0) {
+                FillSubjects(@ViewBag.ClassId);
+            }
+            if (parseInt(@ViewBag.ChapterId) > 0) {
+                FillChapters(@ViewBag.SubjectId);
+            }
+
+            if (@Model.IsQuestionAsImage.ToString().ToLower()) {
+                $("#QuestionImageFileDiv").show().addClass("inline");
+        }
+        else {
+                $("#QuestionImageFileDiv").hide().removeClass("inline");
+        }
+
+        var options = $("#OptionA, #OptionB, #OptionC, #OptionD");
+        if (@Model.IsOptionAsImage.ToString().ToLower()) {
+            $("#OptionImageFileDiv").show().addClass("inline");
+        options.prop('disabled', true);
+        options.val("");
+        options.blur();
+        } else {
+            $("#OptionImageFileDiv").hide().removeClass("inline");
+            options.prop('disabled', false);
+        }
+
+        if (@Model.IsHintAsImage.ToString().ToLower()) {
+            $("#HintImageFileDiv").show().addClass("inline");
+        } else {
+            $("#HintImageFileDiv").hide().removeClass("inline");
+        }
+
+        window.addEventListener("load", MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [['$', '$'], ["\\(", "\\)"]],
+                displayMath: [['$$', '$$'], ["\\[", "\\]"]],
+                processEscapes: true
+            }
+        }), false);
+        $("#QuestionInfo").bind("dblclick blur", function () {
+            UpdateQuestionContent($("#QuestionInfo").val());
+        });
+
+        $("#OptionA").bind("dblclick blur", function () {
+            UpdateOptionAContent($("#OptionA").val());
+        });
+        $("#OptionB").bind("dblclick blur", function () {
+            UpdateOptionBContent($(this).val());
+        });
+        $("#OptionC").bind("dblclick blur", function () {
+            UpdateOptionCContent($(this).val());
+        });
+        $("#OptionD").bind("dblclick blur", function () {
+            UpdateOptionDContent($(this).val());
+        });
+        $("#Hint").bind("dblclick blur", function () {
+            UpdateHintContent($(this).val());
+        });
+        $("#Numerical_Answer").bind("dblclick blur", function () {
+            UpdateNumerical_AnswerContent($(this).val());
+        });
+        $("#Unit").bind("dblclick blur", function () {
+            UpdateUnitContent($(this).val());
+        });
+
+        $("#IsQuestionAsImage").change(function () {
+            if (this.checked) {
+                $("#QuestionImageFileDiv").show().addClass("inline");
+            } else {
+                $("#QuestionImageFileDiv").hide().removeClass("inline");
+            }
+        });
+
+        $("#IsOptionAsImage").change(function () {
+            var options = $("#OptionA, #OptionB, #OptionC, #OptionD");
+            if (this.checked) {
+                $("#OptionImageFileDiv").show().addClass("inline");
+                options.prop('disabled', true);
+                options.val("");
+                options.blur();
+            } else {
+                $("#OptionImageFileDiv").hide().removeClass("inline");
+                options.prop('disabled', false);
+            }
+        });
+
+        $("#IsHintAsImage").change(function () {
+            if (this.checked) {
+                $("#HintImageFileDiv").show().addClass("inline");
+            } else {
+                $("#HintImageFileDiv").hide().removeClass("inline");
+            }
+        });
+
+        });
+
+        function UpdateQuestionContent(s) {
+            var math = MathJax.Hub.getAllJax("QuestionBox")[0];
+            MathJax.Hub.Queue(["Text", math, s]);
+        }
+
+        function UpdateOptionAContent(s) {
+            var math = MathJax.Hub.getAllJax("OptionBoxA")[0];
+            MathJax.Hub.Queue(["Text", math, s]);
+        }
+
+        function UpdateOptionBContent(s) {
+            var math = MathJax.Hub.getAllJax("OptionBoxB")[0];
+            MathJax.Hub.Queue(["Text", math, s]);
+        }
+
+        function UpdateOptionCContent(s) {
+            var math = MathJax.Hub.getAllJax("OptionBoxC")[0];
+            MathJax.Hub.Queue(["Text", math, s]);
+        }
+
+        function UpdateOptionDContent(s) {
+            var math = MathJax.Hub.getAllJax("OptionBoxD")[0];
+            MathJax.Hub.Queue(["Text", math, s]);
+        }
+
+        function UpdateHintContent(s) {
+            var math = MathJax.Hub.getAllJax("HintBox")[0];
+            MathJax.Hub.Queue(["Text", math, s]);
+        }
+
+        function UpdateNumerical_AnswerContent(s) {
+            var math = MathJax.Hub.getAllJax("Numerical_AnswerBox")[0];
+            MathJax.Hub.Queue(["Text", math, s]);
+        }
+
+        function UpdateUnitContent(s) {
+            var math = MathJax.Hub.getAllJax("UnitBox")[0];
+            MathJax.Hub.Queue(["Text", math, s]);
+        }
+
+        function FillSubjects(classId) {
+            //var classId = $('#ClassId').val();
+            $.ajax({
+                url: '/Subject/GetSubjects',
+                type: "GET",
+                dataType: "JSON",
+                data: { classId: classId },
+                success: function (subjects) {
+                    $("#SubjectId").html(""); // clear before appending new list
+                    $("#SubjectId").append($('<option></option>').val("").html("Select Subject"));
+                    $.each(subjects, function (i, sub) {
+                        $("#SubjectId").append(
+                            $('<option></option>').val(sub.SubjectId).html(sub.Name));
+                    });
+                    $("#SubjectId").val(@ViewBag.SubjectId);
+                }
+            });
+        }
+
+        function FillChapters(subjectId) {
+            //var subjectId = $('#SubjectId').val();
+            $.ajax({
+                url: '/Chapter/GetChapters',
+                type: "GET",
+                dataType: "JSON",
+                data: { subjectId: subjectId },
+                success: function (chapters) {
+                    $("#ChapterId").html(""); // clear before appending new list
+                    $("#ChapterId").append($('<option></option>').val("").html("Select Chapter"));
+                    $.each(chapters, function (i, ch) {
+                        $("#ChapterId").append(
+                            $('<option></option>').val(ch.ChapterId).html(ch.ChapterName));
+                    });
+                    $("#ChapterId").val(@ViewBag.ChapterId);
+                }
+            });
+        }
+
+    </script>
+}

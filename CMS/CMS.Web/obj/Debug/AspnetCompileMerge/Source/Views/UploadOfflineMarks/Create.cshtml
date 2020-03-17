@@ -1,0 +1,650 @@
+﻿@model CMS.Web.ViewModels.UploadOfflineMarksViewModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Upload Marks</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m => m.SelectedBranches)
+    @Html.HiddenFor(m => m.CurrentUserRole)
+    @Html.HiddenFor(m => m.SelectedBatches)
+    @Html.HiddenFor(m => m.Title)
+
+    <div class="form-horizontal">
+        <hr />
+        <div id="message">
+        </div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @if (Model.CurrentUserRole == "Admin")
+        { <div class="form-group">
+            @Html.LabelFor(m => m.Branches, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.BranchId, new SelectList(Model.Branches, "Value", "Text"),
+                                  new { @class = "form-control", @onchange = "FillClasses(this.value)", @multiple = "multiple", @autocomplete = "off" })
+            </div>
+        </div>
+
+        <div class="form-group" id="classDetail">
+            @Html.LabelFor(m => m.ClassId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.ClassId, new SelectList(Enumerable.Empty<SelectListItem>(),
+                                "ClassId", "ClassName"), "Select Class", new { @class = "form-control", @onchange = "FillSubjectByClassId(this.value)" })
+            </div>
+        </div>
+        }
+        else if (Model.CurrentUserRole == "Client")
+        {
+            <div class="form-group" id="classDetail">
+                @Html.LabelFor(m => m.Branches, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.BranchId, new SelectList(Model.Branches, "Value", "Text"), "Select Class",
+                   new { @class = "form-control", @onchange = "FillClasses(this.value)" })
+                </div>
+            </div>
+
+            <div class="form-group" id="classDetail">
+                @Html.LabelFor(m => m.Classes, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.ClassId, new SelectList(Model.Classes, "Value", "Text"), "Select Class",
+                   new { @class = "form-control", @onchange = "FillSubjectByClassId(this.value)" })
+                </div>
+            </div>
+
+        }
+        else if (Model.CurrentUserRole == "BranchAdmin")
+        {
+            <div class="form-group">
+            @Html.LabelFor(m => m.BranchName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.BranchName, new
+               {
+                   htmlAttributes = new
+                   {
+                       @class = "form-control",
+                       @readonly = "readonly"
+                   }
+               })
+                @Html.HiddenFor(m => m.BranchId)
+            </div>
+        </div>
+
+            <div class="form-group" id="classDetail">
+                @Html.LabelFor(m => m.Classes, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.ClassId, new SelectList(Model.Classes, "Value", "Text"), "Select Class",
+                   new { @class = "form-control", @onchange = "FillSubjectByClassId(this.value)" })
+                </div>
+            </div>
+        }
+
+        <div class="form-group" id="classDetail">
+            @Html.LabelFor(m => m.SubjectId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.SubjectId, new SelectList(Enumerable.Empty<SelectListItem>(),
+                   "SubjectId", "Name"), "Select Subject", new { @class = "form-control", @onchange = "FillPaperByBranchAndClassAndSubjectId(this.value)" })
+            </div>
+        </div>
+        <div class="form-group" id="batchDetail">
+            @Html.LabelFor(m => m.BatchId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.BatchId, new SelectList(Enumerable.Empty<SelectListItem>(), "BatchId", "BatchName"),
+                   new { @class = "form-control", @multiple = "multiple", @onchange = "GetSelectedBatches()" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Papers, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblPaperName" })
+            <span class="control-label glyphicon glyphicon-plus-sign" title="Click on this button to add new
+           Offline Test Paper." id="tooltipPaperName" onclick="@("window.location.href='" + @Url.Action("Create", "OfflineTestPaper") + "'");"></span>
+            <label id="PaperNote" class="control-label"><b>( Student list is sorted according to paper.)</b></label>
+            <div class="col-md-3">
+                @Html.DropDownListFor(model => model.OfflineTestPaperId, (SelectList)Model.Papers, "Select Paper", new { @class = "form-control", @onchange = "GetStudent(this.value)" })
+
+                @Html.ValidationMessageFor(model => model.OfflineTestPaperId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.TotalMarks, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TotalMarks, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" } })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.StudentOfflineMarks, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <table id="studentList" class="table"></table>
+                @Html.HiddenFor(m => m.StudentOfflineMarks)
+                @Html.ValidationMessageFor(model => model.StudentOfflineMarks, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.Label("( By default email send to student )", new { @class = "text-default", @style = "font-weight:bold" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.SMS, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox checkbox-inline">
+                    @Html.EditorFor(model => model.SMS)
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.AppNotification, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox checkbox-inline">
+                    @Html.EditorFor(model => model.AppNotification)
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input id="save" type="button" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+}
+<div>
+    @Html.ActionLink("Back to Upload Marks List", "Index")
+</div>
+@section Scripts {
+    <script>
+        var JSONObjMarks = [];
+        $(document).ready(function () {
+            $('#OfflineTestPaperId').on('change', function () {
+                RequiredValidation('#OfflineTestPaperId', '#lblPaperName')
+            });
+
+            $('#BatchId').multiselect({
+                includeSelectAllOption: true
+            });
+
+            if ($("#SelectedBranches").val() != "") {
+                if ($("#CurrentUserRole").val() == "BranchAdmin") {
+                    getMultipleClassBranchById();
+                }
+            }
+
+            if ($("#CurrentUserRole").val() == "Admin") {
+                $('#BranchId').multiselect({
+                    includeSelectAllOption: true
+                });
+            }
+
+            $("#save").on('click', function () {
+                JSONObjMarks = [];
+                var studentPaperMarks = $("#studentList").find("td #PaperMarks");
+                var studentPercentage = $("#studentList").find("td #PaperPercentage");
+                var studentEmail = $("#studentList").find("td #studEmail");
+                var studentContact = $("#studentList").find("td #studContact");
+                var IsPresent = $("#studentList").find("td #Absent");
+
+                //var data = JSON.parse(JSON.stringify(JSONObjMarks));
+
+                var paperMarks = [];
+                var sId = [];
+                var percentage = [];
+                var email = [];
+                var contact = [];
+                var present = [];
+
+                studentPaperMarks.each(function () {
+                    paperMarks.push($(this).val());
+                    sId.push($(this).attr("datavalue"));
+                });
+
+                studentPercentage.each(function () {
+                    percentage.push($(this).val());
+                });
+
+                studentEmail.each(function () {
+                    email.push($(this).val());
+                    sId.push($(this).attr("datavalue"));
+                });
+
+                studentContact.each(function () {
+                    contact.push($(this).val());
+                    sId.push($(this).attr("datavalue"));
+                });
+
+                IsPresent.each(function () {
+                    if ($(this).is(':checked')) {
+                        present.push(0);
+                    }
+                    else {
+                        present.push(1);
+                    }
+                    sId.push($(this).attr("datavalue"));
+                });
+
+                for (var i = 0; i < percentage.length; i++) {
+                    if (paperMarks[i] == "" || paperMarks[i] == "Invalid Marks") {
+                        var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+                        $("#message").html("");
+                        $("#message").append(divMessage);
+                        $('#msg').html('<div>Please fill all student marks </div>');
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                        $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                        return false;
+                    }
+                    else {
+                        $('#message').html("");
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                        var item = {};
+                        item["UserId"] = sId[i];
+                        item["ObtainedMarks"] = paperMarks[i];
+                        item["Percentage"] = percentage[i];
+                        item["EmailId"] = email[i];
+                        item["StudentContact"] = contact[i];
+                        item["IsPresent"] = present[i];
+                        JSONObjMarks.push(item);
+                    }
+                }
+                var data = (JSON.stringify(JSONObjMarks));
+
+                $("#StudentOfflineMarks").val(data);
+
+                var selectedBatchesText = [];
+                var selected = $("#BatchId").find("option:selected");
+                var arrSelectedBatches = [];
+                selected.each(function () {
+                    arrSelectedBatches.push($(this).val());
+                    selectedBatchesText.push($(this).text());
+                });
+                var selectedBatch = arrSelectedBatches.toString();
+                var selectedBatchinText = selectedBatchesText.toString();
+
+                var selectedBranches = $("#BranchId").find("option:selected");
+                var arrSelectedBranches = [];
+                selectedBranches.each(function () {
+                    arrSelectedBranches.push($(this).val());
+                });
+                var selectedBranchesinString = arrSelectedBranches.toString();
+
+                var jqxhr = $.post("/UploadOfflineMarks/SaveUploadMarks",
+                 {
+                     StudentOfflineMarks: $("#StudentOfflineMarks").val(),
+                     OfflineTestPaperId: $("#OfflineTestPaperId").val(),
+                     Title: $("#Title").val(),
+                     TotalMarks: $("#TotalMarks").val(),
+                     SMS: $("#SMS").is(":checked"),
+                     AppNotification: $("#AppNotification").is(":checked"),
+                     ClassId: $("#ClassId :selected").val(),
+                     SubjectId: $("#SubjectId :selected").val(),
+                     SelectedBatches: selectedBatch,
+                     SelectedBranches: selectedBranchesinString,
+                     ClassName: $("#ClassId :selected").text(),
+                     SubjectName: $("#SubjectId :selected").text(),
+                     SelectedBatchesName: selectedBatchinText,
+                 }, function (data) {
+                     var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+                     $("#message").html("");
+                     $("#message").append(divMessage);
+
+                     if (data.Success == true) {
+                         var m = "";
+                         for (var i = 0; i < data.Results.length; i++) {
+                             m = m + data.Results[i].Message + "</br>";
+                         }
+                         $('#msg').html('<div>' + m + '</div>');
+                         $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                         $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                         $("#TotalMarks").val('');
+                         $("#SMS, #AppNotification").prop("checked", false);
+                         $("#studentList").html(""); // clear before appending new list
+                         $("#StudentOfflineMarks").html("");
+                         $("#OfflineTestPaperId option:contains(Select Paper)").attr('selected', true);
+                         $("#ClassId option:contains(Select Class)").attr('selected', true);
+                         $("#SubjectId option:contains(Select Subject)").attr('selected', true);
+                         DestroyBatches();
+                         DestroyBranch();
+                         $("#BranchId").multiselect('refresh');
+                         var selected = $("#BranchId").find("option:selected");
+                         selected.each(function () {
+                             $(this).removeAttr('selected').prop('selected', false);
+                         });
+                         $('#BranchId,#BatchId')
+                        .multiselect({
+                            allSelectedText: 'All',
+                            includeSelectAllOption: true
+                        });
+                         $("#BranchId").multiselect('refresh');
+                         $("#SelectedBranches").val("");
+                         $("#BranchId").multiselect('rebuild');
+                     }
+                     else {
+                         var m = "";
+                         for (var i = 0; i < data.Results.length; i++) {
+                             //FillClasses
+                             m = m + data.Results[i].Message + ".</br>";
+                         }
+                         $('#msg').html('<div>' + m + '</div>');
+                         $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                         $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                     }
+                 }).done(function () {
+
+                 }).fail(function () {
+                     $('#msg').html('<div>Something went wrong! Please try again.</div>');
+                     $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                 }).always(function () {
+                 });
+            });
+        });
+
+        function DestroyBatches() {
+            $("#BatchId").html("");
+            $("#BatchId").multiselect('destroy');
+            $("#BatchId").multiselect('rebuild');
+        }
+
+        function DestroyBranch() {
+            $("#BranchId").multiselect('destroy');
+            $("#BranchId").multiselect('rebuild');
+        }
+
+        function FillClasses(branchId) {
+            var selected = $("#BranchId").find("option:selected");
+            var arrSelected = [];
+            selected.each(function () {
+                arrSelected.push($(this).val());
+            });
+            var selectedBranch = arrSelected.toString();
+            $("#SelectedBranches").val(selectedBranch);
+            if ($("#ClassId option:selected").length == 0) {
+                $("#ClassId").html("");
+                $("#ClassId").append($('<option></option>').val(0).html("Select Class"));
+            }
+            else {
+                GetMultipleClassByBranchId();
+                FillPaperByBranch($("#SelectedBranches").val());
+            }
+        }
+
+        function GetSelectedBatches() {
+            var selected = $("#BatchId").find("option:selected");
+            var arrSelected = [];
+            selected.each(function () {
+                arrSelected.push($(this).val());
+            });
+            var selectedSubject = arrSelected.toString();
+            $("#SelectedBatches").val(selectedSubject);
+            FillPaperByBranchAndClassAndSubjectIdAndBatch();
+        }
+
+        function GetMultipleClassByBranchId() {
+            $.ajax({
+                url: '/StudentTimetable/GetClassesByMultipleBranches',
+                type: "GET",
+                dataType: "JSON",
+                data: { selectedBranch: $("#SelectedBranches").val() },
+                async: false,
+                success: function (data) {
+                    $("#ClassId").html(""); // clear before appending new list
+                    $("#ClassId").append($('<option></option>').val("").html("Select Class"));
+                    $.each(data.classes, function (i, cls) {
+                        $("#ClassId").append(
+                            $('<option></option>').val(cls.ClassId).html(cls.ClassName));
+                    });
+                }
+            });
+        }
+
+        function FillSubjectByClassId(classId) {
+            if ($("#ClassId").val() == "") {
+                $("#SubjectId").html("");
+                $("#SubjectId").append($('<option></option>').val(0).html("Select Subject"));
+            }
+            else {
+                $.ajax({
+                    url: '/OfflineTestPaper/GetSubjetctByClassId',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { classId: $("#ClassId").val() },
+                    async: false,
+                    success: function (data) {
+                        $("#SubjectId").html(""); // clear before appending new list
+                        $("#SubjectId").append($('<option></option>').val(0).html("Select Subject"));
+                        $.each(data.subjects, function (i, sub) {
+                            $("#SubjectId").append(
+                                $('<option></option>').val(sub.SubjectId).html(sub.Name));
+                        });
+                    }
+                });
+
+                GetBatchOnSubjectId();
+                FillPaperByBranchAndClass($("#SelectedBranches").val(), $("#ClassId").val())
+            }
+        }
+
+        function GetBatchOnSubjectId() {
+            if ($("#ClassId").val() != "") {
+                $.ajax({
+                    url: '/OfflineTestPaper/GetBatchBySubjectId',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { classId: $("#ClassId").val() },
+                    success: function (data) {
+                        var select = $("#BatchId");
+                        select.children().remove();
+                        $("#BatchId").html(""); // clear before appending new list
+                        $("#BatchId").multiselect('destroy');
+                        $.each(data.batches, function (i, sub) {
+                            $("#BatchId").append("<option value='" + sub.BatchId + "'>" + sub.BatchName + "</option>");
+                        });
+                        //$("#BatchId").multiselect('rebuild');
+                        $('#BatchId')
+                        .multiselect({
+                            allSelectedText: 'All',
+                            includeSelectAllOption: true
+                        });
+                        if ($("#SelectedBatches").val() != "") {
+                            var arr = $("#SelectedBatches").val().split(',');
+                            arr.forEach(function (i) {
+                                $("#BatchId").multiselect('select', i)
+                            });
+                        }
+
+                    }
+                });
+            }
+        }
+
+        function GetStudent(offlineTestPaperId) {
+            if ($('#OfflineTestPaperId :selected').text() != "Select Paper") {
+                $.ajax({
+                    url: '/UploadOfflineMarks/GetStudent',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: {
+                        offlineTestPaperId: offlineTestPaperId,
+                        selectedBatches: $("#SelectedBatches").val(),
+                        selectedBranches: $("#SelectedBranches").val()
+                    },
+                    success: function (data) {
+                        $("#studentList").html(""); // clear before appending new list
+                        $("#StudentOfflineMarks").html("");
+                        var divStudent = "";
+                        divStudent += "<tr><td><div class='col-md-8'><b>Student Name</b></div></td><td><div class='col-md-4'><div aria-label='...'><label><b>Marks</b></label></td><td><label><b>Percentage</b></label></td><td><label><b>Absent</b></label></td></div></div></tr>";
+                        $.each(data.studentList, function (i, student) {
+                            divStudent += "<tr><td><div class='col-md-8'>" + student.FirstName + " " + student.MiddleName + " " + student.LastName + "</div></td><td><div class='col-md-4'><div aria-label='...' id='studDiv'><input type='text' datavalue='" + student.UserId + "' name='PaperMarks' id='PaperMarks' class='StudMark' autocomplete='off'/></td><td><input type='text' name='PaperPercentage' class='StudPercentage' datavalue='" + student.UserId + "' id='PaperPercentage' disabled/> <td><input type='checkbox' name='Absent' id='Absent' class='StudAbsent' datavalue='" + student.UserId + "'><td/><td><input type='hidden' name='studEmail' id='studEmail' value='" + student.Email + "'></td><td><input type='hidden' name='studContact' id='studContact' value='" + student.StudentContact + "'></td></div></div></td></tr>";
+                        });
+                        divStudent = "<tbody>" + divStudent + "</tbody>";
+                        $("#studentList").append(divStudent);
+                        $("#TotalMarks").val(data.marks);
+                        $("#Title").val(data.title);
+                        $(".StudMark").unbind("change");
+                        $(".StudMark").bind("change", CalculatePercentage);
+                        $(".StudAbsent").unbind("change");
+                        $(".StudAbsent").bind("change", GetAbsentStudent);
+                    }
+                });
+            }
+        }
+
+        function GetAbsentStudent() {
+            var sid = $(this).attr("datavalue");
+            var studentMarks = $("#studentList").find("td #PaperMarks");
+            var absent = $("#studentList").find("td #Absent").is(':checked');
+            studentMarks.each(function () {
+                if ($(this).attr("datavalue") == sid) {
+                    if (!absent) {
+                        $(this).removeAttr("disabled", "disabled");
+                        $(this).val('');
+                    }
+                    else {
+                        $(this).val(0);
+                        $(this).attr("disabled", "disabled");
+                    }
+                }
+            });
+            var studentPercentage = $("#studentList").find("td #PaperPercentage");
+            studentPercentage.each(function () {
+                if ($(this).attr("datavalue") == sid) {
+                    if (!absent) {
+                        $(this).val('');
+                    }
+                    else {
+                        $(this).val(0);
+                    }
+                }
+            });
+        }
+
+        function CalculatePercentage() {
+
+            var marks = parseInt($(this).val());
+            var sid = $(this).attr("datavalue");
+            var totalMarks = parseInt($("#TotalMarks").val());
+            if (totalMarks >= marks) {
+                $(this).css("background", "none");
+                //  $(this).removeAttr('placeholder');
+                var percentage = ((marks * 100) / totalMarks);
+                var studentPercentage = $("#studentList").find("td #PaperPercentage");
+                studentPercentage.each(function () {
+                    if ($(this).attr("datavalue") == sid) {
+                        $(this).val(percentage.toFixed(2));
+                    }
+                });
+            }
+            else {
+                $(this).css("background", "rgb(243, 222, 222)");
+                $(this).val('');
+                $(this).attr('placeholder', 'Invalid Marks');
+                var studentPercentage = $("#studentList").find("td #PaperPercentage");
+                studentPercentage.each(function () {
+                    if ($(this).attr("datavalue") == sid) {
+                        $(this).val('');
+                    }
+                });
+            }
+        }
+
+        function FillPaperByBranch(SelectedBranches) {
+            $.ajax({
+                url: '/UploadOfflineMarks/GetPaperByMultipleBranches',
+                type: "GET",
+                dataType: "JSON",
+                data: { selectedBranches: SelectedBranches },
+                async: false,
+                success: function (data) {
+                    $("#studentList").html(""); // clear before appending new list
+                    $("#StudentOfflineMarks").html("");
+                    $("#OfflineTestPaperId").html(""); // clear before appending new list
+                    $("#OfflineTestPaperId").append($('<option></option>').val('').html("Select Paper"));
+                    $.each(data.paperList, function (i, paper) {
+                        $("#OfflineTestPaperId").append(
+                            $('<option></option>').val(paper.OfflineTestPaperId).html(paper.Title));
+                    });
+                }
+            });
+        }
+
+        function FillPaperByBranchAndClass(SelectedBranches, classId) {
+            $.ajax({
+                url: '/UploadOfflineMarks/GetPaperByMultipleBranchesAndClass',
+                type: "GET",
+                dataType: "JSON",
+                data: { selectedBranches: SelectedBranches, classId: classId },
+                async: false,
+                success: function (data) {
+                    $("#studentList").html(""); // clear before appending new list
+                    $("#StudentOfflineMarks").html("");
+                    $("#OfflineTestPaperId").html(""); // clear before appending new list
+                    $("#OfflineTestPaperId").append($('<option></option>').val('').html("Select Paper"));
+                    $.each(data.paperList, function (i, paper) {
+                        $("#OfflineTestPaperId").append(
+                            $('<option></option>').val(paper.OfflineTestPaperId).html(paper.Title));
+                    });
+                }
+            });
+        }
+
+        function FillPaperByBranchAndClassAndSubjectId(subjectId) {
+            $.ajax({
+                url: '/UploadOfflineMarks/FillPaperByBranchandClassAndSubjectId',
+                type: "GET",
+                dataType: "JSON",
+                data: { selectedBranches: $("#SelectedBranches").val(), classId: $("#ClassId").val(), subjectId: subjectId },
+                async: false,
+                success: function (data) {
+                    $("#studentList").html(""); // clear before appending new list
+                    $("#StudentOfflineMarks").html("");
+                    $("#OfflineTestPaperId").html(""); // clear before appending new list
+                    $("#OfflineTestPaperId").append($('<option></option>').val('').html("Select Paper"));
+                    $.each(data.paperList, function (i, paper) {
+                        $("#OfflineTestPaperId").append(
+                            $('<option></option>').val(paper.OfflineTestPaperId).html(paper.Title));
+                    });
+                }
+            });
+        }
+
+        function FillPaperByBranchAndClassAndSubjectIdAndBatch() {
+            $.ajax({
+                url: '/UploadOfflineMarks/FillPaperByBranchandClassAndSubjectIdAndBatch',
+                type: "GET",
+                dataType: "JSON",
+                data: { selectedBranches: $("#SelectedBranches").val(), classId: $("#ClassId").val(), subjectId: $("#SubjectId").val(), selectedBatch: $("#SelectedBatches").val() },
+                async: false,
+                success: function (data) {
+                    $("#studentList").html(""); // clear before appending new list
+                    $("#StudentOfflineMarks").html("");
+                    $("#OfflineTestPaperId").html(""); // clear before appending new list
+                    $("#OfflineTestPaperId").append($('<option></option>').val('').html("Select Paper"));
+                    $.each(data.paperList, function (i, paper) {
+                        $("#OfflineTestPaperId").append(
+                            $('<option></option>').val(paper.OfflineTestPaperId).html(paper.Title));
+                    });
+                }
+            });
+        }
+
+        function getMultipleClassBranchById() {
+            $.ajax({
+                url: '/StudentTimetable/GetClassesByMultipleBranches',
+                type: "GET",
+                dataType: "JSON",
+                data: { selectedBranch: $("#SelectedBranches").val() },
+                async: false,
+                success: function (data) {
+                    $("#ClassId").html(""); // clear before appending new list
+                    $("#ClassId").append($('<option></option>').val("").html("Select Class"));
+                    $.each(data.classes, function (i, cls) {
+                        $("#ClassId").append(
+                            $('<option></option>').val(cls.ClassId).html(cls.ClassName));
+                    });
+                }
+            });
+        }
+    </script>
+    @Scripts.Render("~/bundles/StudentJS")
+    @Styles.Render("~/Content/StudentCSS")
+}

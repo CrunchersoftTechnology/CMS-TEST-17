@@ -1,0 +1,23 @@
+﻿@model IEnumerable<CMS.Web.ViewModels.ArrangeTestViewModel>
+
+@{
+    ViewBag.Title = "ArrengeTestList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Arrange Test List</h2>
+<div class="panel panel-default">
+    <div class="panel-body">
+
+        @Html.Partial("_MVCGridToolbar", new CMS.Web.Models.MVCGridToolbarModel()
+   {
+       MVCGridName = "ArrangeTestGrid",
+       PageSize = true,
+       ColumnVisibility = true,
+       Export = true,
+       GlobalSearch = false
+   })
+        @Html.MVCGrid("ArrangeTestGrid")
+    </div>
+</div>
+@Html.ActionLink("Back to Test Paper List", "Index")

@@ -1,0 +1,8 @@
+F:\arpita\Arpita Web Portal\CMS\CMS.Common\bin\Release\CMS.Common.dll
+F:\arpita\Arpita Web Portal\CMS\CMS.Common\bin\Release\CMS.Common.pdb
+F:\arpita\Arpita Web Portal\CMS\CMS.Common\obj\Release\CMS.Common.dll
+F:\arpita\Arpita Web Portal\CMS\CMS.Common\obj\Release\CMS.Common.pdb
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Common\bin\Release\CMS.Common.dll
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Common\bin\Release\CMS.Common.pdb
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Common\obj\Release\CMS.Common.dll
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Common\obj\Release\CMS.Common.pdb

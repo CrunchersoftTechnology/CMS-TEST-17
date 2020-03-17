@@ -1,0 +1,719 @@
+﻿@model CMS.Web.ViewModels.NotificationViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h2>Send Notification</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.SelectedBatches)
+    @Html.HiddenFor(m => m.SelectedClasses)
+    @Html.HiddenFor(m => m.CurrentUserRole)
+    @Html.HiddenFor(m => m.SelectedBranches)
+    @Html.HiddenFor(m => m.Media)
+    @Html.HiddenFor(m => m.ClientId)
+
+
+    <div class="form-horizontal">
+        <hr />
+
+        <div id="message">
+        </div>
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @if (Model.CurrentUserRole == "Admin" || Model.CurrentUserRole == "Client")
+        {
+            <div class="form-group">
+                @Html.LabelFor(m => m.Branches, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.BranchId, new SelectList(Model.Branches, "Value", "Text"),
+                     new { @class = "form-control", @onchange = "FillClasses(this.value)", @multiple = "multiple" })
+                </div>
+            </div>
+
+            <div class="form-group" id="classDetail">
+                @Html.LabelFor(m => m.ClassId, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.ClassId, new SelectList(Enumerable.Empty<SelectListItem>(),
+                   "ClassId", "Name"), new { @class = "form-control", @onchange = "FillBatches(this.value)", @multiple = "multiple" })
+                </div>
+            </div>
+        }
+        else if (Model.CurrentUserRole == "BranchAdmin")
+        {
+            <div class="form-group">
+                @Html.LabelFor(m => m.BranchName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(m => m.BranchName, new
+               {
+                   htmlAttributes = new
+                   {
+                       @class = "form-control",
+                       @readonly = "readonly"
+                   }
+               })
+                    @Html.HiddenFor(m => m.BranchId)
+                </div>
+            </div>
+
+            <div class="form-group" id="classDetail">
+                @Html.LabelFor(m => m.Classes, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.ClassId, new SelectList(Model.Classes, "Value", "Text"), "Select Class",
+                   new { @class = "form-control", @onchange = "FillBatches(this.value)", @multiple = "multiple" })
+                </div>
+            </div>
+        }
+
+        <div class="form-group" id="batchDetail">
+            @Html.LabelFor(m => m.BatchId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.BatchId, new SelectList(Enumerable.Empty<SelectListItem>(), "BatchId", "Name"),
+                   new { @class = "form-control", @multiple = "multiple", @onchange = "getSelectedBatches()" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.AllUser, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox checkbox-inline">
+                    @Html.EditorFor(model => model.AllUser, new { htmlAttributes = new { @onchange = "getData(this.value)" } })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-offset-2 col-md-2">
+                    <div class="col-md-2">
+                        <div class="checkbox checkbox-inline">
+                            @Html.EditorFor(model => model.Student)
+                        </div>
+                    </div>
+                    @Html.LabelFor(model => model.Student, htmlAttributes: new { @class = "control-label col-md-5" })
+                    (<label class="control-label" id="StudentCount">0</label>)
+                </div>
+                <div class="col-md-2">
+                    <div class="col-md-2">
+                        <div class="checkbox checkbox-inline">
+                            @Html.EditorFor(model => model.Parent)
+                        </div>
+                    </div>
+                    @Html.LabelFor(model => model.Parent, htmlAttributes: new { @class = "control-label col-md-5" })
+                    (<label class="control-label" id="ParentCount">0</label>)
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-offset-2 col-md-2">
+                    <div class="col-md-2">
+                        <div class="checkbox checkbox-inline">
+                            @Html.EditorFor(model => model.BranchAdmin)
+                        </div>
+                    </div>
+                    @Html.LabelFor(model => model.BranchAdmin, htmlAttributes: new { @class = "control-label col-md-8" })
+                    (<label class="control-label" id="BranchAdminCount">0</label>)
+                </div>
+                <div class="col-md-2">
+                    <div class="col-md-2">
+                        <div class="checkbox checkbox-inline">
+                            @Html.EditorFor(model => model.Teacher)
+                        </div>
+                    </div>
+                    @Html.LabelFor(model => model.Teacher, htmlAttributes: new { @class = "control-label col-md-5" })
+                    (<label class="control-label" id="TeacherCount">0</label>)
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.NotificationMessage, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.NotificationMessage, new { htmlAttributes = new { @class = "form-control", @rows = "6" } })
+            </div>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            @Html.Label("Message character length  is 500 ", new { @class = "text-default", @style = "font-weight:bold" })
+        </div>
+        <!--<div class="form-group">
+            @Html.LabelFor(model => model.NotificationAutoDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NotificationAutoDate, new { htmlAttributes = new { @class = "form-control datepicker", autocomplete = "off", @type = "text", @maxlength = "10", @placeholder = "DD-MM-YYYY" } })
+                @*@Html.ValidationMessageFor(model => model.NotificationAutoDate, "", new { @class = "text-danger" })*@
+            </div>
+        </div>-->
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox checkbox-inline">
+                    @Html.EditorFor(model => model.Email)
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SMS, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox checkbox-inline">
+                    @Html.EditorFor(model => model.SMS)
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AppNotification, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox checkbox-inline">
+                    @Html.EditorFor(model => model.AppNotification)
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" id="send" value="Send" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to Notifications List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/InstallmentJS")
+    <script>
+        $(document).ready(function () {
+            if(@ViewBag.BranchId != 0){
+                $("#SelectedBranches").val('@ViewBag.BranchId');
+                $.ajax({
+                    url: '/Student/GetClassesByMultipleBranches',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { selectedBranch: $("#SelectedBranches").val() },
+                    async: false,
+                    success: function (data) {
+                        $("#ClassId").html(""); // clear before appending new list
+                        $("#ClassId").multiselect('destroy');
+                        $.each(data.classes, function (i, cls) {
+                            $("#ClassId").append(
+                                $('<option></option>').val(cls.ClassId).html(cls.ClassName));
+                        });
+                        //$("#ClassId").multiselect('rebuild');
+                        $('#ClassId')
+                        .multiselect({
+                            allSelectedText: 'All',
+                            includeSelectAllOption: true
+                        });
+
+                        $("#StudentCount, #ParentCount").text(data.studentParentCount);
+                        $("#TeacherCount").text(data.teacherCount);
+                        $("#BranchAdminCount").text(data.branchAdminCount);
+                    }
+                });
+            }
+            else{
+                $('#BranchId').multiselect({
+                    allSelectedText: 'All',
+                    includeSelectAllOption: true
+                });
+            }
+
+            $('#ClassId').multiselect({
+                includeSelectAllOption: true
+            });
+
+            $('#BatchId').multiselect({
+                includeSelectAllOption: true
+            });
+
+            $("#send").on('click', function () {
+                var today = new Date();
+                if($("#NotificationAutoDate").val() != "" && ($("#NotificationAutoDate").val() < today.format("yyyy-mm-dd")))
+                {
+                    CreateAlertMessage();
+                    $('#msg').html('<div>Auto date should not accept the previous dates.</div>');
+                    $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                    $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                }
+                else if ($("#NotificationTextMessage").val() != "") {
+                    if ($("#AllUser").is(":checked") == true) {
+                        SendNotification();
+                    }
+                    else if ($("#Student").is(":checked") == true || $("#Teacher").is(":checked") == true || $("#Parent").is(":checked") == true || $("#BranchAdmin").is(":checked") == true) {
+
+                        if($("#SelectedBranches").val() != ""){
+                            if($("#Teacher").is(":checked") == true || $("#BranchAdmin").is(":checked") == true){
+                                if($("#Student").is(":checked") == true || $("#Parent").is(":checked") == true){
+                                    if ($("#SelectedClasses").val() == "") {
+                                        CreateAlertMessage();
+                                        $('#msg').html('<div>Class field is required.</div>');
+                                    }
+                                    else if ($("#SelectedBatches").val() == "") {
+                                        CreateAlertMessage();
+                                        $('#msg').html('<div>Batch field is required.</div>');
+                                    }
+                                    else if($("#SelectedBatches").val() != "" && $("#SelectedClasses").val() != ""){
+                                        SendNotification();
+                                    }
+                                }
+                                else{
+                                    SendNotification();
+                                }
+                            }
+                            else if($("#Student").is(":checked") == true || $("#Parent").is(":checked") == true){
+                                if ($("#SelectedClasses").val() == "") {
+                                    CreateAlertMessage();
+                                    $('#msg').html('<div>Class field is required.</div>');
+                                }
+                                else if ($("#SelectedBatches").val() == "") {
+                                    CreateAlertMessage();
+                                    $('#msg').html('<div>Batch field is required.</div>');
+                                }
+                                else{
+                                    SendNotification();
+                                }
+                            }
+                        }
+                        else{
+                            CreateAlertMessage();
+                            $('#msg').html('<div>Branch field is required.</div>');
+                        }
+
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                        $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                    }
+                    else
+                    {
+                        CreateAlertMessage();
+                        $('#msg').html('<div>Please select atleast one user.</div>');
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                        $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                    }
+                }
+
+                else {
+                    CreateAlertMessage();
+                    $('#msg').html('<div>Notification field is required.</div>');
+                    $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                    $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                }
+            });
+
+            if ($("#NotificationAutoDate").val() == "0001-01-01")
+                $("#NotificationAutoDate").val('');
+        });
+
+        function getSelectedBatches() {
+            var selected = $("#BatchId").find("option:selected");
+            var arrSelected = [];
+            selected.each(function () {
+                arrSelected.push($(this).val());
+            });
+            var selectedSubject = arrSelected.toString();
+            $("#SelectedBatches").val(selectedSubject);
+
+            if ($("#BatchId option:selected").length == $("#BatchId option").length) {
+                //getCountOnClass();
+            }
+            else if ($("#SelectedBatches").val() != "") {
+                $.ajax({
+                    url: '/Batch/GetCountByBatches',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { selectedBatches: $("#SelectedBatches").val(), selectedClasses: $("#SelectedClasses").val(), selectedBranch: $("#SelectedBranches").val() },
+                    success: function (data) {
+                        $("#StudentCount, #ParentCount").text(data);
+                    }
+                });
+            }
+            else {
+                getCountOnClass();
+                //DestroyBatches();
+                //getCountOnBranch();
+            }
+        }
+
+        function getData(allUser) {
+            var allUser = $('#AllUser').is(":checked");
+            if (allUser == true) {
+                $("#Student, #Teacher, #Parent, #BranchAdmin").attr("disabled", "disabled");
+                $("#Student, #Teacher, #Parent, #BranchAdmin").prop("checked", false);
+                DestroyBatches();
+                DestroyClasses();
+                $.ajax({
+                    url: '/Student/GetClassesFromStudent',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { branchId: $("#BranchId").val()},
+                    async: false,
+                    success: function (data) {
+                        $("#StudentCount, #ParentCount").text(data.studentParentCount);
+                        $("#TeacherCount").text(data.teacherCount);
+                        $("#BranchAdminCount").text(data.branchAdminCount);
+                    }
+                });
+                if($("#CurrentUserRole").val()=="BranchAdmin")
+                {
+                    $("#SelectedClasses, #SelectedBatches").val("");
+                    $("#ClassId,#BatchId").multiselect("disable");
+                }
+                else
+                {
+                    $("#SelectedBranches, #SelectedClasses, #SelectedBatches").val("");
+                    $("#BranchId,#ClassId,#BatchId").multiselect("disable");
+                }
+            }
+            else {
+                $("#StudentCount, #ParentCount").text("0");
+                $("#TeacherCount").text("0");
+                $("#BranchAdminCount").text("0");
+                $("#Student, #Teacher, #Parent, #BranchAdmin").removeAttr("disabled", "disabled");
+                if($("#CurrentUserRole").val()=="BranchAdmin")
+                {
+                    $("#ClassId,#BatchId").multiselect('rebuild');
+                }
+                else
+                {
+                    $("#BranchId,#ClassId,#BatchId").multiselect('rebuild');
+                }
+            }
+        }
+
+        function FillBatchesCount(branchId) {
+            if ($('#BranchId :selected').text() != "Select Branch") {
+                $.ajax({
+                    url: '/Student/GetStudentCount',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { branchId: $("#BranchId").val(), selectedClasses: $("#SelectedClasses").val(), SelectedBatches: $("#SelectedBatches").val() },
+                    async: false,
+                    success: function (data) {
+                        $("#ClassId").html(""); // clear before appending new list
+
+                        if ($('#BranchId :selected').text() == "All Branches") {
+                            $("#ClassId").append(
+                                    $('<option></option>').val(0).html("All Class"));
+                            $.each(data.classes, function (i, cls) {
+                                $("#ClassId").append(
+                                    $('<option></option>').val(cls.ClassId).html(cls.ClassName));
+
+                            });
+                        }
+                        else {
+                            $.each(data.classes, function (i, cls) {
+                                $("#ClassId").append(
+                                    $('<option></option>').val(cls.ClassId).html(cls.ClassName));
+
+                            });
+                        }
+
+                        DestroyCount();
+                        $("#studentCount").text(data.studentParentCount);
+                        $("#ParentCount").text(data.studentParentCount);
+                        $("#BranchAdminCount").text(data.branchAdminCount);
+                        $("#TeacherCount").text(data.teacherCount);
+
+
+                    }
+                });
+            }
+            else {
+                DestroyBatches();
+                DestroyClasses();
+            }
+        }
+
+        function FillClasses(branchId) {
+            var selected = $("#BranchId").find("option:selected");
+            var arrSelected = [];
+            selected.each(function () {
+                arrSelected.push($(this).val());
+            });
+            var selectedBranch = arrSelected.toString();
+            $("#SelectedBranches").val(selectedBranch);
+            if ($("#BranchId option:selected").length == 0) {
+                DestroyBatches();
+                DestroyClasses();
+                $("#StudentCount, #ParentCount").text("0");
+                $("#TeacherCount").text("0");
+                $("#BranchAdminCount").text("0");
+            }
+            else {
+                getCountOnBranch();
+            }
+        }
+
+        function FillBatches(branchId) {
+            var selected = $("#ClassId").find("option:selected");
+            var arrSelected = [];
+            selected.each(function () {
+                arrSelected.push($(this).val());
+            });
+            var selectedClass = arrSelected.toString();
+            $("#SelectedClasses").val(selectedClass);
+
+            if ($("#SelectedClasses").val() == "") {
+                DestroyBatches();
+                getCountOnBranch();
+            }
+            else {
+                getCountOnClass();
+            }
+        }
+
+        function SendNotification() {
+            if ($("#Email").is(":checked") || $("#SMS").is(":checked") || $("#AppNotification").is(":checked")) {
+                var media = "";
+                if($("#Email").is(":checked"))
+                    media += "Email";
+                if($("#SMS").is(":checked"))
+                    media += ", SMS";
+                if($("#AppNotification").is(":checked"))
+                    media += ", AppNotification";
+
+                var userCount = 0;
+
+                if($("#Student").is(":checked"))
+                    userCount = parseInt(userCount) +1;
+                if($("#Teacher").is(":checked"))
+                    userCount = parseInt(userCount) +1;
+                if($("#Parent").is(":checked"))
+                    userCount = parseInt(userCount) +1;
+                if($("#BranchAdmin").is(":checked"))
+                    userCount = parseInt(userCount) +1;
+
+                if( media.charAt( 0 ) === ',')
+                    media = media.slice( 1 );
+                $("#Media").val(media);
+
+                //if(userCount == 1 && $("#Parent").is(":checked") && $("#Email").is(":checked")){
+                //    CreateAlertMessage();
+                //    $('#msg').html('<div>Email not available for parent.</div>');
+                //    $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                //    $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                //}else
+                if(($("#BranchAdmin").is(":checked") || $("#Teacher").is(":checked")) && $("#AppNotification").is(":checked") && $("#Email").is(":checked") == false && $("#SMS").is(":checked") == false ){
+                    CreateAlertMessage();
+                    $('#msg').html('<div>App not available for Branch Admin and Teacher.</div>');
+                    $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                    $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                }
+                else{
+                    var jqxhr = $.post("/Notification/SendNotification",
+                                {
+                                    NotificationMessage: $("#NotificationMessage").val(),
+                                    AllUser: $("#AllUser").is(":checked"),
+                                    BranchId: $("#BranchId").val(),
+                                    ClassId: $("#ClassId").val(),
+                                    BatchId: $("#BatchId").val(),
+                                    Student: $("#Student").is(":checked"),
+                                    Teacher: $("#Teacher").is(":checked"),
+                                    Parent: $("#Parent").is(":checked"),
+                                    BranchAdmin: $("#BranchAdmin").is(":checked"),
+                                    Email: $("#Email").is(":checked"),
+                                    SMS: $("#SMS").is(":checked"),
+                                    AppNotification: $("#AppNotification").is(":checked"),
+                                    SelectedBatches: $("#SelectedBatches").val(),
+                                    SelectedClasses: $("#SelectedClasses").val(),
+                                    SelectedBranches: $("#SelectedBranches").val(),
+                                    StudentCount: $("#StudentCount").text(),
+                                    ParentCount: $("#ParentCount").text(),
+                                    BranchAdminCount: $("#BranchAdminCount").text(),
+                                    TeacherCount: $("#TeacherCount").text(),
+                                    Media: $("#Media").val(),
+                                    NotificationAutoDate: $("#NotificationAutoDate").val(),
+                                }, function (data) {
+                                    var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+                                    $("#message").html("");
+                                    $("#message").append(divMessage);
+                                    if (data.Success == true) {
+                                        var m = "";
+                                        for (var i = 0; i < data.Results.length; i++) {
+                                            m = m + data.Results[i].Message + "</br>";
+                                        }
+                                        $('#msg').html('<div>' + m + '</div>');
+                                        $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                                        $("#Student, #Teacher, #Parent, #BranchAdmin, #AllUser, #Email, #SMS, #AppNotification").prop("checked", false);
+                                        $("#BranchId option:contains(Select Branch)").attr('selected', true);
+                                        $("#BranchId, #ClassId, #BatchId").removeAttr("disabled", "disabled");
+                                        $("#Student, #Teacher, #Parent, #BranchAdmin").removeAttr("disabled", "disabled");
+                                        DestroyClasses();
+                                        DestroyBatches();
+                                        $("#StudentCount, #ParentCount").text("0");
+                                        $("#TeacherCount").text("0");
+                                        $("#BranchAdminCount").text("0");
+                                        $("#NotificationMessage").val("");
+                                        $("#NotificationAutoDate").val("");
+                                        if($("#CurrentUserRole").val()=="Admin")
+                                        {
+                                            $("#BranchId").multiselect('refresh');
+                                            var selected = $("#BranchId").find("option:selected");
+                                            selected.each(function () {
+                                                $(this).removeAttr('selected').prop('selected', false);
+                                            });
+                                            $('#BranchId, #ClassId, #BatchId')
+                                           .multiselect({
+                                               allSelectedText: 'All',
+                                               includeSelectAllOption: true
+                                           });
+                                            $("#BranchId").multiselect('refresh');
+                                            $("#SelectedBranches").val("");
+                                            $("#BranchId").multiselect('rebuild');
+                                        }
+                                        $('#ClassId, #BatchId')
+                                            .multiselect({
+                                                allSelectedText: 'All',
+                                                includeSelectAllOption: true
+                                            });
+                                        $("#ClassId, #BatchId").multiselect('refresh');
+                                        $("#SelectedClasses, #SelectedBatches").val("");
+
+                                    }
+                                    else {
+                                        var m = "";
+                                        for (var i = 0; i < data.Results.length; i++) {
+                                            m = m + data.Results[i].Message + "</br>";
+                                        }
+                                        $('#msg').html('<div>' + m + '</div>');
+                                        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                                    }
+                                    $('html, body').animate({ scrollTop: "0px" });
+                                }).done(function () {
+
+                                }).fail(function () {
+
+                                }).always(function () {
+                                });
+                }
+            }
+            else {
+                CreateAlertMessage();
+                $('#msg').html('<div>Please select atleast one media.</div>');
+                $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                $('html, body').animate({ scrollTop: "0px" }, 'fast');
+            }
+
+        }
+
+        function CreateAlertMessage() {
+            var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+            $("#message").html("");
+            $("#message").append(divMessage);
+        }
+
+        function DestroyBatches() {
+            $("#BatchId").html("");
+            $("#BatchId").multiselect('destroy');
+            $("#BatchId").multiselect('rebuild');
+        }
+
+        function DestroyClasses() {
+            $("#ClassId").html("");
+            $("#ClassId").multiselect('destroy');
+            $("#ClassId").multiselect('rebuild');
+        }
+
+        function getCountOnBranch() {
+            if ($("#BranchId option:selected").length == $("#BranchId option").length) {
+                $.ajax({
+                    url: '/Student/GetClassesFromStudent',
+                    type: "GET",
+                    dataType: "JSON",
+                    async: false,
+                    success: function (data) {
+                        $("#ClassId").html(""); // clear before appending new list
+                        $("#ClassId").multiselect('destroy');
+                        $("#BatchId").multiselect('destroy');
+                        $.each(data.classes, function (i, cls) {
+                            $("#ClassId").append(
+                                $('<option></option>').val(cls.ClassId).html(cls.ClassName));
+                        });
+                        //$("#ClassId").multiselect('rebuild');
+
+                        $('#ClassId')
+                        .multiselect({
+                            allSelectedText: 'All',
+                            includeSelectAllOption: true
+                        });
+
+                        $('#BatchId')
+                        .multiselect({
+                            allSelectedText: 'All',
+                            includeSelectAllOption: true
+                        });
+
+                        $("#StudentCount, #ParentCount").text(data.studentParentCount);
+                        $("#TeacherCount").text(data.teacherCount);
+                        $("#BranchAdminCount").text(data.branchAdminCount);
+                    }
+                });
+            }
+            else {
+                $.ajax({
+                    url: '/Student/GetClassesByMultipleBranches',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { selectedBranch: $("#SelectedBranches").val() },
+                    async: false,
+                    success: function (data) {
+                        $("#ClassId").html(""); // clear before appending new list
+                        $("#ClassId").multiselect('destroy');
+                        $.each(data.classes, function (i, cls) {
+                            $("#ClassId").append(
+                                $('<option></option>').val(cls.ClassId).html(cls.ClassName));
+                        });
+                        //$("#ClassId").multiselect('rebuild');
+                        $('#ClassId')
+                        .multiselect({
+                            allSelectedText: 'All',
+                            includeSelectAllOption: true
+                        });
+
+                        $("#StudentCount, #ParentCount").text(data.studentParentCount);
+                        $("#TeacherCount").text(data.teacherCount);
+                        $("#BranchAdminCount").text(data.branchAdminCount);
+                    }
+                });
+            }
+        }
+
+        function getCountOnClass() {
+            if ($("#SelectedClasses").val() != "") {
+                $.ajax({
+                    url: '/Batch/GetBatchesByClassId',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { selectedClasses: $("#SelectedClasses").val(), selectedBranch: $("#SelectedBranches").val() },
+                    success: function (data) {
+                        var select = $("#BatchId");
+                        select.children().remove();
+                        $("#BatchId").html(""); // clear before appending new list
+                        $("#BatchId").multiselect('destroy');
+                        $.each(data.batches, function (i, sub) {
+                            $("#BatchId").append("<option value='" + sub.BatchId + "'>" + sub.BatchName + "</option>");
+                        });
+                        //$("#BatchId").multiselect('rebuild');
+                        $('#BatchId')
+                        .multiselect({
+                            allSelectedText: 'All',
+                            includeSelectAllOption: true
+                        });
+                        $("#StudentCount, #ParentCount").text(data.studentParentCount);
+                    }
+                });
+            }
+        }
+    </script>
+    @Scripts.Render("~/bundles/StudentJS")
+    @Styles.Render("~/Content/StudentCSS")
+    @Scripts.Render("~/bundles/jqueryval")
+}

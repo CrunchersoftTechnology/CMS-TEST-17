@@ -1,0 +1,82 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Clear Punch Id</h2>
+@using (Html.BeginForm())
+{
+    <div class="form-horizontal">
+        <hr />
+        <div id="message">
+        </div>
+        <div class="form-group">
+            <br />
+            <div class="col-md-10">
+                <button type="button" class="btn btn-default" id="clearId">Clear</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="demoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width:450px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Clear Punch Id</h4>
+                </div>
+                <div class="modal-body">Are you sure , do you want to clear all student punch id ?</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input id="save" type="button" value="Clear" class="btn btn-success" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#clearId").click(function () {
+                $('#demoModal').modal('show');
+            });
+            $("#save").on('click', function () {
+                clearPunchId();
+                $('#demoModal').modal('hide');
+            });
+        });
+
+        function clearPunchId() {
+            $.ajax({
+                url: 'ClearPunchId',
+                type: "GET",
+                dataType: "JSON",
+                data: {},
+                async: false,
+                success: function (data) {
+                    if (data.Success == true) {
+                        var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+                        $("#message").html("");
+                        $("#message").append(divMessage);
+                        $('#msg').html('<div>' + data.Results[0].Message + '</div>');
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                        $('html, body').animate({ scrollTop: "0px" });
+                    }
+                    else {
+                        CreateAlertMessage();
+                        $('#msg').html('<div>' + data.Results[0].Message + '</div>');
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                    }
+                }
+
+            });
+        }
+
+        function CreateAlertMessage() {
+            var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+            $("#message").html("");
+            $("#message").append(divMessage);
+        }
+    </script>
+}

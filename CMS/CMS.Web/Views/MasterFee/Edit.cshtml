@@ -1,0 +1,103 @@
+﻿@model CMS.Web.ViewModels.MasterFeeViewModel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Edit Master Fee</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.MasterFeeId)
+    @Html.HiddenFor(model => model.ClassId)
+    @Html.HiddenFor(model => model.SubjectId)
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @*<div class="form-group">
+            @Html.Label("Class", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.ClassId, new SelectList(ViewBag.SelectedClasses, "Value", "Text"), new { @class = "form-control", @readonly = "readonly" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Subject", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.SubjectId, new SelectList(ViewBag.SelectedSubjects, "Value", "Text"), new { @class = "form-control", @readonly = "readonly" })
+            </div>
+        </div>*@
+
+        <div class="form-group">
+            @Html.Label("Class", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ClassName, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" , @disabled="disable" } })
+                @Html.ValidationMessageFor(model => model.ClassName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Subject", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SubjectName, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @disabled = "disable" } })
+                @Html.ValidationMessageFor(model => model.SubjectName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Year, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.EditorFor(model => model.Year, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.Year, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownList("years", new SelectList(new List<SelectListItem> { new SelectListItem { } }), "Select Year",
+                      new { @class = "yrselectdesc form-control", onchange = "changeYear(this.value)" })
+                @Html.ValidationMessageFor(model => model.Year)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Fee, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Fee, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @maxlength = "12" } })
+                @Html.ValidationMessageFor(model => model.Fee, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Update" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to MasterFee List", "Index")
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#ClassId").val(@ViewBag.ClassId);
+            $("#SubjectId").val(@ViewBag.SubjectId);
+          
+            var year = (new Date().getFullYear()) - 10;
+            $('.yrselectdesc').yearselect({ start: year, order: 'asc', end: (parseInt(year) + 20) });
+
+            $("#years").val($("#Year").val().split('-')[0])
+
+        });
+
+        function changeYear(yr) {
+            $("#Year").val($("#years").val() + "-" + (parseInt(yr) + 1))
+        }
+    </script>
+    @Scripts.Render("~/bundles/masterfeescript")
+}

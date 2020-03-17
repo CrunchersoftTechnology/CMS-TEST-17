@@ -1,0 +1,37 @@
+﻿@using CMS.Common;
+
+@{
+    ViewBag.Title = "GetTests";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+
+<h2>Tests</h2>
+<br />
+
+@if (ViewBag.testsResult.Count == 0)
+{
+    <h2>No Notes found!</h2>
+}
+else
+{
+    int i = 1;
+    foreach (var item in ViewBag.testsResult)
+    {
+        <div class="row">
+            <div class="col-sm-2">
+                <img src="@System.Configuration.ConfigurationManager.AppSettings[Constants.UrlWebsiteImage]@(item.LogoName.Replace("~", ""))" alt="" style="height:110px;width:110px">
+            </div>
+            <div class="col-sm-4">
+                <a href='@System.Configuration.ConfigurationManager.AppSettings[Constants.UrlTestPDF]@item.FileName' target="_blank">
+                    @item.ClassName @item.SubjectName ( @item.BoardName )
+                </a>
+                <br />
+                @item.Title
+                <br />
+                @item.UploadDate.ToString("dd/MM/yyyy")
+            </div>
+        </div>
+        <br />
+        i += 1;
+    }
+}

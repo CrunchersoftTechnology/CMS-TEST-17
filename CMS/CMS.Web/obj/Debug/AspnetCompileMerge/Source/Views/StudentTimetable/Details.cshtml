@@ -1,0 +1,73 @@
+﻿@model CMS.Web.ViewModels.StudentTimetableEditViewModel
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Details Exam Timetable</h2>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SelectedBranches)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SelectedBranches)
+        </dd>
+        <br />
+        <dt>
+            @Html.DisplayNameFor(model => model.SelectedClasses)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SelectedClasses)
+        </dd>
+        <br />
+        <dt>
+            @Html.DisplayNameFor(model => model.SelectedBatches)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SelectedBatches)
+        </dd>
+        <br />
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <br />
+        @if (ViewBag.fileName != "" && ViewBag.fileName != null)
+            {
+            <dt>
+                @Html.DisplayNameFor(model => model.FileName)
+            </dt>
+            <dd>
+                <a href='@Url.Action("DownloadPDF", "StudentTimetable", new { id = Model.StudentTimetableId })' target="_blank"><span class='glyphicon glyphicon-download-alt'></span></a>
+            </dd>
+            <br />
+            <dt>
+                @Html.DisplayNameFor(model => model.AttachmentDescription)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.AttachmentDescription)
+            </dd>
+            <br />
+        }
+        <dt>
+            @Html.DisplayNameFor(model => model.StudentTimetableDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StudentTimetableDate)
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Back to Exam Timetable List", "Index")<br />
+    @Html.ActionLink("Edit this record", "Edit", new { id = Model.StudentTimetableId })
+</p>

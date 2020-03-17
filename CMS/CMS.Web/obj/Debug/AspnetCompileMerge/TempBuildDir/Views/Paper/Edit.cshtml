@@ -1,0 +1,301 @@
+﻿@model CMS.Web.ViewModels.TestPaperViewModel
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .chapterbtn {
+        width: 18%;
+        white-space: pre-line !important;
+        margin-bottom: 5px !important;
+    }
+
+    #tblChapters {
+        width: 90%;
+        margin: 5%;
+        margin-bottom: 1%;
+        margin-top: 1%;
+    }
+</style>
+
+<h2>Edit Test Paper</h2>
+
+<div id="message">
+</div>
+
+<div id="testPaper">
+    <div class="row">
+        <div class="col-md-3">
+            @Html.DropDownList("ChapterId", new SelectList(Enumerable.Empty<SelectListItem>(), "ChapterId", "ChapterName"),
+            new { @class = "form-control" })
+
+        </div>
+
+        <div class="col-md-7">
+            <div class="input-group col-md-4">
+                <div class="input-group-btn">
+                    <button class="btn btn-primary" id="chapterCountDetails">Chapter Details</button>
+                </div>
+                <label class="form-control" placeholder="No." aria-describedby="basic-addon1" value="0" readonly="readonly"><span id="QuestionChapterNo">0</span>/<span id="qChapterCount">4</span></label>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Total</span>
+                <label class="form-control" placeholder="No." aria-describedby="basic-addon1" value="0" readonly="readonly"><span id="QuestionTotalNo">0</span>/<span id="qTotalCount"></span></label>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <div class="col-md-3"><span id="cEasy"></span></div>
+            <div class="col-md-3"><span id="cMedium"></span></div>
+            <div class="col-md-6"><span id="cHard"></span></div>
+        </div>
+        <div class="col-md-3">
+            <div class="col-md-4"><span id="cTheoretical"></span></div>
+            <div class="col-md-4"><span id="cNumerical"></span></div>
+            <div class="col-md-4"><span id="cNewPatternNumerical"></span></div>
+        </div>
+        <div class="col-md-2">
+            <div class="col-md-4"><span id="cAsked"></span></div>
+            <div class="col-md-4"><span id="cNotAsked"></span></div>
+        </div>
+        <div class="col-md-2">
+            <div class="col-md-4"><span id="cUsed"></span></div>
+            <div class="col-md-4"><span id="cNotUsed"></span></div>
+        </div>
+        <div class="col-md-2">
+            <div class="col-md-4"><span id="cHint"></span></div>
+            <div class="col-md-4"><span id="cWithoutHint"></span></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div id="QLevel" class="btn-group btn-group-sm" role="radiogroup" aria-label="...">
+                <button id="levelEasy" type="button" class="btn btn-default" data-value="1">Easy</button>
+                <button id="levelMedium" type="button" class="btn btn-default" data-value="2">Medium</button>
+                <button id="levelHard" type="button" class="btn btn-default" data-value="3">Hard</button>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div id="QType" class="btn-group btn-group-sm" role="radiogroup" aria-label="...">
+                <button id="typeTheory" type="button" class="btn btn-default" data-value="1">Theoretical</button>
+                <button id="typeNumeric" type="button" class="btn btn-default" data-value="2">Numerical</button>
+                <button id="typeNewPatternNumerical" type="button" class="btn btn-default" data-value="3">NewPatternNumerical</button>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div id="QAsked" class="btn-group btn-group-sm" role="radiogroup" aria-label="...">
+                <button id="typeAsked" type="button" class="btn btn-default" data-value="1">Asked</button>
+                <button id="typeNotAsked" type="button" class="btn btn-default" data-value="2">Not Asked</button>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div id="QUsed" class="btn-group btn-group-sm" role="radiogroup" aria-label="...">
+                <button id="typeUsed" type="button" class="btn btn-default" data-value="1">Used</button>
+                <button id="typeNotUsed" type="button" class="btn btn-default" data-value="2">Not Used</button>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div id="QHints" class="btn-group btn-group-sm" role="radiogroup" aria-label="...">
+                <button id="typeHint" type="button" class="btn btn-default" data-value="1">Hint</button>
+                <button id="typeWithoutHint" type="button" class="btn btn-default" data-value="2">Without Hint</button>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <button id="btnAdd" type="button" class="btn btn-default hidden">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
+            </button>
+            <button id="btnRemove" type="button" class="btn btn-default ">
+                <span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span> Remove
+            </button>
+            <button type="button" class="btn btn-default">
+                <span class="glyphicon" aria-hidden="true"></span> Advanced Selection
+            </button>
+        </div>
+
+        <div class="col-md-6">
+            <div class="row" id="prevNextgroup">
+                <div class="col-md-3" style="text-align: right;">
+                    <button id="btnFirst" type="button" class="btn btn-default" aria-label="Left Align">
+                        <span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span>
+                    </button>
+                    <button id="btnPrev" type="button" class="btn btn-default" aria-label="Left Align">
+                        <span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="col-md-3 nopadding">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1"><span id="qCount">0</span> of </span>
+                        <input type="text" id="QuestionNo" class="form-control" placeholder="No." aria-describedby="basic-addon1" value="0">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <button id="btnNext" type="button" class="btn btn-default" aria-label="Right Align">
+                        <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+                    </button>
+                    <button id="btnLast" type="button" class="btn btn-default" aria-label="Right Align">
+                        <span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-3">
+
+            <button type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Review
+            </button>
+            <button id="savePaper" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Update
+            </button>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <label>Easy - <span id="tEasy"></span>,</label>
+            <label>Medium - <span id="tMedium"></span>,</label>
+            <label>Hard - <span id="tHard"></span></label>
+        </div>
+    </div>
+    <br />
+    <div class="form-group form-group-sm">
+        <div class="col-md-12">
+
+            <div class="sp1"><strong>Q. <span id="qSeq"></span></strong>&nbsp; <span id="QuestionBox">$\mbox{}$</span></div>
+            <div id="qi" class="wrapper">
+                <img src="" class="file-preview-image kv-preview-data rotate-1" id="imgQues" />
+                <span id="qdel" class="glyphicon hidden" data-value="1"></span>
+            </div>
+            <br />
+            <span><b>Options:</b></span>
+            <div class="sp1"><strong>A :</strong>&nbsp; <span id="OptionBoxA">$\mbox{}$</span></div>
+            <div class="sp1"><strong>B :</strong> &nbsp;<span id="OptionBoxB">$\mbox{}$</span></div>
+            <div class="sp1"><strong>C :</strong>&nbsp; <span id="OptionBoxC">$\mbox{}$</span></div>
+            <div class="sp1"><strong>D :</strong>&nbsp; <span id="OptionBoxD">$\mbox{}$</span></div>
+            <div class="wrapper">
+                <img src="" class="file-preview-image kv-preview-data rotate-1" id="imgOption" />
+                <span id="odel" class="glyphicon hidden" data-value="2"></span>
+            </div>
+            <br />
+            <div class="sp1"><strong>Answer :</strong>&nbsp; <span id="AnswerBox">$\mbox{}$</span></div>
+            <br />
+            <div class="sp1"><strong>Numerical_Answer :</strong>&nbsp; <span id="Numerical_AnswerBox">$\mbox{}$</span></div>
+            <br />
+            <div class="sp1"><strong>Unit :</strong>&nbsp; <span id="UnitBox">$\mbox{}$</span></div>
+            <br />
+            <div class="sp1"><strong>Hint :</strong>&nbsp; <span id="HintBox">$\mbox{}$</span></div>
+            <div class="wrapper">
+                <img src="" class="file-preview-image kv-preview-data rotate-1" id="imgHint" />
+                <span id="hdel" class="glyphicon hidden" data-value="3"></span>
+            </div>
+            <br />
+        </div>
+    </div>
+</div>
+
+<div id='chapterListWithCount' class='modal fade'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" id="close" class="close" data-dismiss="modal" style="color:black; opacity:1 !important;">
+                    X
+                </button>
+                <h3 id="chapterHeader" class="text-center" style="margin-top:0px !important;"> Chapter Details</h3>
+            </div>
+            <div id="chapterCount" class="modal-footer">
+                <table class="table" id="tblChapters"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id='saveTestPaperModal' class='modal fade'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="text-center" style="margin-top:0px !important;">
+                    Are you sure you want to update test paper?
+                </h3>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @onchange = "removeReadonly(this.value)" } })
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div id="modalButtons" class="row hidden">
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <button type="button" data-dismiss="modal" class="btn btn-primary" id="btnYes" readonly="readonly">Yes</button>
+                            <button type="button" data-dismiss="modal" class="btn">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div>
+    @Html.ActionLink("Back to Paper List", "Index")
+</div>
+
+@Html.Hidden("QuestionInfo")
+@Html.Hidden("OptionA")
+@Html.Hidden("OptionB")
+@Html.Hidden("OptionC")
+@Html.Hidden("OptionD")
+@Html.Hidden("Hint")
+@Html.Hidden("Answer")
+@Html.Hidden("Numerical_Answer")
+@Html.Hidden("Unit")
+@Html.Hidden("QuestionId")
+@Html.HiddenFor(m => m.TestPaperId)
+@Html.HiddenFor(m => m.TestType)
+@Html.HiddenFor(m => m.DelimitedQuestionIds)
+@Html.HiddenFor(m => m.ClassId)
+
+@section scripts{
+
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+        tex2jax:{inlineMath:[['$','$'],['\\(','\\)']]}
+        });
+    </script>
+
+    <script>
+        var arr = [];
+        var arrQuestionList = [];
+        var arrChapterList = [];
+        var clickedButtonId = "";
+        var testType = 0;
+
+        $(document).ready(function () {
+            getTestPaper();
+        });
+
+        function getTestPaper() {
+            $.getJSON("/Paper/GetTestPaper",
+                   { id: $("#TestPaperId").val() },
+                   function (data, status, xhr) {
+                       console.log(data);
+                   }).done(function () {
+                   }).fail(function () {
+                   });
+        }
+    </script>
+}

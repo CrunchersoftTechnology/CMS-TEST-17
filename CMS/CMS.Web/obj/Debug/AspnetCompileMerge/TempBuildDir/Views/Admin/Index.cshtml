@@ -1,0 +1,284 @@
+﻿@model CMS.Web.ViewModels.AdminSummaryViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Dashboard</h2>
+
+<hr />
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.CurrentUserRole)
+    <div class="form-horizontal">
+        <hr />
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="row">
+            @if (Model.CurrentUserRole == "Client" || Model.CurrentUserRole == "BranchAdmin")
+            {
+                <div class="col-lg-2 col-md-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="glyphicon glyphicon-tree-deciduous gi-4x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">@Model.BranchesCount</div>
+                                    <div><strong>Branches</strong></div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="Branch/Index">
+                            <div class="panel-footer">
+                                <span class="pull-left">Branches: @Model.BranchesCount</span>
+                                <span class="pull-right"><i class="glyphicon glyphicon-circle-arrow-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="glyphicon glyphicon-user  gi-4x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">@Model.StudentsCount</div>
+                                    <div><strong>Students</strong></div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="Student/Index">
+                            <div class="panel-footer">
+                                <span class="pull-left">Students:@Model.StudentsCount</span>
+                                <span class="pull-right"><i class="glyphicon glyphicon-circle-arrow-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="glyphicon glyphicon-book gi-4x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">@Model.TeachersCount</div>
+                                    <div>Teachers</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="Teacher/Index">
+                            <div class="panel-footer">
+                                <span class="pull-left">Teachers: @Model.TeachersCount</span>
+                                <span class="pull-right"><i class="glyphicon glyphicon-circle-arrow-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="glyphicon glyphicon-dashboard gi-4x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">@Model.BatchesCount</div>
+                                    <div>Batches</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="Batch/Index">
+                            <div class="panel-footer">
+                                <span class="pull-left">Batches:@Model.BatchesCount</span>
+                                <span class="pull-right"><i class="glyphicon glyphicon-circle-arrow-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="glyphicon glyphicon-time gi-4x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">@Model.PendingAdmissionCount</div>
+                                    <div>PendingAdmission</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="Admin/PendingAdmissionList">
+                            <div class="panel-footer">
+                                <span class="pull-left">Pending Admission:@Model.PendingAdmissionCount</span>
+                                <span class="pull-right"><i class="glyphicon glyphicon-circle-arrow-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+            }
+            else if (Model.CurrentUserRole == "Admin")
+            {
+                <div class="col-lg-2 col-md-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="glyphicon glyphicon-dashboard gi-4x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">@Model.ClientsCount</div>
+                                    <div><strong>Clients</strong></div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="Client/Index">
+                            <div class="panel-footer">
+                                <span class="pull-left">Clients: @Model.ClientsCount</span>
+                                <span class="pull-right"><i class="glyphicon glyphicon-circle-arrow-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="glyphicon glyphicon-tree-deciduous gi-4x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">@Model.BranchesCount</div>
+                                    <div><strong>Branches</strong></div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="Branch/Index">
+                            <div class="panel-footer">
+                                <span class="pull-left">Branches: @Model.BranchesCount</span>
+                                <span class="pull-right"><i class="glyphicon glyphicon-circle-arrow-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="glyphicon glyphicon-user  gi-4x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">@Model.StudentsCount</div>
+                                    <div><strong>Students</strong></div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="Student/Index">
+                            <div class="panel-footer">
+                                <span class="pull-left">Students:@Model.StudentsCount</span>
+                                <span class="pull-right"><i class="glyphicon glyphicon-circle-arrow-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="glyphicon glyphicon-book gi-4x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">@Model.TeachersCount</div>
+                                    <div>Teachers</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="Teacher/Index">
+                            <div class="panel-footer">
+                                <span class="pull-left">Teachers: @Model.TeachersCount</span>
+                                <span class="pull-right"><i class="glyphicon glyphicon-circle-arrow-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="glyphicon glyphicon-dashboard gi-4x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">@Model.BatchesCount</div>
+                                    <div>Batches</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="Batch/Index">
+                            <div class="panel-footer">
+                                <span class="pull-left">Batches:@Model.BatchesCount</span>
+                                <span class="pull-right"><i class="glyphicon glyphicon-circle-arrow-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="glyphicon glyphicon-time gi-4x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">@Model.PendingAdmissionCount</div>
+                                    <div>PendingAdmission</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="Admin/PendingAdmissionList">
+                            <div class="panel-footer">
+                                <span class="pull-left">Pending Admission:@Model.PendingAdmissionCount</span>
+                                <span class="pull-right"><i class="glyphicon glyphicon-circle-arrow-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+            }
+
+
+
+       </div>
+</div>
+        }
+

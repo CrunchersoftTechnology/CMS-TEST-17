@@ -1,0 +1,161 @@
+﻿@model CMS.Web.ViewModels.StudentFeedbackViewModel
+
+@{
+    ViewBag.Title = "StudentFeedback";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+<br />
+@using (Html.BeginForm())
+{
+    <div class="form-horizontal">
+        <br />
+        <h2>Student Feedback</h2>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblEmail", autocomplete = "off" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.ConfirmEmail, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblConfirmEmail" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ConfirmEmail, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.ConfirmEmail, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Contact, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblContact", autocomplete = "off" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Contact, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.Contact, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.FeedbackFor, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblFeedbackFor" })
+            <div class="col-md-10">
+                @Html.EnumDropDownListFor(m => m.FeedbackFor, "Select", new { @class = "form-control", @autocomplete = "off" })
+                @Html.ValidationMessageFor(model => model.FeedbackFor, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Teacher, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblUserId" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.UserId, new SelectList(Enumerable.Empty<SelectListItem>(), "UserId", "TeacherName"),
+                "Select Teacher", new { @class = "form-control", @autocomplete = "off" })
+                @Html.ValidationMessageFor(model => model.UserId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Message, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblMessage", autocomplete = "off" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Message, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Rating, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblMessage", autocomplete = "off" })
+            <div class="col-md-10" style="top:2px;">
+                <span class="glyphicon glyphicon-star StudentRating" aria-hidden="true" value="1" style="font-size:2.1em;cursor:pointer"></span>
+                <span class="glyphicon glyphicon-star StudentRating" aria-hidden="true" value="2" style="font-size:2.1em;cursor:pointer"></span>
+                <span class="glyphicon glyphicon-star StudentRating" aria-hidden="true" value="3" style="font-size:2.1em;cursor:pointer"></span>
+                <span class="glyphicon glyphicon-star StudentRating" aria-hidden="true" value="4" style="font-size:2.1em;cursor:pointer"></span>
+                <span class="glyphicon glyphicon-star StudentRating" aria-hidden="true" value="5" style="font-size:2.1em;cursor:pointer"></span>
+                @Html.HiddenFor(model => model.Rating)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            $('.StudentRating').click(function () {
+                $('.StudentRating').each(function () {
+                    $(this).css("color", "Black")
+                });
+                $("#Rating").val($(this).attr("value"));
+                $(this).css("color", "green")
+            });
+
+            $('#Email').on('change', function () {
+                RequiredValidation('#Email', '#lblEmail')
+            });
+            $('#Contact').on('change', function () {
+                RequiredValidation('#Contact', '#lblContact')
+            });
+            $('#FeedbackFor').on('change', function () {
+                RequiredValidation('#FeedbackFor', '#lblFeedbackFor')
+            });
+            $('#Message').on('change', function () {
+                RequiredValidation('#Message', '#lblMessage')
+            });
+            $('#ConfirmEmail').on('change', function () {
+                RequiredValidation('#ConfirmEmail', '#lblConfirmEmail')
+            });
+            $("#Name").attr("disabled", "disabled");
+            $("#UserId").attr("disabled", "disabled");
+
+            $('#FeedbackFor').on('change', function () {
+                if ($('#FeedbackFor').val() != "1" && $('#FeedbackFor').val() != "0") {
+                    $("#UserId").removeAttr("disabled", "disabled");
+                }
+                else {
+                    $("#UserId").attr("disabled", "disabled");
+                    if(@ViewBag.BranchId != null || @ViewBag.BranchId != 0)
+                    {
+                        FillTeachers(@ViewBag.BranchId);
+                    }
+                }
+            });
+        });
+
+        if(@ViewBag.BranchId != null || @ViewBag.BranchId != 0)
+        {
+            FillTeachers(@ViewBag.BranchId);
+        }
+        function FillTeachers(branchId) {
+            $.ajax({
+                url: '/Teacher/GetTeachers',
+                type: "GET",
+                dataType: "JSON",
+                data: { branchId: branchId },
+                async: false,
+                success: function (teachers) {
+                    $("#UserId").html(""); // clear before appending new list
+                    $("#UserId").append($('<option></option>').val("").html("Select Teacher"));
+                    $.each(teachers, function (i, ts) {
+                        var middelName;
+                        if(ts.MiddleName == null || ts.MiddleName == "")
+                            middelName = "";
+                        else
+                            middelName = ts.MiddleName;
+
+                        $("#UserId").append(
+                            $('<option></option>').val(ts.UserId).html(ts.FirstName + " " + middelName + " " + ts.LastName));
+                    });
+                }
+            });
+        }
+    </script>
+}

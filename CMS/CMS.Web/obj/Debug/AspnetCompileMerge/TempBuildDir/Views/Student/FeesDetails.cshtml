@@ -1,0 +1,33 @@
+﻿@model IEnumerable<CMS.Web.ViewModels.InstallmentViewModel>
+
+@{
+    ViewBag.Title = "FeesDetails";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+
+<h2>Student Fee Details</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatedOn)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.Payment)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedOn)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.Payment)
+        </td>
+    </tr>
+}
+
+</table>

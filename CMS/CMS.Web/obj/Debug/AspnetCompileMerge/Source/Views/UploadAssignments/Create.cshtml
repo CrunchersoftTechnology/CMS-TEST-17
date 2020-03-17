@@ -1,0 +1,139 @@
+﻿@model CMS.Web.ViewModels.UploadAssignmentsViewModel
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h2>Upload Assignments</h2>
+@using (Html.BeginForm("Create", "UploadAssignments", FormMethod.Post, new
+{
+    enctype = "multipart/form-data"
+}))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.BoardName)
+    @Html.HiddenFor(m => m.ClassName)
+    @Html.HiddenFor(m => m.SubjectName)
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(m => m.Boards, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.BoardId, new SelectList(Model.Boards, "Value", "Text"), "Select Board",
+                     new { @class = "form-control", @onchange = "GetBoardName()" })
+                @Html.ValidationMessageFor(model => model.BoardId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Classes, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.ClassId, new SelectList(Model.Classes, "Value", "Text"), "Select Class",
+                     new { @class = "form-control", @onchange = "FillSubjects(this.value)" })
+                @Html.ValidationMessageFor(model => model.ClassId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Subjects, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.SubjectId, new SelectList(Enumerable.Empty<SelectListItem>(),
+                   "SubjectId", "Name"), "Select Subject", new { @class = "form-control", @onchange = "GetSubjectName()" })
+                @Html.ValidationMessageFor(model => model.SubjectId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.UploadDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UploadDate, new { htmlAttributes = new { @class = "form-control datepicker", @autocomplete = "off", @type = "text", @maxlength = "10", @placeholder = "DD-MM-YYYY" } })
+                @Html.ValidationMessageFor(model => model.UploadDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.FilePath, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblFilePath" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.FilePath, new { @type = "file", @class = "file input-group-margin", @accept = "application/pdf", @maxFileSize = 123456789 })
+                @Html.ValidationMessageFor(model => model.FilePath, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.LogoPath, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblFilePath" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.LogoPath, new { @type = "file", @class = "file input-group-margin", @accept = "image/*", @maxFileSize = 123456789 })
+                @Html.ValidationMessageFor(model => model.LogoPath, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsVisible, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                <div class="checkbox checkbox-inline check-box">
+                    @Html.EditorFor(model => model.IsVisible)
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+<div>
+    @Html.ActionLink("Back to Upload Assignments List", "Index")
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            if ($("#UploadDate").val() == "0001-01-01")
+                $("#UploadDate").val('');
+
+            if ($("#ClassId").val() > 0)
+                FillSubjects($("#ClassId").val());
+
+            if ('@ViewBag.SubjectId' != "") {
+                $("#SubjectId").val(@ViewBag.SubjectId);
+            }
+        });
+
+        function GetBoardName() {
+            $("#BoardName").val(($("#BoardId :selected").text()));
+        }
+
+        function GetSubjectName() {
+            $("#SubjectName").val(($("#SubjectId :selected").text()));
+        }
+
+        function FillSubjects(classId) {
+            console.log(classId);
+            if (classId != "") {
+                $("#ClassName").val(($("#ClassId :selected").text()));
+                $.ajax({
+                    url: "/Subject/GetSubjects",
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { classId: $("#ClassId").val() },
+                    async: false,
+                    success: function (data) {
+                        $("#SubjectId").html("");
+                        $("#SubjectId").append("<option>Select Subject</option>");
+                        $.each(data, function (i, sub) {
+                            $("#SubjectId").append("<option value='" + sub.SubjectId + "'>" + sub.Name + "</option>");
+                        });
+                    }, error: function (result) {
+                        console.log(result);
+                    }
+                });
+            }
+            else {
+                $("#SubjectId").html("");
+            }
+        }
+    </script>
+}

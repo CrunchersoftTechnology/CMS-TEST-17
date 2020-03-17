@@ -1,0 +1,163 @@
+﻿@model CMS.Web.ViewModels.MasterFeeViewModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Create Master Fee</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(x => x.ClassName)
+    @Html.HiddenFor(x => x.SubjectName)
+    @Html.HiddenFor(m => m.CurrentUserRole)
+    @Html.HiddenFor(m => m.ClientName)
+    
+    <div class="form-horizontal">
+        <hr />
+        @Html.AntiForgeryToken()
+        @if (Model.CurrentUserRole == "Admin")
+        {
+            <div class="form-group">
+                @Html.LabelFor(m => m.Clients, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblClientId" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.ClientId, new SelectList(Model.Clients, "Value", "Text"),
+                    "Select Branch", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ClientId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        }
+        else if (Model.CurrentUserRole == "Client")
+        {
+            <div class="form-group">
+                @Html.LabelFor(m => m.ClientName, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblClientName" })
+                <div class="col-md-10">
+                    @Html.EditorFor(m => m.ClientName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.ValidationMessageFor(model => model.ClientId, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(m => m.ClientId)
+                </div>
+            </div>
+        }
+
+        <div class="form-horizontal">
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Classes, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblClassId" })
+                <div class="col-md-3">
+                    @Html.DropDownListFor(model => model.ClassId, new SelectList(Model.Classes, "Value", "Text"),
+         "Select Class", new { @class = "form-control", @onchange = "FillSubjects(this.value)" })
+                    @Html.ValidationMessageFor(model => model.ClassId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Subjects, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblSubjectId" })
+                <div class="col-md-3">
+                    @Html.DropDownListFor(model => model.SubjectId, new SelectList(Enumerable.Empty<SelectListItem>(), "SubjectId", "Name"),
+       "Select Subject", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.SubjectId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Year, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblyear" })
+                <div class="col-md-2">
+                    @Html.EditorFor(model => model.Year, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.ValidationMessageFor(model => model.Year, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-2">
+                    @Html.DropDownList("years", new SelectList(new List<SelectListItem> { new SelectListItem { } }), "Select Year",
+           new { @class = "yrselectdesc form-control", onchange = "changeYear(this.value)" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Fee, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblFee" })
+                <span class="control-label glyphicon glyphicon-info-sign" title="Masterfee is required while register
+             student & student fees installment." id="tooltipfee"></span>
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.Fee, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @maxlength = "12" } })
+                    @Html.ValidationMessageFor(model => model.Fee, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+        </div>
+        }
+        <div>
+            @Html.ActionLink("Back to MasterFee List", "Index")
+        </div>
+
+        @section Scripts {
+            <script>
+                $(document).ready(function () {
+                    $("#tooltipfee").tooltip({ track: true });
+                    $('#ClassId').on('change', function () {
+                        RequiredValidation('#ClassId', '#lblClassId')
+                    });
+                    $('#SubjectId').on('change', function () {
+                        RequiredValidation('#SubjectId', '#lblSubjectId')
+                    });
+                    $('#years').on('change', function () {
+                        RequiredValidation('#years', '#lblYear')
+                    });
+                    $('#Fee').on('change', function () {
+                        RequiredValidation('#Fee', '#lblFee')
+                    });
+                    if (parseInt(@ViewBag.ClassId) > 0) {
+                        $("#ClassId").val(@ViewBag.ClassId);
+                        FillSubjects(@ViewBag.ClassId);
+                    }
+                    if (parseInt(@ViewBag.SubjectId) > 0) {
+                        FillSubjects(@ViewBag.ClassId);
+                    }
+                    var year = (new Date().getFullYear()) - 10;
+                    console.log(year);
+                    $('.yrselectdesc').yearselect({ start: year, order: 'asc', end: (parseInt(year) + 20) });
+
+
+                    if ($("#Year").val() == "") {
+                        var yr = $("#years").val();
+                        $("#Year").val($("#years").val() + "-" + (parseInt(yr) + 1))
+                    }
+                    else
+                        $("#years").val($("#Year").val().split('-')[0])
+
+                });
+
+                function changeYear(yr) {
+                    $("#Year").val($("#years").val() + "-" + (parseInt(yr) + 1))
+                }
+
+                function FillSubjects(classId) {
+                    if ($('#ClassId :selected').text() != "Select Class") {
+                        $.ajax({
+                            url: '/Subject/GetSubjects',
+                            type: "GET",
+                            dataType: "JSON",
+                            data: { classId: classId },
+                            success: function (subjects) {
+                                $("#SubjectId").html(""); // clear before appending new list
+                                $("#SubjectId").append($('<option></option>').val("").html("Select Subject"));
+                                $.each(subjects, function (i, sub) {
+                                    $("#SubjectId").append(
+                                        $('<option></option>').val(sub.SubjectId).html(sub.Name));
+                                });
+                                $("#SubjectId").val(@ViewBag.SubjectId);
+                            }
+                        });
+                    } else {
+                        $("#SubjectId").html("");
+                    }
+                }
+            </script>
+            @Scripts.Render("~/bundles/masterfeescript")
+        }

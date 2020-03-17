@@ -1,0 +1,22 @@
+﻿@model IEnumerable<CMS.Web.ViewModels.UploadAssignmentsViewModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h2>Assignments List</h2>
+<p>
+    @Html.ActionLink("Upload New Assignments", "Create")
+</p>
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_MVCGridToolbar", new CMS.Web.Models.MVCGridToolbarModel()
+   {
+       MVCGridName = "UploadAssignmentsGrid",
+       PageSize = true,
+       ColumnVisibility = false,
+       Export = false,
+       GlobalSearch = false
+   })
+        @Html.MVCGrid("UploadAssignmentsGrid")
+    </div>
+</div>

@@ -1,0 +1,26 @@
+﻿@model IEnumerable<CMS.Web.ViewModels.DailyPracticePaperViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Daily Practice Problems List</h2>
+
+<p>
+    @Html.ActionLink("Create New Daily Practice Problems", "Create")
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_MVCGridToolbar", new CMS.Web.Models.MVCGridToolbarModel()
+   {
+       MVCGridName = "DailyPracticePaperGrid",
+       PageSize = true,
+       ColumnVisibility = true,
+       Export = true,
+       GlobalSearch = false
+   })
+        @Html.MVCGrid("DailyPracticePaperGrid", new { userRole = ViewBag.userId })
+    </div>
+</div>

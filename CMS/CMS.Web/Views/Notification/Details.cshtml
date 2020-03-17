@@ -1,0 +1,112 @@
+﻿@model CMS.Web.ViewModels.NotificationViewModel
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Notification Details</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        </br>
+        <dt>
+            @Html.DisplayNameFor(model => model.SelectedBranches)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SelectedBranches)
+        </dd>
+        <br />
+        <dt>
+            @Html.DisplayNameFor(model => model.SelectedClasses)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SelectedClasses)
+        </dd>
+        </br>
+        <dt>
+            @Html.DisplayNameFor(model => model.SelectedBatches)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SelectedBatches)
+        </dd>
+        </br>
+        <dt>
+            @Html.DisplayNameFor(model => model.AllUser)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AllUser)
+        </dd>
+        </br>
+        <dt>
+            @Html.DisplayNameFor(model => model.StudentCount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StudentCount)
+        </dd>
+        </br>
+        <dt>
+            @Html.DisplayNameFor(model => model.ParentCount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ParentCount)
+        </dd>
+        </br>
+        <dt>
+            @Html.DisplayNameFor(model => model.TeacherCount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TeacherCount)
+        </dd>
+        </br>
+        <dt>
+            @Html.DisplayNameFor(model => model.BranchAdminCount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BranchAdminCount)
+        </dd>
+        </br>
+        <dt>
+            @Html.DisplayNameFor(model => model.NotificationMessage)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NotificationMessage)
+        </dd>
+        <br />
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedOn)
+        </dd>
+        @*</br>
+        <dt>
+            @Html.DisplayNameFor(model => model.NotificationAutoDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NotificationAutoDate)
+        </dd>*@
+        </br>
+        <dt>
+            @Html.DisplayNameFor(model => model.Media)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Media)
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Back to Notification List", "Index")
+</p>

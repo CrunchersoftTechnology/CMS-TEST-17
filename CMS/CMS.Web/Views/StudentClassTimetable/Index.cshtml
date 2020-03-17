@@ -1,0 +1,25 @@
+﻿@model IEnumerable<CMS.Domain.Storage.Projections.StudentTimetableViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h2>Student Class Timetable List</h2>
+
+<p>
+    @Html.ActionLink("Create Class Timetable", "Create")
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_MVCGridToolbar", new CMS.Web.Models.MVCGridToolbarModel()
+   {
+       MVCGridName = "StudentClassTimetableGrid",
+       PageSize = true,
+       ColumnVisibility = true,
+       Export = true,
+       GlobalSearch = false
+   })
+        @Html.MVCGrid("StudentClassTimetableGrid", new { userRole = ViewBag.userId })
+    </div>
+</div>

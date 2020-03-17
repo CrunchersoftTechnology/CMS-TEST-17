@@ -1,0 +1,22 @@
+﻿@model IEnumerable<CMS.Web.ViewModels.UploadNotesViewModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h2>Notes List</h2>
+<p>
+    @Html.ActionLink("Upload New Notes", "Create")
+</p>
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_MVCGridToolbar", new CMS.Web.Models.MVCGridToolbarModel()
+   {
+       MVCGridName = "UploadNotesGrid",
+       PageSize = true,
+       ColumnVisibility = false,
+       Export = false,
+       GlobalSearch = false
+   })
+        @Html.MVCGrid("UploadNotesGrid")
+    </div>
+</div>

@@ -1,0 +1,14 @@
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Storage\bin\Release\CMS.Domain.Storage.dll.config
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Storage\bin\Release\CMS.Domain.Storage.dll
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Storage\bin\Release\CMS.Domain.Storage.pdb
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Storage\bin\Release\CMS.Common.dll
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Storage\bin\Release\CMS.Domain.dll
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Storage\bin\Release\EntityFramework.dll
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Storage\bin\Release\EntityFramework.SqlServer.dll
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Storage\bin\Release\Microsoft.AspNet.Identity.Core.dll
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Storage\bin\Release\Microsoft.AspNet.Identity.EntityFramework.dll
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Storage\bin\Release\CMS.Common.pdb
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Storage\bin\Release\CMS.Domain.pdb
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Storage\obj\Release\CMS.Domain.Storage.csprojResolveAssemblyReference.cache
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Storage\obj\Release\CMS.Domain.Storage.dll
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Storage\obj\Release\CMS.Domain.Storage.pdb

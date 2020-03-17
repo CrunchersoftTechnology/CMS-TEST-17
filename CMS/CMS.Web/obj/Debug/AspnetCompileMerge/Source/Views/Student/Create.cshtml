@@ -1,0 +1,1507 @@
+﻿@model CMS.Web.ViewModels.StudentViewModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@*<style type="text/css">
+        #webcam, #canvas {
+            width: 320px;
+            border: 20px solid #333;
+            background: #eee;
+            -webkit-border-radius: 20px;
+            -moz-border-radius: 20px;
+            border-radius: 20px;
+        }
+
+        #webcam {
+            position: relative;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+
+            #webcam > span {
+                z-index: 2;
+                position: absolute;
+                color: #eee;
+                font-size: 10px;
+                bottom: -16px;
+                left: 152px;
+            }
+
+            #webcam > img {
+                z-index: 1;
+                position: absolute;
+                border: 0px none;
+                padding: 0px;
+                bottom: -40px;
+                left: 89px;
+            }
+
+            #webcam > div {
+                border: 5px solid #333;
+                position: absolute;
+                right: -90px;
+                padding: 5px;
+                -webkit-border-radius: 8px;
+                -moz-border-radius: 8px;
+                border-radius: 8px;
+                cursor: pointer;
+            }
+
+            #webcam a {
+                background: #fff;
+                font-weight: bold;
+            }
+
+                #webcam a > img {
+                    border: 0px none;
+                }
+
+        #canvas {
+            border: 20px solid #ccc;
+            background: #eee;
+        }
+
+        #flash {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            z-index: 5000;
+            width: 100%;
+            height: 500px;
+            background-color: #c00;
+            display: none;
+        }
+
+        object {
+            display: block; /* HTML5 fix */
+            position: relative;
+            z-index: 1000;
+        }
+    </style>*@
+@Styles.Render("~/Content/StudentPhotoCropCSS")
+<h2>Create Student</h2>
+
+@using (Html.BeginForm("Create", "Student", FormMethod.Post, new
+{
+    enctype = "multipart/form-data"
+}))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.SelectedSubject)
+    @Html.HiddenFor(m => m.CurrentUserRole)
+    @Html.HiddenFor(m => m.UserId)
+    @Html.HiddenFor(m => m.IsIdExits)
+    @Html.HiddenFor(m => m.PaymentLists)
+    @Html.HiddenFor(m => m.PaymentErrorMessage)
+    @Html.HiddenFor(m => m.ClientId)
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="container">
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <h3>Official Details</h3><hr />
+                    <div class="row">
+                        <div class="col-md-6">
+                            @if (Model.CurrentUserRole == "Admin" || Model.CurrentUserRole=="Client")
+                            {
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Branches, htmlAttributes: new { @class = "control-label col-md-3 asterisk_input", @id = "lblBranchId" })
+                                    <div class="col-md-9">
+                                        @Html.DropDownListFor(model => model.BranchId, new SelectList(Model.Branches, "Value", "Text"),
+                    "Select Branch", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.BranchId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            }
+                            else if (Model.CurrentUserRole == "BranchAdmin" )
+                            {
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.BranchName, htmlAttributes: new { @class = "control-label col-md-3 asterisk_input", @id = "lblBranchName" })
+                                    <div class="col-md-9">
+                                        @Html.EditorFor(m => m.BranchName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        @Html.ValidationMessageFor(model => model.BranchId, "", new { @class = "text-danger" })
+                                        @Html.HiddenFor(m => m.BranchId)
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Boards, htmlAttributes: new { @class = "control-label col-md-3 asterisk_input", @id = "lblBoardId" })
+                                <span class="control-label glyphicon glyphicon-plus-sign" title="Click on this button to add new
+           Board." id="tooltipBoardName" onclick="@("window.location.href='" + @Url.Action("Create", "Board") + "'");"></span>
+                                <div class="col-md-7">
+                                    @Html.DropDownListFor(model => model.BoardId, new SelectList(Model.Boards, "Value", "Text"),
+                    "Select Board", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.BoardId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Classes, htmlAttributes: new { @class = "control-label col-md-3 asterisk_input", @id = "lblClassId" })
+                                <span class="control-label glyphicon glyphicon-plus-sign" title="Click on this button to add new
+           Class." id="tooltipClassName" onclick="@("window.location.href='" + @Url.Action("Create", "Class") + "'");"></span>
+                                <div class="col-md-7">
+                                    @Html.DropDownListFor(model => model.ClassId, new SelectList(Model.Classes, "Value", "Text"),
+                    "Select Class", new { @class = "form-control", @onchange = "FillBatchByClassId(this.value)" })
+                                    @Html.ValidationMessageFor(model => model.ClassId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Batches, htmlAttributes: new { @class = "control-label col-md-3 asterisk_input", @id = "lblBatchId" })
+                                <span class="control-label glyphicon glyphicon-plus-sign" title="Click on this button to add new
+                                    Batch." id="tooltipBatchName" onclick="@("window.location.href='" + @Url.Action("Create", "Batch") + "'");"></span>
+                                <div class="col-md-7">
+                                    @Html.DropDownListFor(model => model.BatchId, new SelectList(Enumerable.Empty<SelectListItem>(),
+                   "BatchId", "BatchName"), "Select Batch", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.BatchId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.SubjectId, htmlAttributes: new { @class = "control-label col-md-3 asterisk_input", @id = "lblSubjectId" })
+                                <span class="control-label glyphicon glyphicon-plus-sign" title="Click on this button to add new
+                                    Subject." id="tooltipSubjectName" onclick="@("window.location.href='" + @Url.Action("Create", "Subject") + "'");"></span>
+                                <div class="col-md-7">
+                                    @Html.DropDownListFor(model => model.SubjectId, new SelectList(Enumerable.Empty<SelectListItem>(), "SubjectId", "BatchName"),
+                   new { @class = "form-control", @multiple = "multiple" })
+                                    @Html.ValidationMessageFor(model => model.SelectedSubject, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-md-6"></div>
+                        </div>
+                    </div>
+                    <h3>Personal Details</h3><hr />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-3 asterisk_input", @id = "lblFirstName" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                                    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.MiddleName, htmlAttributes: new { @class = "control-label col-md-3 " })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.MiddleName, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                                    @Html.ValidationMessageFor(model => model.MiddleName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-3 asterisk_input", @id = "lblLastName" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                                    @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.MotherName, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.MotherName, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                                    @Html.ValidationMessageFor(model => model.MotherName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-3 asterisk_input", @id = "lblGender" })
+                                <div class="col-md-9">
+                                    @Html.EnumDropDownListFor(m => m.Gender, "Select Gender", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-3 asterisk_input", @id = "lblAddress" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control input-large", @rows = 2, @autocomplete = "off" } })
+                                    @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Pin, htmlAttributes: new { @class = "control-label col-md-3", @id = "lblPin" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.Pin, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @maxlength = "6" } })
+                                    @Html.ValidationMessageFor(model => model.Pin, "", new { @class = "error" })
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DOB, htmlAttributes: new { @class = "control-label col-md-3 asterisk_input", @id = "lblDOB" })
+                                <span class="control-label glyphicon glyphicon-info-sign" title="Add correct date of birth which will be
+               required for registering parent app." id="tooltipDOB"></span>
+                                <div class="col-md-7">
+                                    @Html.EditorFor(model => model.DOB, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @type = "text", @maxlength = "10", @placeholder = "DD-MM-YYYY" } })
+                                    @Html.ValidationMessageFor(model => model.DOB, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.BloodGroup, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EnumDropDownListFor(m => m.BloodGroup, "Select Blood Group", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.BloodGroup, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.StudentContact, htmlAttributes: new { @class = "control-label col-md-3 asterisk_input", @id = "lblStudentContact" })
+                                <span class="control-label glyphicon glyphicon-info-sign" title="Add correct phone number of
+             student will be required for registering student app." id="tooltipStudentContact"></span>
+                                <div class="col-md-7">
+                                    @Html.EditorFor(model => model.StudentContact, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @maxlength = "10" } })
+                                    @Html.ValidationMessageFor(model => model.StudentContact, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ParentContact, htmlAttributes: new { @class = "control-label col-md-3 asterisk_input", @id = "lblParentContact" })
+                                <span class="control-label glyphicon glyphicon-info-sign" title="Add correct phone number of
+             parent will be required for registering parent app." id="tooltipParentContact"></span>
+                                <div class="col-md-7">
+                                    @Html.EditorFor(model => model.ParentContact, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @maxlength = "10" } })
+                                    @Html.ValidationMessageFor(model => model.ParentContact, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DOJ, htmlAttributes: new { @class = "control-label col-md-3 asterisk_input", @id = "lblDOJ" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.DOJ, new { htmlAttributes = new { @class = "form-control", autocomplete = "off", @type = "text", @maxlength = "10", @placeholder = "DD-MM-YYYY" } })
+                                    @Html.ValidationMessageFor(model => model.DOJ, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.EmergencyContact, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-7">
+                                    @Html.EditorFor(model => model.EmergencyContact, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @maxlength = "10" } })
+                                    @Html.ValidationMessageFor(model => model.EmergencyContact, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ParentEmailId, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.ParentEmailId, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                                    @Html.ValidationMessageFor(model => model.ParentEmailId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Schools, htmlAttributes: new { @class = "control-label col-md-3 asterisk_input", @id = "lblSchoolId" })
+                                <span class="control-label glyphicon glyphicon-plus-sign" title="Click on this button to add new
+           School." id="tooltipSchoolName" onclick="@("window.location.href='" + @Url.Action("Create", "School") + "'");"></span>
+                                <div class="col-md-7">
+                                    @Html.DropDownListFor(model => model.SchoolId, new SelectList(Model.Schools, "Value", "Text"),
+                    "Select School", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.SchoolId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.SeatNumber, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.SeatNumber, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                                    @Html.ValidationMessageFor(model => model.SeatNumber, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-3 asterisk_input", @id = "lblEmail" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ConfirmEmail, htmlAttributes: new { @class = "control-label col-md-3 asterisk_input", @id = "lblConfirmEmail" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.ConfirmEmail, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                                    @Html.ValidationMessageFor(model => model.ConfirmEmail, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PunchId, htmlAttributes: new { @class = "control-label col-md-3 asterisk_input", @id = "lblPunchId" })
+                                <span class="control-label glyphicon glyphicon-info-sign" title="Add correct punch id, will get you after registering student on machine &
+             required to map student attendance." id="tooltipPunchid"></span>
+                                <div class="col-md-7">
+                                    @Html.EditorFor(model => model.PunchId, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.PunchId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Fee Details</h3><hr />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.VANArea, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.VANArea, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                                    @Html.ValidationMessageFor(model => model.VANArea, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.VANFee, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.VANFee, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                                    @Html.ValidationMessageFor(model => model.VANFee, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TotalFees, htmlAttributes: new { @class = "control-label col-md-3 asterisk_input", @id = "lblTotalFees" })
+                                <div class="col-md-2">
+                                    @Html.EditorFor(model => model.TotalFees, new { htmlAttributes = new { @class = "form-control", onchange = "getFinalFee()", @autocomplete = "off", @readonly = "readonly" } })
+                                </div>
+                                <div class="col-sm-7">
+                                    <div id="SelectYear" class="btn-group btn-group-md" role="radiogroup" aria-label="...">
+                                        <button id="preYear" type="button" class="btn btn-default" data-value="1"></button>
+                                        <button id="nextYear" type="button" class="btn btn-default" data-value="2"></button>
+                                        @*</div>
+                                            <div class="col-md-4">*@<br />
+                                        @Html.ValidationMessageFor(model => model.TotalFees, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-offset-3 col-sm-12">
+                                        <label id="msg" class="text-danger hidden">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Discount, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.Discount, new { htmlAttributes = new { @class = "form-control", onchange = "getFinalFee()", @autocomplete = "off" } })
+                                    @Html.ValidationMessageFor(model => model.Discount, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.FinalFees, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.FinalFees, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                    @Html.ValidationMessageFor(model => model.FinalFees, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PaidFee, htmlAttributes: new { @class = "control-label col-md-3", @id = "lblPaidFeeId" })
+                                <div class="col-md-7">
+                                    @Html.EditorFor(model => model.PaidFee, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                                    @Html.ValidationMessageFor(model => model.PaidFee, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ReceiptBookNumber, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.ReceiptBookNumber, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" } })
+                                    @Html.ValidationMessageFor(model => model.ReceiptBookNumber, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ReceiptNumber, htmlAttributes: new { @class = "control-label col-md-3", @id = "lblPaidFeeId" })
+                                <div class="col-md-7">
+                                    @Html.EditorFor(model => model.ReceiptNumber, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" } })
+                                    @Html.ValidationMessageFor(model => model.ReceiptNumber, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PaymentNo, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EnumDropDownListFor(m => m.PaymentNo, "Select Payment", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.PaymentNo, "", new { @class = "text-danger" })
+                                    <br />
+                                    <table id="PaymentList" class="table"></table>
+                                    &nbsp; <button name="Add-Row" type="button">New Payment</button>&nbsp;<button name="Remove-Row" type="button">Remove Payment</button>
+                                    <label id="PaymentMessage" style="color:red;" class="control-label col-md-9"><b></b></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Add-On Details</h3><hr />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PickAndDrop, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-3">
+                                    <div class="checkbox checkbox-inline check-box">
+                                        @Html.EditorFor(model => model.PickAndDrop)
+                                        @Html.ValidationMessageFor(model => model.PickAndDrop, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.IsWhatsApp, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-3">
+                                    <div class="checkbox checkbox-inline check-box">
+                                        @Html.EditorFor(model => model.IsWhatsApp)
+                                        @Html.ValidationMessageFor(model => model.IsWhatsApp, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <span class="control-label glyphicon glyphicon-info-sign" title="Check the active status if student is part of institute or class.
+                Uncheck if student is not
+                willing to continue the class." id="tooltipActive"></span>
+                                <div class="col-md-3">
+                                    <div class="checkbox checkbox-inline check-box">
+                                        @Html.EditorFor(model => model.IsActive)
+                                        @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PhotoPath, htmlAttributes: new { @class = "control-label col-md-3", @id = "lblPhotoFilePath" })
+                                <div class="col-md-6">
+                                    <br />
+                                    <div class="jcrop-holder"></div>
+                                    @Html.TextBoxFor(m => m.PhotoFilePath, new { @type = "file", @class = "inline", @accept = ".png,.jpg,.jpeg,.gif,image/*;capture=camera" })
+                                    <br />
+                                    <br />
+                                    <div id="imgCrop">
+                                        <img id="avatar-crop" src="" width="100%" />
+                                    </div>
+                                    <br />
+                                    <canvas id="canvasCrop" height="5" width="272"></canvas>
+                                    <input type="hidden" name="imgCropped" id="imgCropped" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="button" id="Capture">Capture</button>
+                            </div>
+                            <div id="webcam" height="5" width="320">
+
+                            </div>
+                            <p>
+                                <canvas id="canvas" height="5" width="320"></canvas>
+                            </p>
+
+                            @Html.HiddenFor(model => model.ImageData)
+
+                            <h3>Available Cameras</h3>
+                            <ul id="cams"></ul>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Create" class="btn btn-default" id="save" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to Students List", "Index")
+</div>
+
+@section Scripts {
+    <script>
+
+
+
+
+
+        $(document).ready(function () {
+
+            $("#ParentContact").keypress(function (e) {
+                //if the letter is not digit then display error and don't type anything
+                if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    //display error message
+
+                        $("#errmsg").html("Digits Only").show().fadeOut("slow");
+                        alert("Please enter the 10 digits number");
+                        return false;
+
+                }
+            });
+
+
+            $("#StudentContact").keypress(function (e) {
+                //if the letter is not digit then display error and don't type anything
+                if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    //display error message
+
+                        $("#errmsg").html("Digits Only").show().fadeOut("slow");
+                        alert("Please enter the 10 digits number");
+                        return false;
+
+                }
+            });
+
+            $("#EmergencyContact").keypress(function (e) {
+                //if the letter is not digit then display error and don't type anything
+                if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    //display error message
+
+                    $("#errmsg").html("Digits Only").show().fadeOut("slow");
+                    alert("Please enter the 10 digits number");
+                    return false;
+
+                }
+            });
+            $("#Pin").keypress(function (e) {
+                //if the letter is not digit then display error and don't type anything
+                if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    //display error message
+
+                        $("#errmsg").html("Digits Only").show().fadeOut("slow");
+                        alert("Please enter the 6 digits number");
+                        return false;
+
+                }
+            });
+
+            $("#DOJ").keypress(function (e) {
+
+                if (ParentContact > 10) {
+                    //display error message
+                        $("#errmsg").html("Digits Only").show().fadeOut("slow");
+                        alert("Please enter the 10 digits number");
+                        return false;
+
+
+                }
+            });
+
+            $("#tooltipClassName").tooltip({ track: true });
+            $("#tooltipBoardName").tooltip({ track: true });
+            $("#tooltipSchoolName").tooltip({ track: true });
+            $("#tooltipBatchName").tooltip({ track: true });
+            $("#tooltipActive").tooltip({ track: true });
+            $("#tooltipParentContact").tooltip({ track: true });
+            $("#tooltipDOB").tooltip({ track: true });
+            $("#tooltipPunchid").tooltip({ track: true });
+            $("#tooltipStudentContact").tooltip({ track: true });
+
+            $('#PhotoFilePath').on('change', function () {
+                RequiredValidation('#PhotoFilePath', '#lblPhotoFilePath')
+            });
+
+            $('#PunchId').on('change', function () {
+                RequiredValidation('#PunchId', '#lblPunchId')
+            });
+            $('#preYear').on('change', function () {
+                RequiredValidation('#preYear', '#lblTotalFees')
+            });
+            $('#nextYear').on('change', function () {
+                RequiredValidation('#nextYear', '#lblTotalFees')
+            });
+            $('#ConfirmEmail').on('change', function () {
+                RequiredValidation('#ConfirmEmail', '#lblConfirmEmail')
+            });
+            $('#Email').on('change', function () {
+                RequiredValidation('#Email', '#lblEmail')
+            });
+            $('#SchoolId').on('change', function () {
+                RequiredValidation('#SchoolId', '#lblSchoolId')
+            });
+            $('#DOJ').on('change', function () {
+                RequiredValidation('#DOJ', '#lblDOJ')
+            });
+            $('#ParentContact').on('change', function () {
+                RequiredValidation('#ParentContact', '#lblParentContact')
+            });
+            $('#StudentContact').on('change', function () {
+                RequiredValidation('#StudentContact', '#lblStudentContact')
+            });
+            $('#DOB').on('change', function () {
+                RequiredValidation('#DOB', '#lblDOB')
+            });
+            $('#Address').on('change', function () {
+                RequiredValidation('#Address', '#lblAddress')
+            });
+            $('#Gender').on('change', function () {
+                RequiredValidation('#Gender', '#lblGender')
+            });
+            $('#LastName').on('change', function () {
+                RequiredValidation('#LastName', '#lblLastName')
+            });
+            $('#FirstName').on('change', function () {
+                RequiredValidation('#FirstName', '#lblFirstName')
+            });
+            $('#BatchId').on('change', function () {
+                RequiredValidation('#BatchId', '#lblBatchId')
+            });
+            $('#ClassId').on('change', function () {
+                RequiredValidation('#ClassId', '#lblClassId')
+            });
+            $('#BoardId').on('change', function () {
+                RequiredValidation('#BoardId', '#lblBoardId')
+            });
+            $('#BranchId').on('change', function () {
+                RequiredValidation('#BranchId', '#lblBranchId')
+            });
+            $('#BranchName').on('change', function () {
+                RequiredValidation('#BranchName', '#lblBranchName')
+            });
+            $('#SubjectId').on('change', function () {
+                RequiredValidation('#SubjectId', '#lblSubjectId')
+            });
+            $('#PaidFee').on('change', function () {
+                if ($("#PaidFee").val() != "0.00" && $("#PaidFee").val() > "0") {
+                    $("#ReceiptBookNumber,#ReceiptNumber").removeAttr("readonly");
+                }
+                if ($("#PaidFee").val() == "" || $("#PaidFee").val() == "0") {
+                    $("#ReceiptBookNumber,#ReceiptNumber").val('');
+                    $("#ReceiptBookNumber,#ReceiptNumber").attr("readonly", "readonly");
+                }
+            });
+
+            $('#PaymentNo').on('change', function () {
+                if ($('#PaymentNo').val() <= 12) {
+                    $("#PaymentList").html('');
+                    $("#PaymentMessage").html('');
+                    var divPayment = "";
+                    divPayment += "<tr><td><div class='col-md-8'><b>Date</b></div></td><td><div class='col-md-4'><div aria-label='...'><label><b>Payment</b></label></td><td></div></div></td></tr>";
+                    for (var i = 0; i < $('#PaymentNo').val() ; i++) {
+                        divPayment += "<tr><td><div class='col-md-8'><input type='date' name='Date' id='Date' class='PaymentDate'></div></td><td><div class='col-md-4'><div aria-label='...'><input type='text' name='Payment' id='Payment' class='PaymentAmount' autocomplete='off'></td><td></div></div></td></tr>";
+                    }
+                    divPayment = "<tbody>" + divPayment + "</tbody>";
+                    $("#PaymentList").append(divPayment);
+                    $(".PaymentAmount").unbind("change");
+                    $(".PaymentAmount").bind("change", GetPayment);
+                    //$(".PaymentDate").unbind("change");
+                    //$(".PaymentDate").bind("change", GetPayment);
+                }
+            });
+
+            $('#Discount').on('change', function () {
+                if ($("#Discount").val() == "" || $("#Discount").val() == "0") {
+                    $('#Discount').val('0.00');
+                }
+            });
+            $("#Capture").click(function () {
+
+                webcam.capture(); changeFilter(); void (0);
+                var image = document.getElementById("canvas").toDataURL("image/png");
+                //console.log(image);
+                image = image.replace('data:image/png;base64,', '');
+                $("#ImageData").val(image);
+            });
+
+            $('#SubjectId').multiselect();
+
+            $("#nextYear").addClass("active").siblings().removeClass("active");
+
+            if ('@ViewBag.SelectedSubjects' != "") {
+                FillSubjects();
+                $("#SelectedSubject").val('@ViewBag.SelectedSubjects');
+            }
+
+            if ('@ViewBag.BatchId' != "") {
+                FillBatchByClassId($("#ClassId").val());
+                $("#BatchId").val('@ViewBag.BatchId');
+            }
+
+            $(".btn-group > .btn").click(function () {
+                $(this).addClass("active").siblings().removeClass("active");
+                $.ajax({
+                    url: '/Student/GetSubjectFees',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: {
+                        selectedSubject: $("#SelectedSubject").val(),
+                        selectedYear: $(this).text()
+                    },
+                    success: function (data) {
+                        $("#TotalFees").val(data);
+                        getFinalFee();
+                        if (data == 0) {
+                            $("#msg").html("");
+                            $("#msg").removeClass("hidden");
+                            if ($("#SelectedSubject").val() != "") {
+                                $("#msg").append("Please add Master Fee details of selected subject!    ");
+                            }
+                        }
+                        else {
+                            $("#msg").addClass("hidden");
+                        }
+                    }
+                });
+            });
+
+            $("#preYear").text((new Date().getFullYear() - 1) + "-" + new Date().getFullYear());
+
+            $("#nextYear").text(new Date().getFullYear() + "-" + (new Date().getFullYear() + 1));
+
+            $('#SubjectId').on('change', function () {
+                getFee();
+            });
+
+            $('#close').click(function () {
+                var val = [];
+                $(':checkbox:checked').each(function (i) {
+                    val[i] = $(this).val();
+                });
+            });
+
+            if ($("#DOJ, #DOB").val() == "01-01-0001") {
+                $("#DOJ, #DOB").val("");
+            }
+
+            $("#DOJ, #DOB").datepicker({
+                dateFormat: 'dd-mm-yy',
+                changeYear: true,
+                changeMonth: true,
+                yearRange: "-100:+10",
+            });
+
+            $("#DOJ, #DOB").keydown(function (e) {
+                var afterValue;
+                if (e.keyCode != 8) {
+                    if ($(this).val().length == 2 || $(this).val().length == 5) {
+                        var beforeValue = $(this).val();
+                        if ($(this).val().length == 2) {
+                            if ((parseInt(beforeValue) > 30 || parseInt(beforeValue) == 0)) {
+                                afterValue = "01";
+                            } else {
+                                afterValue = beforeValue;
+                            }
+                        }
+
+                        if ($(this).val().length == 5) {
+                            if ((parseInt(beforeValue.split('-')[1]) > 12 || parseInt(beforeValue.split('-')[1]) == 0)) {
+                                afterValue = beforeValue.split('-')[0] + "-" + "01";
+                            } else {
+                                afterValue = beforeValue;
+                            }
+                        }
+                        $(this).val(afterValue + "-");
+
+                    } else if ($(this).val().length == 10) {
+                        var dateDetails = $(this).val().split('-');
+                        if (parseInt(dateDetails[1]) > 12) {
+                            dateDetails[1] = "01";
+                        }
+                        if (parseInt(dateDetails[0]) > 30) {
+                            dateDetails[0] = "01";
+                        }
+                        var finalDate = dateDetails[0] + "-" + dateDetails[1] + "-" + dateDetails[2];
+                        $(this).val(finalDate);
+                    }
+                }
+            });
+
+            $("#DOJ, #DOB").keyup(function (e) {
+                var date2 = $(this).datepicker('getDate', '+1d');
+                if (e.keyCode == 38) {
+                    date2.setDate(date2.getDate() + 1);
+                    $(this).datepicker('setDate', date2);
+                }
+                if (e.keyCode == 40) {
+                    date2.setDate(date2.getDate() - 1);
+                    $(this).datepicker('setDate', date2);
+                }
+            });
+
+            //if ($("#DOJ").val() == "0001-01-01")
+            //    $("#DOJ").val('');
+            //if ($("#DOB").val() == "0001-01-01")
+            //    $("#DOB").val('');
+
+            if ($("#PaidFee").val() != "0.00") {
+                $("#ReceiptBookNumber,#ReceiptNumber").removeAttr("readonly");
+            }
+            if ($("#PaidFee").val() == "") {
+                $("#ReceiptBookNumber,#ReceiptNumber").val('');
+                $("#ReceiptBookNumber,#ReceiptNumber").attr("readonly");
+            }
+            getFee();
+
+            if ($("#PaymentLists").val() != "") {
+                var data = $("#PaymentLists").val();
+                var obj = $.parseJSON(data);
+                $("#PaymentList").html('');
+                var divPayment = "";
+                divPayment += "<tr><td><div class='col-md-8'><b>Date</b></div></td><td><div class='col-md-4'><div aria-label='...'><label><b>Payment</b></label></td><td></div></div></td></tr>";
+                $.each(obj, function () {
+                    divPayment += "<tr><td><div class='col-md-8'><input type='date' name='Date' id='Date' class='PaymentDate' value='" + this['Date'] + "'></div></td><td><div class='col-md-4'><div aria-label='...'><input type='text' name='Payment' id='Payment' class='PaymentAmount' value='" + this['Payment'] + "' autocomplete='off'></td><td></div></div></td></tr>";
+                });
+                divPayment = "<tbody>" + divPayment + "</tbody>";
+                $("#PaymentList").append(divPayment);
+                $(".PaymentDate").datepicker({
+                    dateFormat: 'dd-mm-yy',
+                    changeYear: true,
+                    changeMonth: true,
+                });
+                $(".PaymentAmount").unbind("change");
+                $(".PaymentAmount").bind("change", GetPayment);
+                //$(".PaymentDate").unbind("change");
+                //$(".PaymentDate").bind("change", GetPayment);
+
+                //$(".PaymentDate").unbind("keydown");
+                //$(".PaymentDate").bind("keydown", GetDateOnPayment);
+            }
+
+            $('button[name="Add-Row"]').on('click', function () {
+                $("#PaymentMessage").html('');
+                var paymentNo = parseInt($("#PaymentNo").val()) + 1;
+                console.log(paymentNo);
+                $("#PaymentNo").val(paymentNo);
+
+                if ($("#PaymentNo").val() == null) {
+                    $("#PaymentMessage").text('The payment must be maximum 12.')
+                }
+                else {
+                    var divPayment = "";
+                    divPayment += "<tr><td><div class='col-md-8'><input type='date' name='Date' id='Date' class='PaymentDate'></div></td><td><div class='col-md-4'><div aria-label='...'><input type='text' name='Payment' id='Payment' class='PaymentAmount' autocomplete='off'></td><td></div></div></td></tr>";
+                    divPayment = "<tbody>" + divPayment + "</tbody>";
+                    $("#PaymentList").append(divPayment);
+                    $(".PaymentAmount").unbind("change");
+                    $(".PaymentAmount").bind("change", GetPayment);
+                    //$(".PaymentDate").unbind("change");
+                    //$(".PaymentDate").bind("change", GetPayment);
+                    //$(".datepicker" + paymentNo).datepicker({
+                    //    dateFormat: 'dd-mm-yy',
+                    //    changeYear: true,
+                    //    changeMonth: true,
+                    //});
+                    //$(".PaymentDate").unbind("keydown");
+                    //$(".PaymentDate").bind("keydown", GetDateOnPayment);
+                }
+            });
+
+            $('button[name="Remove-Row"]').on('click', function () {
+                $("#PaymentMessage").html('');
+                if ($("#PaymentNo").val() == "0") {
+                    $("#PaymentMessage").text('All payment removed')
+                }
+                else {
+                    $('#PaymentList tr:last').remove();
+
+                    var paymentNo = parseInt($("#PaymentNo").val()) - 1;
+                    $("#PaymentNo").val(paymentNo);
+                }
+            });
+        });
+
+        function GetDateOnPayment(e) {
+            var afterValue;
+            if (e.keyCode != 8) {
+                if ($(this).val().length == 2 || $(this).val().length == 5) {
+                    var beforeValue = $(this).val();
+                    if ($(this).val().length == 2) {
+                        if ((parseInt(beforeValue) > 30 || parseInt(beforeValue) == 0)) {
+                            afterValue = "01";
+                        } else {
+                            afterValue = beforeValue;
+                        }
+                    }
+
+                    if ($(this).val().length == 5) {
+                        if ((parseInt(beforeValue.split('-')[1]) > 12 || parseInt(beforeValue.split('-')[1]) == 0)) {
+                            afterValue = beforeValue.split('-')[0] + "-" + "01";
+                        } else {
+                            afterValue = beforeValue;
+                        }
+                    }
+                    $(this).val(afterValue + "-");
+
+                } else if ($(this).val().length == 10) {
+                    var dateDetails = $(this).val().split('-');
+                    if (parseInt(dateDetails[1]) > 12) {
+                        dateDetails[1] = "01";
+                    }
+                    if (parseInt(dateDetails[0]) > 30) {
+                        dateDetails[0] = "01";
+                    }
+                    var finalDate = dateDetails[0] + "-" + dateDetails[1] + "-" + dateDetails[2];
+                    $(this).val(finalDate);
+                }
+            }
+        }
+
+        function GetPayment() {
+            var payment = parseInt($(this).val());
+            var sum = 0;
+            $(".PaymentAmount").each(function () {
+                sum += parseFloat(this.value);
+            });
+
+            if (payment <= '0') {
+                $(this).css("background", "rgb(243, 222, 222)");
+                $(this).val('');
+                $(this).attr('placeholder', 'Invalid Payment');
+                //  $(this).val('Invalid Payment');
+            }
+            else if ($("#FinalFees").val() > sum) {
+                $("#PaymentMessage").text('Payment amount is less.')
+            }
+            else if ($("#FinalFees").val() < sum) {
+                $("#PaymentMessage").text('Payment amount is exceed.')
+            }
+            else if ($("#FinalFees").val() >= payment) {
+                $("#PaymentMessage").html('');
+                $("#PaymentList").find("td #Payment").css("background", "none");
+                $("#PaymentList").find("td #Date").css("background", "none");
+
+                JSONObjMarks = [];
+                var date = $("#PaymentList").find("td #Date");
+                var payment = $("#PaymentList").find("td #Payment");
+                var studentDate = [];
+                var studentPayment = [];
+
+                date.each(function () {
+                    if ($(this).val() == "") {
+                        $("#PaymentMessage").text('Payment Date should not be blank.')
+                    }
+                    studentDate.push($(this).val());
+                });
+                payment.each(function () {
+                    studentPayment.push($(this).val());
+                });
+                for (var i = 0; i < payment.length; i++) {
+                    var item = {};
+                    item["Date"] = studentDate[i];
+                    item["Payment"] = studentPayment[i];
+                    JSONObjMarks.push(item);
+                }
+                var data = (JSON.stringify(JSONObjMarks));
+                $("#PaymentLists").val(data);
+            }
+            else {
+                $(this).css("background", "rgb(243, 222, 222)");
+                $(this).val('');
+                $(this).attr('placeholder', 'Invalid Payment');
+                //  $(this).val('Invalid Payment');
+            }
+            $("#PaymentErrorMessage").val($("#PaymentMessage").text());
+        }
+
+        function getFee() {
+            var selected = $('#SubjectId').find("option:selected");
+            var arrSelected = [];
+            selected.each(function () {
+                arrSelected.push($(this).val());
+            });
+
+            var selectedSubject = arrSelected.toString();
+            if ('@ViewBag.SelectedSubjects' != "") {
+                selectedSubject = '@ViewBag.SelectedSubjects';
+            }
+            $("#SelectedSubject").val(selectedSubject);
+
+            $.ajax({
+                url: '/Student/GetSubjectFees',
+                type: "GET",
+                dataType: "JSON",
+                data: {
+                    selectedSubject: $("#SelectedSubject").val(),
+                    selectedYear: $("#nextYear").text()
+                },
+                success: function (data) {
+                    $("#TotalFees").val(data);
+                    getFinalFee();
+                    if (data == 0) {
+                        $("#msg").html("");
+                        $("#msg").removeClass("hidden");
+                        if ($("#SelectedSubject").val() != "") {
+                            $("#msg").append("Please add Master Fee details of selected subject!    ");
+                        }
+                    }
+                    else {
+                        $("#msg").addClass("hidden");
+                    }
+                }
+            });
+        }
+
+        function getFinalFee() {
+            if ((parseInt($("#TotalFees").val())) > (parseInt($("#Discount").val())))
+                $("#FinalFees").val((parseInt($("#TotalFees").val())) - (parseInt($("#Discount").val())));
+            else
+                $("#FinalFees").val(0)
+        }
+
+        function FillBatchByClassId(classId) {
+            {
+                if ($('#ClassId :selected').text() == "Select Class") {
+                    $("#BatchId").html("");
+                    $("#BatchId").append($('<option></option>').val(0).html("Select Batch"));
+                }
+                else {
+                    $.ajax({
+                        url: '/Student/GetBatch',
+                        type: "GET",
+                        dataType: "JSON",
+                        data: { classId: $("#ClassId").val() },
+                        async: false,
+                        success: function (data) {
+                            $("#BatchId").html(""); // clear before appending new list
+                            $("#BatchId").append($('<option></option>').val('').html("Select Batch"));
+                            $.each(data, function (i, sub) {
+                                $("#BatchId").append(
+                                    $('<option></option>').val(sub.BatchId).html(sub.BatchName));
+                            });
+                        }
+                    });
+
+                    FillSubjects(classId);
+                }
+            }
+        }
+
+        function FillSubjects() {
+            var classId = $('#ClassId').val();
+            if ($('#ClassId :selected').text() == "Select Class") {
+                var select = $("#SubjectId");
+                select.children().remove();
+                $("#SubjectId").html("");
+                $("#SubjectId").multiselect('destroy')
+                $("#SubjectId").multiselect();
+            }
+            else {
+                $.ajax({
+                    url: '/Student/GetSubjects',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { classId: classId },
+                    success: function (subjects) {
+                        var select = $("#SubjectId");
+                        select.children().remove();
+                        $("#SubjectId").html(""); // clear before appending new list
+                        $("#SubjectId").multiselect('destroy')
+                        $.each(subjects, function (i, sub) {
+                            $("#SubjectId").append("<option value='" + sub.SubjectId + "'>" + sub.Name + "</option>");
+                        });
+                        $("#SubjectId").multiselect('rebuild');
+
+                        var arr = $("#SelectedSubject").val().split(',');
+                        arr.forEach(function (i) {
+                            $("#SubjectId").multiselect('select', i)
+                        });
+                    }
+                });
+            }
+        }
+    </script>
+    <script src="~/Scripts/jquery.webcam.js"></script>
+    @Scripts.Render("~/bundles/StudentJS")
+    @Styles.Render("~/Content/StudentCSS")
+
+    <script type="text/javascript">
+
+        var pos = 0;
+        var ctx = null;
+        var cam = null;
+        var image = null;
+
+        var filter_on = false;
+        var filter_id = 0;
+
+        function changeFilter() {
+            if (filter_on) {
+                filter_id = (filter_id + 1) & 7;
+            }
+        }
+
+        function toggleFilter(obj) {
+            if (filter_on = !filter_on) {
+                obj.parentNode.style.borderColor = "#c00";
+            } else {
+                obj.parentNode.style.borderColor = "#333";
+            }
+        }
+        // validation offffff
+        //function valid(){
+        //    var pin_code=document.getElementById("Pin");
+        //    var user_mobile = document.getElementById("ParentContact");
+        //    var user_id = document.getElementById("ParentEmailId");
+        //    var pat1="/^([0-9](6,6)+$/";
+        //    var pattern=/^([0-9](10,10))+$/;
+        //    var filter=/^([a-z A-Z 0-9 _\.\-])+\@@(([a-z A-Z 0-9\-])+\.)+([a-z A-z 0-9]{3,3})+$/;
+
+        //    if (!filter.test(user_id.vlaue)) {
+        //        alert("Email is in www.gmail.com format");
+        //        user_id.focus();
+        //        return false;
+        //    }
+        //    if (!pattern.test(user_mobile.value)) {
+        //        alert("Phone nubmer is in 0123456789 format ");
+        //        user_mobile.focus();
+        //        return false;
+        //    }
+        //    if (!pat1.test(pin_code.value))  {
+        //        alert("Pin code should be 6 digits ");
+        //        pin_code.focus();
+        //        return false;
+        //    }
+        //}
+
+        $("#webcam").webcam({
+
+            width: 320,
+            height: 240,
+            mode: "callback",
+            swffile: "/jscam_canvas_only.swf",
+
+            onTick: function (remain) {
+
+                if (0 == remain) {
+                    jQuery("#status").text("Cheese!");
+                } else {
+                    jQuery("#status").text(remain + " seconds remaining...");
+                }
+            },
+
+            onSave: function (data) {
+
+                var col = data.split(";");
+                var img = image;
+
+                if (false == filter_on) {
+
+                    for (var i = 0; i < 320; i++) {
+                        var tmp = parseInt(col[i]);
+                        img.data[pos + 0] = (tmp >> 16) & 0xff;
+                        img.data[pos + 1] = (tmp >> 8) & 0xff;
+                        img.data[pos + 2] = tmp & 0xff;
+                        img.data[pos + 3] = 0xff;
+                        pos += 4;
+                    }
+
+                } else {
+
+                    var id = filter_id;
+                    var r, g, b;
+                    var r1 = Math.floor(Math.random() * 255);
+                    var r2 = Math.floor(Math.random() * 255);
+                    var r3 = Math.floor(Math.random() * 255);
+
+                    for (var i = 0; i < 320; i++) {
+                        var tmp = parseInt(col[i]);
+
+                        /* Copied some xcolor methods here to be faster than calling all methods inside of xcolor and to not serve complete library with every req */
+
+                        if (id == 0) {
+                            r = (tmp >> 16) & 0xff;
+                            g = 0xff;
+                            b = 0xff;
+                        } else if (id == 1) {
+                            r = 0xff;
+                            g = (tmp >> 8) & 0xff;
+                            b = 0xff;
+                        } else if (id == 2) {
+                            r = 0xff;
+                            g = 0xff;
+                            b = tmp & 0xff;
+                        } else if (id == 3) {
+                            r = 0xff ^ ((tmp >> 16) & 0xff);
+                            g = 0xff ^ ((tmp >> 8) & 0xff);
+                            b = 0xff ^ (tmp & 0xff);
+                        } else if (id == 4) {
+
+                            r = (tmp >> 16) & 0xff;
+                            g = (tmp >> 8) & 0xff;
+                            b = tmp & 0xff;
+                            var v = Math.min(Math.floor(.35 + 13 * (r + g + b) / 60), 255);
+                            r = v;
+                            g = v;
+                            b = v;
+                        } else if (id == 5) {
+                            r = (tmp >> 16) & 0xff;
+                            g = (tmp >> 8) & 0xff;
+                            b = tmp & 0xff;
+                            if ((r += 32) < 0) r = 0;
+                            if ((g += 32) < 0) g = 0;
+                            if ((b += 32) < 0) b = 0;
+                        } else if (id == 6) {
+                            r = (tmp >> 16) & 0xff;
+                            g = (tmp >> 8) & 0xff;
+                            b = tmp & 0xff;
+                            if ((r -= 32) < 0) r = 0;
+                            if ((g -= 32) < 0) g = 0;
+                            if ((b -= 32) < 0) b = 0;
+                        } else if (id == 7) {
+                            r = (tmp >> 16) & 0xff;
+                            g = (tmp >> 8) & 0xff;
+                            b = tmp & 0xff;
+                            r = Math.floor(r / 255 * r1);
+                            g = Math.floor(g / 255 * r2);
+                            b = Math.floor(b / 255 * r3);
+                        }
+
+                        img.data[pos + 0] = r;
+                        img.data[pos + 1] = g;
+                        img.data[pos + 2] = b;
+                        img.data[pos + 3] = 0xff;
+                        pos += 4;
+                    }
+                }
+
+                if (pos >= 0x4B000) {
+                    ctx.putImageData(img, 0, 0);
+                    pos = 0;
+                }
+            },
+
+            onCapture: function () {
+                webcam.save();
+
+                jQuery("#flash").css("display", "block");
+                jQuery("#flash").fadeOut(100, function () {
+                    jQuery("#flash").css("opacity", 1);
+                });
+            },
+
+            debug: function (type, string) {
+                jQuery("#status").html(type + ": " + string);
+            },
+
+            onLoad: function () {
+
+                var cams = webcam.getCameraList();
+                for (var i in cams) {
+                    jQuery("#cams").append("<li>" + cams[i] + "</li>");
+                }
+            }
+        });
+
+        function getPageSize() {
+
+            var xScroll, yScroll;
+
+            if (window.innerHeight && window.scrollMaxY) {
+                xScroll = window.innerWidth + window.scrollMaxX;
+                yScroll = window.innerHeight + window.scrollMaxY;
+            } else if (document.body.scrollHeight > document.body.offsetHeight) { // all but Explorer Mac
+                xScroll = document.body.scrollWidth;
+                yScroll = document.body.scrollHeight;
+            } else { // Explorer Mac...would also work in Explorer 6 Strict, Mozilla and Safari
+                xScroll = document.body.offsetWidth;
+                yScroll = document.body.offsetHeight;
+            }
+
+            var windowWidth, windowHeight;
+
+            if (self.innerHeight) { // all except Explorer
+                if (document.documentElement.clientWidth) {
+                    windowWidth = document.documentElement.clientWidth;
+                } else {
+                    windowWidth = self.innerWidth;
+                }
+                windowHeight = self.innerHeight;
+            } else if (document.documentElement && document.documentElement.clientHeight) { // Explorer 6 Strict Mode
+                windowWidth = document.documentElement.clientWidth;
+                windowHeight = document.documentElement.clientHeight;
+            } else if (document.body) { // other Explorers
+                windowWidth = document.body.clientWidth;
+                windowHeight = document.body.clientHeight;
+            }
+
+            // for small pages with total height less then height of the viewport
+            if (yScroll < windowHeight) {
+                pageHeight = windowHeight;
+            } else {
+                pageHeight = yScroll;
+            }
+
+            // for small pages with total width less then width of the viewport
+            if (xScroll < windowWidth) {
+                pageWidth = xScroll;
+            } else {
+                pageWidth = windowWidth;
+            }
+
+            return [pageWidth, pageHeight];
+        }
+
+        window.addEventListener("load", function () {
+
+            jQuery("body").append("<div id=\"flash\"></div>");
+
+            var canvas = document.getElementById("canvas");
+
+            if (canvas.getContext) {
+                ctx = document.getElementById("canvas").getContext("2d");
+                ctx.clearRect(0, 0, 320, 240);
+
+                var img = new Image();
+                //img.src = "/image/logo.gif";
+                img.onload = function () {
+                    ctx.drawImage(img, 129, 89);
+                }
+                image = ctx.getImageData(0, 0, 320, 240);
+            }
+
+            var pageSize = getPageSize();
+            jQuery("#flash").css({ height: 100 + "%" });
+
+        }, false);
+
+        window.addEventListener("resize", function () {
+
+            var pageSize = getPageSize();
+            jQuery("#flash").css({ height: 100 + "%" });
+
+        }, false);
+
+    </script>
+
+    @Scripts.Render("~/bundles/StudentPhotoCropJS")
+    <script>
+        var fixedHeight = 200;
+        var fixedWidth = 200;
+        jQuery(function ($) {
+
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        if ($('#imgCrop').data('Jcrop')) {
+                            // if need destroy jcrop or its created dom element here
+                            $('#imgCrop').data('Jcrop').destroy();
+                        }
+                        $('.jcrop-holder').remove();
+
+                        //replace with new image
+                        $('#avatar-crop').replaceWith('<img id="avatar-crop" src="' + e.target.result + '"/>');
+                        //run jcrop again
+                        $("#avatar-crop").Jcrop({
+                            allowResize: true,
+                            aspectRatio: 1,
+                            onSelect: SetCoordinates,
+                            onChange: SetCoordinates,
+                            setSelect: [0, 0, fixedWidth, fixedHeight],
+                            allowSelect: false,
+                            boxWidth: 600,
+                            boxHeight: 500
+                        });
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            // first run jcrop
+            $("#avatar-crop").Jcrop({
+                allowResize: false,
+                aspectRatio: 1,
+                onSelect: SetCoordinates,
+                onChange: SetCoordinates,
+                setSelect: [0, 0, fixedWidth, fixedHeight],
+                allowSelect: false,
+                boxWidth: 450,
+                boxHeight: 400
+            });
+
+            //input file
+            $("#PhotoFilePath").change(function () {
+                readURL(this);
+            });
+
+            function SetCoordinates(c) {
+                var canvas = $("#canvasCrop")[0];
+                var context = canvas.getContext('2d');
+                var img = new Image();
+                img.onload = function () {
+                    canvas.height = fixedHeight;
+                    canvas.width = fixedWidth;
+                    context.drawImage(img, c.x, c.y, c.w, c.h, 0, 0, canvas.width, canvas.height);
+                    //   context.drawImage(img, c.x, c.y, fixedWidth, fixedHeight, 0, 0, fixedWidth, fixedHeight);
+                    $('#imgCropped').val(canvas.toDataURL());
+                };
+                img.src = $('#avatar-crop').attr("src");
+            };
+        });
+    </script>
+}
+

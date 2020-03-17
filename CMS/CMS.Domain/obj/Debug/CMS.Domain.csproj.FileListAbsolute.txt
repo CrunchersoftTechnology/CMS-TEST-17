@@ -1,0 +1,384 @@
+E:\Yogesh\Arpita\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+E:\Yogesh\Arpita\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+E:\Yogesh\Arpita\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+E:\Yogesh\Arpita\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+E:\Yogesh\Arpita\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+E:\Yogesh\Arpita\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+E:\Yogesh\Arpita\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+E:\Yogesh\Arpita\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+E:\Yogesh\Arpita\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+E:\Yogesh\Arpita\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+E:\Yogesh\Arpita\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+E:\Yogesh\Arpita\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+E:\Yogesh\Arpita\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+E:\Yogesh\Arpita\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+E:\Yogesh\Arpita\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+E:\Yogesh\Arpita\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+E:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+E:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+E:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+E:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+E:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+E:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+E:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+E:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+E:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+E:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+E:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+E:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+E:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+E:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+E:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+E:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+F:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+F:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+F:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+F:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+F:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+F:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+F:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+F:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+F:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+F:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+F:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+F:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+F:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+F:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+F:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+F:\Yogesh\ARPITA PROJECTS\Arpita\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+F:\Yogesh\ARPITA PROJECTS\Arpita - Copy\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+F:\Yogesh\ARPITA PROJECTS\Arpita - Copy\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+F:\Yogesh\ARPITA PROJECTS\Arpita - Copy\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+F:\Yogesh\ARPITA PROJECTS\Arpita - Copy\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+F:\Yogesh\ARPITA PROJECTS\Arpita - Copy\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+F:\Yogesh\ARPITA PROJECTS\Arpita - Copy\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+F:\Yogesh\ARPITA PROJECTS\Arpita - Copy\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+F:\Yogesh\ARPITA PROJECTS\Arpita - Copy\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+F:\Yogesh\ARPITA PROJECTS\Arpita - Copy\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+F:\Yogesh\ARPITA PROJECTS\Arpita - Copy\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+F:\Yogesh\ARPITA PROJECTS\Arpita - Copy\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+F:\Yogesh\ARPITA PROJECTS\Arpita - Copy\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+F:\Yogesh\ARPITA PROJECTS\Arpita - Copy\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+F:\Yogesh\ARPITA PROJECTS\Arpita - Copy\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+F:\Yogesh\ARPITA PROJECTS\Arpita - Copy\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+F:\Yogesh\ARPITA PROJECTS\Arpita - Copy\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+F:\sheetal\Arpita - Copy\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+F:\sheetal\Arpita - Copy\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+F:\sheetal\Arpita - Copy\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+F:\sheetal\Arpita - Copy\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+F:\sheetal\Arpita - Copy\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+F:\sheetal\Arpita - Copy\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+F:\sheetal\Arpita - Copy\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+F:\sheetal\Arpita - Copy\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+F:\sheetal\Arpita - Copy\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+F:\sheetal\Arpita - Copy\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+F:\sheetal\Arpita - Copy\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+F:\sheetal\Arpita - Copy\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+F:\sheetal\Arpita - Copy\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+F:\sheetal\Arpita - Copy\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+F:\sheetal\Arpita - Copy\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+F:\sheetal\Arpita - Copy\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+F:\sheetal\Arpita\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+F:\sheetal\Arpita\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+F:\sheetal\Arpita\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+F:\sheetal\Arpita\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+F:\sheetal\Arpita\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+F:\sheetal\Arpita\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+F:\sheetal\Arpita\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+F:\sheetal\Arpita\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+F:\sheetal\Arpita\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+F:\sheetal\Arpita\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+F:\sheetal\Arpita\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+F:\sheetal\Arpita\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+F:\sheetal\Arpita\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+F:\sheetal\Arpita\Arpita Web Portal\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+F:\sheetal\Arpita\Arpita Web Portal\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+F:\sheetal\Arpita\Arpita Web Portal\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+F:\arpita work 04-09-2019\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+F:\arpita work 04-09-2019\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+F:\arpita work 04-09-2019\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+F:\arpita work 04-09-2019\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+F:\arpita work 04-09-2019\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+F:\arpita work 04-09-2019\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+F:\arpita work 04-09-2019\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+F:\arpita work 04-09-2019\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+F:\arpita work 04-09-2019\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+F:\arpita work 04-09-2019\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+F:\arpita work 04-09-2019\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+F:\arpita work 04-09-2019\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+F:\arpita work 04-09-2019\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+F:\arpita work 04-09-2019\Arpita Web Portal\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+F:\arpita work 04-09-2019\Arpita Web Portal\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+F:\arpita work 04-09-2019\Arpita Web Portal\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+F:\ArpitaApp\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+F:\ArpitaApp\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+F:\ArpitaApp\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+F:\ArpitaApp\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+F:\ArpitaApp\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+F:\ArpitaApp\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+F:\ArpitaApp\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+F:\ArpitaApp\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+F:\ArpitaApp\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+F:\ArpitaApp\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+F:\ArpitaApp\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+F:\ArpitaApp\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+F:\ArpitaApp\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+F:\ArpitaApp\Arpita Web Portal\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+F:\ArpitaApp\Arpita Web Portal\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+F:\ArpitaApp\Arpita Web Portal\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+E:\Krunal\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+E:\Krunal\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+E:\Krunal\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+E:\Krunal\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+E:\Krunal\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+E:\Krunal\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+E:\Krunal\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+E:\Krunal\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+E:\Krunal\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+E:\Krunal\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+E:\Krunal\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+E:\Krunal\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+E:\Krunal\Arpita Web Portal\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+E:\Krunal\Arpita Web Portal\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+E:\Krunal\Arpita Web Portal\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+E:\Krunal\Arpita Web Portal\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+E:\Arpitas\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+E:\Arpitas\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+E:\Arpitas\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+E:\Arpitas\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+E:\Arpitas\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+E:\Arpitas\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+E:\Arpitas\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+E:\Arpitas\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+E:\Arpitas\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+E:\Arpitas\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+E:\Arpitas\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+E:\Arpitas\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+E:\Arpitas\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+E:\Arpitas\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+E:\Arpitas\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+E:\Arpitas\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+F:\Git CMS Project\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+F:\Git CMS Project\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+F:\Git CMS Project\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+F:\Git CMS Project\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+F:\Git CMS Project\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+F:\Git CMS Project\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+F:\Git CMS Project\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+F:\Git CMS Project\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+F:\Git CMS Project\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+F:\Git CMS Project\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+F:\Git CMS Project\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+F:\Git CMS Project\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+F:\Git CMS Project\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+F:\Git CMS Project\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+F:\Git CMS Project\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+F:\Git CMS Project\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+F:\Sheetal\New Project\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+F:\Sheetal\New Project\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+F:\Sheetal\New Project\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+F:\Sheetal\New Project\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+F:\Sheetal\New Project\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+F:\Sheetal\New Project\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+F:\Sheetal\New Project\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+F:\Sheetal\New Project\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+F:\Sheetal\New Project\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+F:\Sheetal\New Project\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+F:\Sheetal\New Project\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+F:\Sheetal\New Project\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+F:\Sheetal\New Project\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+F:\Sheetal\New Project\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+F:\Sheetal\New Project\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+F:\Sheetal\New Project\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+E:\Krunal\Crunchersoft CMS Test\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+E:\Krunal\Crunchersoft CMS Test\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+E:\Krunal\Crunchersoft CMS Test\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+E:\Krunal\Crunchersoft CMS Test\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+E:\Krunal\Crunchersoft CMS Test\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+E:\Krunal\Crunchersoft CMS Test\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+E:\Krunal\Crunchersoft CMS Test\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+E:\Krunal\Crunchersoft CMS Test\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+E:\Krunal\Crunchersoft CMS Test\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+E:\Krunal\Crunchersoft CMS Test\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+E:\Krunal\Crunchersoft CMS Test\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+E:\Krunal\Crunchersoft CMS Test\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+E:\Krunal\Crunchersoft CMS Test\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+E:\Krunal\Crunchersoft CMS Test\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+E:\Krunal\Crunchersoft CMS Test\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+E:\Krunal\Crunchersoft CMS Test\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+F:\Sheetal\CMS Project\28-02-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+F:\02-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+F:\02-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+F:\02-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+F:\02-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+F:\02-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+F:\02-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+F:\02-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+F:\02-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+F:\02-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+F:\02-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+F:\02-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+F:\02-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+F:\02-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+F:\02-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+F:\02-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+F:\02-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+F:\Sheetal\CMS Project\02-03-2020 with notification\02-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+F:\Sheetal\CMS Project\02-03-2020 with notification\02-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+F:\Sheetal\CMS Project\02-03-2020 with notification\02-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+F:\Sheetal\CMS Project\02-03-2020 with notification\02-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+F:\Sheetal\CMS Project\02-03-2020 with notification\02-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+F:\Sheetal\CMS Project\02-03-2020 with notification\02-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+F:\Sheetal\CMS Project\02-03-2020 with notification\02-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+F:\Sheetal\CMS Project\02-03-2020 with notification\02-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+F:\Sheetal\CMS Project\02-03-2020 with notification\02-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+F:\Sheetal\CMS Project\02-03-2020 with notification\02-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+F:\Sheetal\CMS Project\02-03-2020 with notification\02-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+F:\Sheetal\CMS Project\02-03-2020 with notification\02-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+F:\Sheetal\CMS Project\02-03-2020 with notification\02-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+F:\Sheetal\CMS Project\02-03-2020 with notification\02-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+F:\Sheetal\CMS Project\02-03-2020 with notification\02-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+F:\Sheetal\CMS Project\02-03-2020 with notification\02-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+F:\03-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+F:\03-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+F:\03-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+F:\03-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+F:\03-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+F:\03-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+F:\03-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+F:\03-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+F:\03-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+F:\03-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+F:\03-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+F:\03-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+F:\03-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+F:\03-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+F:\03-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+F:\03-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+F:\Sheetal\CMS Project\Today\03-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+F:\Sheetal\CMS Project\Today\03-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+F:\Sheetal\CMS Project\Today\03-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+F:\Sheetal\CMS Project\Today\03-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+F:\Sheetal\CMS Project\Today\03-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+F:\Sheetal\CMS Project\Today\03-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+F:\Sheetal\CMS Project\Today\03-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+F:\Sheetal\CMS Project\Today\03-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+F:\Sheetal\CMS Project\Today\03-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+F:\Sheetal\CMS Project\Today\03-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+F:\Sheetal\CMS Project\Today\03-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+F:\Sheetal\CMS Project\Today\03-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+F:\Sheetal\CMS Project\Today\03-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+F:\Sheetal\CMS Project\Today\03-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+F:\Sheetal\CMS Project\Today\03-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+F:\Sheetal\CMS Project\Today\03-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+F:\04-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+F:\04-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+F:\04-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+F:\04-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+F:\04-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+F:\04-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+F:\04-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+F:\04-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+F:\04-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+F:\04-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+F:\04-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+F:\04-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+F:\04-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+F:\04-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+F:\04-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+F:\04-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+E:\Krunal\04-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+E:\Krunal\04-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+E:\Krunal\04-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+E:\Krunal\04-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+E:\Krunal\04-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+E:\Krunal\04-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+E:\Krunal\04-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+E:\Krunal\04-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+E:\Krunal\04-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+E:\Krunal\04-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+E:\Krunal\04-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+E:\Krunal\04-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+E:\Krunal\04-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+E:\Krunal\04-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+E:\Krunal\04-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+E:\Krunal\04-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+F:\07-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+F:\07-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+F:\07-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+F:\07-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+F:\07-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+F:\07-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+F:\07-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+F:\07-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+F:\07-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+F:\07-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+F:\07-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+F:\07-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+F:\07-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+F:\07-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+F:\07-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+F:\07-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+F:\07-03-2020\07-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+F:\07-03-2020\07-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+F:\07-03-2020\07-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+F:\07-03-2020\07-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+F:\07-03-2020\07-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+F:\07-03-2020\07-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+F:\07-03-2020\07-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+F:\07-03-2020\07-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+F:\07-03-2020\07-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+F:\07-03-2020\07-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+F:\07-03-2020\07-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+F:\07-03-2020\07-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+F:\07-03-2020\07-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+F:\07-03-2020\07-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+F:\07-03-2020\07-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+F:\07-03-2020\07-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+E:\Krunal\CMS TEST PROJET\13-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+E:\Krunal\CMS TEST PROJET\13-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+E:\Krunal\CMS TEST PROJET\13-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+E:\Krunal\CMS TEST PROJET\13-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+E:\Krunal\CMS TEST PROJET\13-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+E:\Krunal\CMS TEST PROJET\13-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+E:\Krunal\CMS TEST PROJET\13-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+E:\Krunal\CMS TEST PROJET\13-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+E:\Krunal\CMS TEST PROJET\13-03-2020\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+E:\Krunal\CMS TEST PROJET\13-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+E:\Krunal\CMS TEST PROJET\13-03-2020\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+E:\Krunal\CMS TEST PROJET\13-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+E:\Krunal\CMS TEST PROJET\13-03-2020\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+E:\Krunal\CMS TEST PROJET\13-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+E:\Krunal\CMS TEST PROJET\13-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+E:\Krunal\CMS TEST PROJET\13-03-2020\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb
+E:\Sheetal\16-03-2020 new update\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll.config
+E:\Sheetal\16-03-2020 new update\CMS\CMS.Domain\bin\Debug\CMS.Domain.dll
+E:\Sheetal\16-03-2020 new update\CMS\CMS.Domain\bin\Debug\CMS.Domain.pdb
+E:\Sheetal\16-03-2020 new update\CMS\CMS.Domain\bin\Debug\CMS.Common.dll
+E:\Sheetal\16-03-2020 new update\CMS\CMS.Domain\bin\Debug\EntityFramework.dll
+E:\Sheetal\16-03-2020 new update\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.dll
+E:\Sheetal\16-03-2020 new update\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+E:\Sheetal\16-03-2020 new update\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+E:\Sheetal\16-03-2020 new update\CMS\CMS.Domain\bin\Debug\CMS.Common.pdb
+E:\Sheetal\16-03-2020 new update\CMS\CMS.Domain\bin\Debug\EntityFramework.xml
+E:\Sheetal\16-03-2020 new update\CMS\CMS.Domain\bin\Debug\EntityFramework.SqlServer.xml
+E:\Sheetal\16-03-2020 new update\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+E:\Sheetal\16-03-2020 new update\CMS\CMS.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+E:\Sheetal\16-03-2020 new update\CMS\CMS.Domain\obj\Debug\CMS.Domain.csprojResolveAssemblyReference.cache
+E:\Sheetal\16-03-2020 new update\CMS\CMS.Domain\obj\Debug\CMS.Domain.dll
+E:\Sheetal\16-03-2020 new update\CMS\CMS.Domain\obj\Debug\CMS.Domain.pdb

@@ -1,0 +1,67 @@
+﻿@model IEnumerable<CMS.Web.ViewModels.ArrangeTestResultViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Arrange Test Result</h2>
+
+<div class="well">
+    <div class="form-inline">
+        <div class="form-group">
+            @Html.DropDownList("ClassList", new SelectList(ViewBag.ClassList, "Value", "Text"),
+            "Select Class", new { @class = "form-control", @data_mvcgrid_type = "filter", @data_mvcgrid_option = "ClassId", @onchange = "getTestPapersList(this.value)" })
+        </div>
+        <div class="form-group">
+            <div class="col-md-6">
+                @Html.DropDownList("TestPaperId", new SelectList(Enumerable.Empty<SelectListItem>(), "TestPaperId", "Title"),
+                    "Select Test Paper", new { @class = "form-control dropdown", @data_mvcgrid_type = "filter", @data_mvcgrid_option = "TestPaperId" })<SelectListItem>
+            </div>
+        </div>
+        <button type="button" class="btn btn-default" data-mvcgrid-apply-filter="click">Apply</button>
+        <input type="submit" value="Reset" id="Submit" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "ArrangeTestResult")'" />
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_MVCGridToolbar", new CMS.Web.Models.MVCGridToolbarModel()
+   {
+       MVCGridName = "ArrangeTestResultGrid",
+       PageSize = true,
+       ColumnVisibility = true,
+       Export = true,
+       GlobalSearch = false
+   })
+        @Html.MVCGrid("ArrangeTestResultGrid", new { userRole = ViewBag.UserId})
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+        });
+
+        function getTestPapersList(ClassId) {
+            var classId = $('#ClassList').val();
+            if ($('#ClassList :selected').text() != "Select Class") {
+                $.ajax({
+                    url: '/Paper/GetTestPapers',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { classId: ClassId },
+                    success: function (data) {
+                        $("#TestPaperId").html(""); // clear before appending new list
+                        $("#TestPaperId").append($('<option></option>').val("").html("Select Test Paper"));
+                        $.each(data, function (i, testpaper) {
+                            $("#TestPaperId").append(
+                            $('<option></option>').val(testpaper.TestPaperId).html(testpaper.Title));
+                        });
+                        //$("#TestPaperId").val("@ViewBag.TestPaperId");
+                    }
+                });
+            }
+        }
+    </script>
+}

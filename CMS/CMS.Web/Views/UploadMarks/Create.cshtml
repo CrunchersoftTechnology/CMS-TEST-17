@@ -1,0 +1,200 @@
+﻿@model CMS.Web.ViewModels.UploadOfflineMarksViewModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Upload offline test marks</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.SelectedBranches)
+    @Html.HiddenFor(m => m.CurrentUserRole)
+    @Html.HiddenFor(m => m.SelectedBatches)
+    @Html.HiddenFor(m => m.ClassName)
+    @Html.HiddenFor(m => m.SubjectName)
+    @Html.HiddenFor(m => m.SelectedBatchesName)
+
+    <div class="form-horizontal">
+        <hr />
+        <div id="message">
+        </div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @if (Model.CurrentUserRole == "Admin")
+        { <div class="form-group">
+            @Html.LabelFor(m => m.Branches, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.BranchId, new SelectList(Model.Branches, "Value", "Text"),
+                     new { @class = "form-control", @onchange = "FillClasses(this.value)", @multiple = "multiple", @autocomplete = "off" })
+            </div>
+        </div>
+
+        <div class="form-group" id="classDetail">
+            @Html.LabelFor(m => m.ClassId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.ClassId, new SelectList(Enumerable.Empty<SelectListItem>(),
+                   "ClassId", "ClassName"), "Select Class", new { @class = "form-control", @onchange = "FillSubjectByClassId(this.value)" })
+            </div>
+        </div>
+        }
+        else if (Model.CurrentUserRole == "BranchAdmin")
+        {
+            <div class="form-group">
+                @Html.LabelFor(m => m.BranchName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(m => m.BranchName, new
+               {
+                   htmlAttributes = new
+                   {
+                       @class = "form-control",
+                       @readonly = "readonly"
+                   }
+               })
+                    @Html.HiddenFor(m => m.BranchId)
+                </div>
+            </div>
+
+            <div class="form-group" id="classDetail">
+                @Html.LabelFor(m => m.Classes, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.ClassId, new SelectList(Model.Classes, "Value", "Text"), "Select Class",
+                   new { @class = "form-control", @onchange = "FillSubjectByClassId(this.value)" })
+                </div>
+            </div>
+        }
+
+        <div class="form-group" id="classDetail">
+            @Html.LabelFor(m => m.SubjectId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.SubjectId, new SelectList(Enumerable.Empty<SelectListItem>(),
+                   "SubjectId", "Name"), "Select Subject", new { @class = "form-control", @onchange = "getBatchOnSubjectId(this.value)" })
+            </div>
+        </div>
+        <div class="form-group" id="batchDetail">
+            @Html.LabelFor(m => m.BatchId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.BatchId, new SelectList(Enumerable.Empty<SelectListItem>(), "BatchId", "BatchName"),
+                   new { @class = "form-control", @multiple = "multiple", @onchange = "getSelectedBatches()" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            if ($("#CurrentUserRole").val() == "Admin") {
+                $('#BranchId').multiselect({
+                    includeSelectAllOption: true
+                });
+            }
+            if ($("#SelectedBranches").val() != "") {
+                if ($("#CurrentUserRole").val() == "BranchAdmin") {
+                    getMultipleClassBranchById();
+                }
+            }
+        });
+
+        function FillClasses(branchId) {
+            var selected = $("#BranchId").find("option:selected");
+            var arrSelected = [];
+            selected.each(function () {
+                arrSelected.push($(this).val());
+            });
+            var selectedBranch = arrSelected.toString();
+            $("#SelectedBranches").val(selectedBranch);
+            if ($("#ClassId option:selected").length == 0) {
+                $("#ClassId").html("");
+                $("#ClassId").append($('<option></option>').val(0).html("Select Class"));
+            }
+            else {
+                getMultipleClassBranchById();
+            }
+        }
+
+        function getMultipleClassBranchById() {
+            $.ajax({
+                url: '/StudentTimetable/GetClassesByMultipleBranches',
+                type: "GET",
+                dataType: "JSON",
+                data: { selectedBranch: $("#SelectedBranches").val() },
+                async: false,
+                success: function (data) {
+                    $("#ClassId").html(""); // clear before appending new list
+                    $("#ClassId").append($('<option></option>').val("").html("Select Class"));
+                    $.each(data.classes, function (i, cls) {
+                        $("#ClassId").append(
+                            $('<option></option>').val(cls.ClassId).html(cls.ClassName));
+                    });
+                }
+            });
+        }
+
+        function FillSubjectByClassId(classId) {
+            if ($("#ClassId").val() == "") {
+                $("#SubjectId").html("");
+                $("#SubjectId").append($('<option></option>').val(0).html("Select Subject"));
+            }
+            else {
+                $.ajax({
+                    url: '/OfflineTestPaper/GetSubjetctByClassId',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { classId: $("#ClassId").val() },
+                    async: false,
+                    success: function (data) {
+                        $("#SubjectId").html(""); // clear before appending new list
+                        $("#SubjectId").append($('<option></option>').val(0).html("Select Subject"));
+                        $.each(data.subjects, function (i, sub) {
+                            $("#SubjectId").append(
+                                $('<option></option>').val(sub.SubjectId).html(sub.Name));
+                        });
+                    }
+                });
+            }
+        }
+
+        function getBatchOnSubjectId(subjectId) {
+            if ($("#SubjectId").val() != "") {
+                $.ajax({
+                    url: '/OfflineTestPaper/GetBatchBySubjectId',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { subjectId: $("#SubjectId").val() },
+                    success: function (data) {
+                        var select = $("#BatchId");
+                        select.children().remove();
+                        $("#BatchId").html(""); // clear before appending new list
+                        $("#BatchId").multiselect('destroy');
+                        $.each(data.batches, function (i, sub) {
+                            $("#BatchId").append("<option value='" + sub.BatchId + "'>" + sub.BatchName + "</option>");
+                        });
+                        //$("#BatchId").multiselect('rebuild');
+                        $('#BatchId')
+                        .multiselect({
+                            allSelectedText: 'All',
+                            includeSelectAllOption: true
+                        });
+                        if ($("#SelectedBatches").val() != "") {
+                            var arr = $("#SelectedBatches").val().split(',');
+                            arr.forEach(function (i) {
+                                $("#BatchId").multiselect('select', i)
+                            });
+                        }
+
+                    }
+                });
+            }
+        }
+    </script>
+}

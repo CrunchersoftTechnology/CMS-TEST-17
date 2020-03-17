@@ -1,0 +1,100 @@
+﻿@model CMS.Web.ViewModels.OfflineTestPaperViewModel
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Delete Exam Schedule</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SelectedBranchesName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SelectedBranchesName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ClassName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ClassName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SubjectName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SubjectName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SelectedBatchesName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SelectedBatchesName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalMarks)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalMarks)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TestDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TestDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TestInTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TestInTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TestOutTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TestOutTime)
+        </dd>
+    </dl>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.OfflineTestPaperId)
+        @Html.HiddenFor(model => model.SelectedBatchesName)
+        @Html.HiddenFor(model => model.SelectedBranchesName)
+        @Html.HiddenFor(model => model.SubjectName)
+        @Html.HiddenFor(model => model.ClassName)
+        @Html.HiddenFor(model => model.Title)
+        @Html.HiddenFor(model => model.TestInTime)
+        @Html.HiddenFor(model => model.TestOutTime)
+        @Html.HiddenFor(model => model.TotalMarks)
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to Exam Schedule List", "Index")
+        </div>
+    }
+   
+</div>

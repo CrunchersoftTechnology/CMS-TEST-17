@@ -1,0 +1,123 @@
+﻿@model IEnumerable<CMS.Web.ViewModels.InstallmentViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h2>Payment List</h2>
+<div class="form-horizontal">
+    <p>
+        @Html.ActionLink("Create New Payment", "Create")
+    </p>
+    <br />
+</div>
+<div class="well">
+    <div class="form-inline">
+        <div class="form-group">
+            <div class="col-md-4">
+                @Html.DropDownList("ClassList", new SelectList(ViewBag.ClassList, "Value", "Text"),
+                    "All Classes", new
+                    {
+                        @class = "form-control",
+                        @data_mvcgrid_type = "filter",
+                        @data_mvcgrid_option = "ClassName",
+                        onchange = "getStudentList(this.value)"
+                    })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-6">
+                @Html.DropDownList("UserId", new SelectList(Enumerable.Empty<SelectListItem>(), "UserId", "Name"),
+                    "Select Student", new { @class = "form-control dropdown", @data_mvcgrid_type = "filter", @data_mvcgrid_option = "UserId" })<SelectListItem>
+            </div>
+        </div>
+        <button type="button" class="btn btn-default" data-mvcgrid-apply-filter="click">Search</button>
+        <input type="submit" value="Reset" id="Submit" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Installment" )'" />
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_MVCGridToolbar", new CMS.Web.Models.MVCGridToolbarModel()
+   {
+       MVCGridName = "InstallmentGrid",
+       PageSize = true,
+       ColumnVisibility = true,
+       Export = true,
+       GlobalSearch = false
+   })
+        @Html.MVCGrid("InstallmentGrid", new { userRole = ViewBag.userId })
+    </div>
+</div>
+
+@section Scripts
+   {
+    @Scripts.Render("~/bundles/InstallmentJS")
+    <script>
+
+        $(document).ready(function () {
+            $("#ClassList").val(@ViewBag.ClassId);
+
+            if ("@ViewBag.UserId" != "") {
+                getStudentList($("#ClassList").val());
+            }
+        });
+
+        function getInstallments(userId) {
+            if ($('#UserId :selected').text() != "Select Student") {
+                var classId = $("#ClassList").val()
+                window.location.href = "/Installment/Index?userId=" + userId + "&classId=" + classId
+            }
+        }
+
+        function getStudentList(ClassId) {
+            var classId = $('#ClassList').val();
+            if ($('#ClassList :selected').text() != "All Classes") {
+                $("#SubjectDiv").show().addClass("inline");
+                if(@ViewBag.BranchId == 0){
+                    $.ajax({
+                        url: '/Installment/GetStudent',
+                        type: "GET",
+                        dataType: "JSON",
+                        data: { classId: ClassId },
+                        success: function (students) {
+                            $("#UserId").html(""); // clear before appending new list
+                            $("#UserId").append($('<option></option>').val("").html("Select Student"));
+                            $.each(students, function (i, stud) {
+                                var studDob =new Date(parseInt(stud.DOB.substr(6)));
+                                $("#UserId").append(
+                                $('<option></option>').val(stud.UserId).html(stud.FirstName + " " + (stud.MiddleName == null ? "" : stud.MiddleName) + " " + stud.LastName  + " ( " + studDob.format("dd/mm/yyyy") + " ) "));
+                            });
+                            $("#UserId").val("@ViewBag.UserId");
+                        }
+                    });
+                }
+                else if(@ViewBag.BranchId > 0)
+                {
+                    var branchId = @ViewBag.BranchId;
+                    $.ajax({
+                        url: '/Installment/GetStudentByBranchId',
+                        type: "GET",
+                        dataType: "JSON",
+                        data: { classId: ClassId, branchId: branchId },
+                        success: function (students) {
+                            $("#UserId").html(""); // clear before appending new list
+                            $("#UserId").append($('<option></option>').val("").html("Select Student"));
+                            $.each(students, function (i, stud) {
+                                var studDob =new Date(parseInt(stud.DOB.substr(6)));
+                                $("#UserId").append(
+                                $('<option></option>').val(stud.UserId).html(stud.FirstName + " " + (stud.MiddleName == null ? "" : stud.MiddleName) + " " + stud.LastName +  " ( " + studDob.toLocaleDateString() + " ) "));
+                            });
+                            $("#UserId").val("@ViewBag.UserId");
+                        }
+                    });
+                }
+            }
+            else {
+                //$("#SubjectDiv").hide().removeClass("inline");
+                //window.location.href = "/Installment/Index"
+                $("#UserId").html(""); // clear before appending new list
+                $("#UserId").append($('<option></option>').val("").html("Select Student"));
+            }
+        }
+    </script>
+}

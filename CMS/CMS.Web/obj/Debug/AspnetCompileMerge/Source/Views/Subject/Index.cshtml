@@ -1,0 +1,53 @@
+﻿@model IEnumerable<CMS.Web.ViewModels.SubjectViewModel>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Index";
+}
+<h2>Subject List</h2>
+<div class="form-horizontal">
+    <p>
+        @Html.ActionLink("Create New Subject", "Create")
+    </p>
+    <br />
+
+</div>
+<div class="well">
+    <div class="form-inline">
+        <div class="form-group">
+            @Html.DropDownList("ClassList", new SelectList(ViewBag.ClassList, "Value", "Text"),
+                    "All Classes", new { @class = "form-control", @data_mvcgrid_type = "filter", @data_mvcgrid_option = "ClassName" })
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Subject Name"
+                   data-mvcgrid-type="filter" data-mvcgrid-option="SubjectName" />
+        </div>
+        <button type="button" class="btn btn-default" data-mvcgrid-apply-filter="click">Search</button>
+        <input type="submit" value="Reset" id="Submit" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Subject")'" />
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_MVCGridToolbar", new CMS.Web.Models.MVCGridToolbarModel()
+   {
+       MVCGridName = "SubjectGrid",
+       PageSize = true,
+       ColumnVisibility = true,
+       Export = true,
+       GlobalSearch = false
+   })
+        @Html.MVCGrid("SubjectGrid", new { userRole = ViewBag.userId })
+    </div>
+</div>
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#ClassList").val(@ViewBag.ClassId);
+        });
+
+        function getSubjects(ClassId) {
+            window.location.href = "/Subject/Index/" + ClassId;
+        }
+    </script>
+}

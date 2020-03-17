@@ -1,0 +1,26 @@
+﻿@model IEnumerable<CMS.Web.ViewModels.NotificationViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Notification List</h2>
+
+<p>
+    @Html.ActionLink("Send Notification", "Create")
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_MVCGridToolbar", new CMS.Web.Models.MVCGridToolbarModel()
+   {
+       MVCGridName = "NotificationGrid",
+       PageSize = true,
+       ColumnVisibility = true,
+       Export = true,
+       GlobalSearch = false
+   })
+        @Html.MVCGrid("NotificationGrid", new { userRole = ViewBag.userId })
+    </div>
+</div>

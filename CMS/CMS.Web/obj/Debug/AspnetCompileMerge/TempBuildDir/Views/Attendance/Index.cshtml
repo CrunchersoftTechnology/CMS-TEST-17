@@ -1,0 +1,204 @@
+﻿@model IEnumerable<CMS.Web.ViewModels.AttendanceViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<br />
+
+<div id="message">
+</div>
+
+<h2>Attendance List</h2>
+
+<p>
+    @Html.ActionLink("Create New Attendance", "Create")
+</p>
+
+<div class="well">
+    <div class="form-inline">
+        @Html.Hidden("SelectedAttendance")
+        <div class="form-group">
+            @Html.DropDownList("ClassList", new SelectList(ViewBag.ClassList, "Value", "Text"),
+        "All Classes", new { @class = "form-control", @data_mvcgrid_type = "filter", @data_mvcgrid_option = "ClassName", @onchange = "FillSubjects(this.value)" })
+        </div>
+        @*<div class="form-group">
+            @Html.DropDownList("SubjectId", new SelectList(Enumerable.Empty<SelectListItem>(), "SubjectId", "Name"),
+        "Select Subject", new { @class = "form-control", @data_mvcgrid_type = "filter", @data_mvcgrid_option = "SubjectName" })
+        </div>*@
+        <div class="form-group">
+            @Html.Editor("Date", new { htmlAttributes = new { @class = "form-control datepicker", autocomplete = "off", @type = "text", @data_mvcgrid_type = "filter", @data_mvcgrid_option = "Date" , @maxlength = "10", @placeholder = "DD-MM-YYYY" } })
+        </div>
+        <button type="button" class="btn btn-default" data-mvcgrid-apply-filter="click">Search</button>
+        <input type="submit" value="Reset" id="Submit" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Attendance")'" />
+        <div class="form-group">
+            <div class="col-md-12">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-4">
+                <div class="checkbox checkbox-inline">
+                    <input type="checkbox" id="Email" />
+                </div>
+            </div>
+            @Html.Label("Email", htmlAttributes: new { @class = "control-label col-md-4" })
+        </div>
+        @*<div class="form-group">
+                <div class="col-md-4">
+                    <div class="checkbox checkbox-inline">
+                        <input type="checkbox" id="SMS" />
+                    </div>
+                </div>
+                @Html.Label("SMS", htmlAttributes: new { @class = "control-label col-md-8" })
+            </div>*@
+        <div class="form-group">
+            <div class="col-md-3">
+                <div class="checkbox checkbox-inline">
+                    <input type="checkbox" id="AppNotification" />
+                </div>
+            </div>
+            @Html.Label("AppNotification", htmlAttributes: new { @class = "control-label col-md-9" })
+        </div>
+        <button type="button" id="btnSend" class="btn btn-default">Send</button>
+       
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_MVCGridToolbar", new CMS.Web.Models.MVCGridToolbarModel()
+   {
+       MVCGridName = "AttendanceGrid",
+       PageSize = true,
+       ColumnVisibility = true,
+       Export = true,
+       GlobalSearch = false
+   })
+        @Html.MVCGrid("AttendanceGrid", new { userRole = ViewBag.userId })
+    </div>
+</div>
+@section scripts
+        {
+    <script>
+        $(document).ready(function () {
+            $("#btnSend").on("click", function () {
+                if ($("#SelectedAttendance").val() != "") {
+                    if ($("#Email").is(":checked") == true || $("#AppNotification").is(":checked") == true) {
+                        $.ajax({
+                            url: '/Attendance/SendAttendance',
+                            type: "GET",
+                            dataType: "JSON",
+                            data: {
+                                Email: $("#Email").is(":checked"),
+                                SMS: $("#SMS").is(":checked"),
+                                AppNotification: $("#AppNotification").is(":checked"),
+                                SelectedAttendance: $("#SelectedAttendance").val()
+                            },
+                            success: function (data) {
+                                CreateAlertMessage();
+                                var m = "";
+                                for (var i = 0; i < data.Results.length; i++) {
+                                    m = m + data.Results[i].Message + "</br>";
+                                }
+                                $('#msg').html('<div>' + m + '</div>');
+                                $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                                $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                                $("#Email:checked,#AppNotification").prop('checked', false);
+                                $("#SelectedAttendance").val("");
+                                $('.panel-body').load("/Attendance/Index" + ' .panel-body');
+                            }
+                        });
+                    }
+                    else {
+                        CreateAlertMessage();
+                        $('#msg').html('<div>Please select atleast one media.</div>');
+                        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                        $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                    }
+                }
+                else {
+                    CreateAlertMessage();
+                    $('#msg').html('<div>Please select atleast one record from list.</div>');
+                    $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                    $('html, body').animate({ scrollTop: "0px" }, 'fast');
+                }
+            });
+
+            //$('.chkselectall').click(function () {
+            //    console.log("chkselectall");
+            //    var i = 0;
+            //    //alert('test');
+            //    if ($(this).is(':checked')) {
+            //        //alert('test');
+            //        $('.select').each(function () {
+            //            $(this).prop('checked', true);
+            //            i = parseInt(i) + 1;
+            //           // $('#btnDelete').removeClass('disabled');
+            //        });
+            //    }
+            //    else {
+            //        $('.select').each(function () {
+            //            $(this).prop('checked', false);
+            //            //$('#btnDelete').addClass('disabled');
+            //        });
+            //    }
+
+            //    console.log(i);
+            //});
+        });
+
+        function selectedValue() {
+            var arrSelected = [];
+            $('.select:checked').each(function () {
+                arrSelected.push(parseInt($(this).val()));
+            });
+
+            var selectedIds = arrSelected.toString();
+            $("#SelectedAttendance").val(selectedIds);
+        }
+
+        function FillSubjects(classId) {
+            //var classId = $('#ClassList').val();
+
+            if ($('#ClassList :selected').text() != "All Classes") {
+                $("#SubjectDiv").show().addClass("inline");
+                $.ajax({
+                    url: '/Subject/GetSubjects',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { classId: classId },
+                    success: function (subjects) {
+
+                        $("#SubjectId").html(""); // clear before appending new list
+                        $("#SubjectId").append($('<option selected></option>').val("").html("Select Subject"));
+                        $.each(subjects, function (i, sub) {
+                            $("#SubjectId").append(
+                            $('<option></option>').val(sub.SubjectId).html(sub.Name));
+                        });
+                        if (parseInt(@ViewBag.SubjectId) > 0) {
+                            $("#SubjectId").val(@ViewBag.SubjectId);
+                            console.log("go")
+                        }
+
+                    }
+                });
+            }
+            else {
+                $("#SubjectId").append($('<option selected></option>').val("").html("Select Subject"));
+            }
+        }
+
+        function getBatches(subjectId) {
+            if ($('#SubjectId :selected').text() != "Select Subject") {
+                var classId = $("#ClassList").val()
+                window.location.href = "/Attendance/Index?subjectId=" + subjectId + "&classId=" + classId
+            }
+        }
+
+        function CreateAlertMessage() {
+            var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+            $("#message").html("");
+            $("#message").append(divMessage);
+        }
+    </script>
+}

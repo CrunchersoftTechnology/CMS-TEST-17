@@ -1,0 +1,1379 @@
+﻿@model CMS.Web.ViewModels.QuestionViewModel
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@*<link href="~/Content/jquery.fileupload.css" rel="stylesheet" />*@
+
+@*<link href="~/Content/fileinput.min.css" rel="stylesheet" />
+    <link href="~/Content/dependent-dropdown.min.css" rel="stylesheet" />*@
+
+<style>
+    /*.btn-file {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-file input[type=file] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100%;
+            min-height: 100%;
+            font-size: 100px;
+            text-align: right;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            outline: none;
+            background: white;
+            cursor: inherit;
+            display: block;
+        }*/
+
+    .modal {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+    }
+
+    .cursor-zoomin {
+        cursor: zoom-in;
+    }
+
+    .input-group-margin {
+        margin: 5px 0px;
+    }
+
+    .wrapper {
+        position: relative;
+    }
+
+        .wrapper .glyphicon {
+            position: absolute;
+            top: 2px;
+            left: 0px;
+            cursor: pointer;
+            font-size: 20px;
+            color: red;
+        }
+
+    #imgQues, #imgOption, #imgHint {
+        margin-left: 4%;
+    }
+   #btnQueLineBreak,#btnOptionALineBreak,#btnOptionBLineBreak,#btnOptionCLineBreak,
+   #btnOptionDLineBreak,#btnHintLineBreak,#btnNumerical_AnswerLineBreak,#btnUnitLineBreak{
+  pointer-events: none;
+}
+    /*.sp1 {
+        width: 100% !important;
+        overflow-x: auto;
+        max-width: 100% !important;
+    }*/
+</style>
+<br />
+<div class="row">
+    <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-2">
+                @Html.DropDownListFor(model => model.ClassId, new SelectList(Enumerable.Empty<SelectListItem>
+                    ()),
+                    "Class", new { @class = "form-control input-sm" })
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownListFor(model => model.SubjectId, new SelectList(Enumerable.Empty<SelectListItem>
+                    ()),
+                    "Subject", new { @class = "form-control input-sm" })
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownListFor(model => model.ChapterId, new SelectList(Enumerable.Empty<SelectListItem>
+                    ()),
+                    "Chapter", new { @class = "form-control input-sm" })
+            </div>
+            <div class="col-md-3">
+                <div id="QLevel" class="btn-group btn-group-sm" role="radiogroup" aria-label="...">
+                    <button id="levelEasy" type="button" class="btn btn-default" data-value="1" disabled>Easy</button>
+                    <button id="levelMedium" type="button" class="btn btn-default" data-value="2" disabled>Medium</button>
+                    <button id="levelHard" type="button" class="btn btn-default" data-value="3" disabled>Hard</button>
+                </div>
+                @Html.HiddenFor(m => m.Level)
+            </div>
+            <div class="col-md-3">
+                <div id="QType" class="btn-group btn-group-sm" role="radiogroup" aria-label="...">
+                    <button id="typeTheory" type="button" class="btn btn-default" data-value="1" disabled>Theoretical</button>
+                    <button id="typeNumeric" type="button" class="btn btn-default" data-value="2" disabled>Numerical</button>
+                    <button id="typeNewPatternNumerical" type="button" class="btn btn-default" data-value="3" disabled>NewPatternNumerical</button>
+                </div>
+                @Html.HiddenFor(m => m.Type)
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="form-group form-group-sm">
+                <div class="col-md-12">
+
+                    <div id="btnActive">
+                        <input type="button" id="activeCreate" class="btn btn-default" value="New" disabled />
+                        <input type="button" id="activeUpdate" class="btn btn-default" value="Modify" disabled />
+                    </div>
+                    <br />
+
+                    <div id="message">
+                    </div>
+
+                    <div id="errorMessage">
+                    </div>
+
+                    <div class="sp1"><strong>QuestionInfo :</strong>&nbsp; <span id="QuestionBox">$\mbox{}$</span></div>
+                    <div id="questionImageWithDelete" class="wrapper hidden">
+                        <img src="" class="file-preview-image kv-preview-data rotate-1" id="imgQues" />
+                        <span id="qdel" class="glyphicon glyphicon-trash hidden" data-value="1"></span>
+                    </div>
+                    <br />
+                    <div class="sp1"><strong>A :</strong>&nbsp; <span id="OptionBoxA">$\mbox{}$</span></div>
+                    <div class="sp1"><strong>B :</strong> &nbsp;<span id="OptionBoxB">$\mbox{}$</span></div>
+                    <div class="sp1"><strong>C :</strong>&nbsp; <span id="OptionBoxC">$\mbox{}$</span></div>
+                    <div class="sp1"><strong>D :</strong>&nbsp; <span id="OptionBoxD">$\mbox{}$</span></div>
+                    <div id="optionImageWithDelete" class="wrapper hidden">
+                        <img src="" class="file-preview-image kv-preview-data rotate-1" id="imgOption" />
+                        <span id="odel" class="glyphicon glyphicon-trash hidden" data-value="2"></span>
+                    </div>
+                    <br />
+                    <div class="sp1"><strong>Answer :</strong>&nbsp; <span id="CorrectAnswer"></span></div>
+                    <br />
+                    <div class="sp1"><strong>Numerical_Answer :</strong>&nbsp; <span id="Numerical_AnswerBox">$\mbox{}$</span></div>
+                    <br />
+                    <div class="sp1"><strong>Unit :</strong>&nbsp; <span id="UnitBox">$\mbox{}$</span></div>
+                    <br />
+                    <div class="sp1"><strong>Year :</strong>&nbsp; <span id="CorrectYear"></span></div>
+                    <br />
+                    <div class="sp1"><strong>Hint :</strong>&nbsp; <span id="HintBox">$\mbox{}$</span></div>
+                    <div id="hintImageWithDelete" class="wrapper hidden">
+                        <img src="" class="file-preview-image kv-preview-data rotate-1" id="imgHint" />
+                        <span id="hdel" class="glyphicon glyphicon-trash hidden" data-value="3"></span>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="row" id="prevNextgroup">
+            <div class="col-md-3">
+                <button id="btnPrev" type="button" class="btn btn-default" aria-label="Left Align">
+                    Prev<span class="glyphicon glyphicon glyphicon-backward" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="col-md-6 nopadding">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1"><span id="qCount">0</span> of </span>
+                    <input type="text" id="QuestionNo" class="form-control" placeholder="No." aria-describedby="basic-addon1" value="0">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <button id="btnNext" type="button" class="btn btn-default" aria-label="Left Align">
+                    <span class="glyphicon glyphicon glyphicon-forward" aria-hidden="true"></span>Next
+                </button>
+            </div>
+        </div>
+        <div class="form-group">
+            <br />
+            @*<input id="QuestionImage" class="file input-group-margin" name="QuestionImage[]" type="file" data-overwrite-initial="true" data-show-upload="false" data-show-preview="false" data-allowed-file-extensions='["png", "jpg", "jpeg"]'>*@
+            <form enctype="multipart/form-data">
+                <div id="Qimage" @*class="hidden"*@>
+                    @Html.TextBoxFor(m => m.QuestionImage, new { @type = "file", @class = "file input-group-margin file-loading", name = "QuestionImage[]", data_overwrite_initial = "true", data_show_upload = "false", data_show_preview = "false", data_allowed_file_extensions = "" })
+                </div>
+            </form>
+            <div class="input-group input-group-margin">
+                <span class="input-group-addon cursor-zoomin" id="basic-addon1" title="Double click to enlarge text area.">Q</span>
+                @Html.EditorFor(model => model.QuestionInfo, new { htmlAttributes = new { @class = "form-control full-width-input", rows = "2", placeholder = "Question", aria_describedby = "basic-addon1", @disabled = "disabled" } })
+                <span class="input-group-addon glyphicon glyphicon-arrow-right" id="btnQueLineBreak" title="click to next line." contenteditable="false"></span>
+                @* <input id="btnQueLineBreak" value="" type="button" Class="glyphicon glyphicon-arrow-right" />*@
+                @Html.HiddenFor(m => m.QuestionId)
+            </div>
+            <br />
+            <div id="Oimage" @*class="hidden"*@>
+                @Html.TextBoxFor(m => m.OptionImage, new { @type = "file", @class = "file input-group-margin", name = "OptionImage[]", data_overwrite_initial = "true", data_show_upload = "false", data_show_preview = "false", data_allowed_file_extensions = "" })
+            </div>
+            <div class="input-group input-group-margin">
+                <span class="input-group-addon cursor-zoomin" id="basic-addon1" title="Double click to enlarge text area.">A</span>
+                @Html.EditorFor(model => model.OptionA, new { htmlAttributes = new { @class = "form-control full-width-input", rows = "2", placeholder = "Option A", aria_describedby = "basic-addon1", @disabled = "disabled" } })
+                <span class="input-group-addon glyphicon glyphicon-arrow-right" id="btnOptionALineBreak" title="click to next line."></span>
+            </div>
+            <div class="input-group input-group-margin">
+                <span class="input-group-addon cursor-zoomin" id="basic-addon1" title="Double click to enlarge text area.">B</span>
+                @Html.EditorFor(model => model.OptionB, new { htmlAttributes = new { @class = "form-control full-width-input", rows = "2", placeholder = "Option B", aria_describedby = "basic-addon1", @disabled = "disabled" } })
+                <span class="input-group-addon glyphicon glyphicon-arrow-right" id="btnOptionBLineBreak" title="click to next line."></span>
+            </div>
+            <div class="input-group input-group-margin">
+                <span class="input-group-addon cursor-zoomin" id="basic-addon1" title="Double click to enlarge text area.">C</span>
+                @Html.EditorFor(model => model.OptionC, new { htmlAttributes = new { @class = "form-control full-width-input", rows = "2", placeholder = "Option C", aria_describedby = "basic-addon1", @disabled = "disabled" } })
+                <span class="input-group-addon glyphicon glyphicon-arrow-right" id="btnOptionCLineBreak" title="click to next line."></span>
+            </div>
+            <div class="input-group input-group-margin">
+                <span class="input-group-addon cursor-zoomin" id="basic-addon1" title="Double click to enlarge text area.">D</span>
+                @Html.EditorFor(model => model.OptionD, new { htmlAttributes = new { @class = "form-control full-width-input", rows = "2", placeholder = "Option D", aria_describedby = "basic-addon1", @disabled = "disabled" } })
+                <span class="input-group-addon glyphicon glyphicon-arrow-right" id="btnOptionDLineBreak" title="click to next line."></span>
+            </div>
+            <br />
+            <div id="Himage" @*class="hidden"*@>
+                @Html.TextBoxFor(m => m.HintImage, new { @type = "file", @class = "file input-group-margin", name = "HintImage[]", data_overwrite_initial = "true", data_show_upload = "false", data_show_preview = "false", @data_allowed_file_extensions = "" })
+            </div>
+            <div class="input-group input-group-margin">
+                <span class="input-group-addon cursor-zoomin" id="basic-addon1" title="Double click to enlarge text area.">H</span>
+                @Html.EditorFor(model => model.Hint, new { htmlAttributes = new { @class = "form-control full-width-input", rows = "2", placeholder = "Hint", aria_describedby = "basic-addon1", @disabled = "disabled" } })
+                <span class="input-group-addon glyphicon glyphicon-arrow-right" id="btnHintLineBreak" title="click to next line."></span>
+            </div>
+
+            <div class="input-group input-group-margin">
+                <span class="input-group-addon cursor-zoomin" id="basic-addon1" title="Double click to enlarge text area.">Numerical_Answer</span>
+                @Html.EditorFor(model => model.Numerical_Answer, new { htmlAttributes = new { @class = "form-control full-width-input", rows = "2", placeholder = "Numerical_Answer", aria_describedby = "basic-addon1", @disabled = "disabled" } })
+                <span class="input-group-addon glyphicon glyphicon-arrow-right" id="btnNumerical_AnswerLineBreak" title="click to next line."></span>
+            </div>
+
+            <div class="input-group input-group-margin">
+                <span class="input-group-addon cursor-zoomin" id="basic-addon1" title="Double click to enlarge text area.">Unit</span>
+                @Html.EditorFor(model => model.Unit, new { htmlAttributes = new { @class = "form-control full-width-input", rows = "2", placeholder = "Unit", aria_describedby = "basic-addon1", @disabled = "disabled" } })
+                <span class="input-group-addon glyphicon glyphicon-arrow-right" id="btnUnitLineBreak" title="click to next line."></span>
+            </div>
+
+            <div class="input-group input-group-margin">
+                <span class="input-group-addon" id="basic-addon1">Answer:</span>
+                <div id="AnswerOption" class="form-control full-width-input">
+                    <div class="checkbox-inline">
+                        <label><input id="o1" type="checkbox" value="1" disabled>A</label>
+                    </div>
+                    <div class="checkbox-inline">
+                        <label><input id="o2" type="checkbox" value="2" disabled>B</label>
+                    </div>
+                    <div class="checkbox-inline">
+                        <label><input id="o3" type="checkbox" value="3" disabled>C</label>
+                    </div>
+                    <div class="checkbox-inline">
+                        <label><input id="o4" type="checkbox" value="4" disabled>D</label>
+                    </div>
+                </div>
+                @Html.HiddenFor(m => m.Answer)
+            </div>
+            
+            
+
+            <div class="input-group input-group-margin">
+                <span class="input-group-addon" id="basic-addon1">Y</span>
+                @Html.EditorFor(model => model.Year, new { htmlAttributes = new { @class = "form-control full-width-input", placeholder = "Year", aria_describedby = "basic-addon1", @disabled = "disabled", @autocomplete = "off" } })
+            </div>
+        </div>
+
+
+
+        <input id="create" value="Save" type="button" class="btn btn-default hidden" />
+        <input id="update" value="Update" type="button" class="btn btn-default hidden" />
+        <input id="clear" value="Clear" type="button" class="btn btn-default hidden" />
+
+        <div id='confirm' class='modal fade'>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" id="close" class="close" data-dismiss="modal" style="color:black; opacity:1 !important;">
+                            X
+                        </button>
+                        <h3 class="text-center" style="margin-top:0px !important;">
+                            Are you sure you want to delete this?
+                        </h3>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-primary" id="delete">Delete</button>
+                        <button type="button" data-dismiss="modal" class="btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <span class="modal-title"></span>
+                <button type="button" id="btnZoomUpdate" class="btn btn-default">Apply</button> &nbsp;
+                <button type="button" data-dismiss="modal" class="btn btn-default">Discard</button>
+            </div>
+            <div class="modal-body">
+                <textarea id="txt_zoom" style="max-width:100%;width: 100%;height:250px;"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal active">
+    <div style="float:left;width:100%;">
+        <textarea style="max-width:100%;width: 100%;"></textarea>
+    </div>
+    <div style="clear:both;"></div>
+</div>
+@*}*@
+@section Scripts
+{
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>*@
+    <script type="text/javascript">
+        jQuery("#btnQueLineBreak").on('click', function () {
+            var caretPos = document.getElementById("QuestionInfo").selectionStart;
+            var textAreaTxt = jQuery("#QuestionInfo").val();
+            var txtToAdd = "}\\\\\\mbox{";
+            jQuery("#QuestionInfo").val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos));
+        });
+        jQuery("#btnOptionALineBreak").on('click', function () {
+            var caretPos = document.getElementById("OptionA").selectionStart;
+            var textAreaTxt = jQuery("#OptionA").val();
+            var txtToAdd = "}\\\\\\mbox{";
+            jQuery("#OptionA").val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos));
+        });
+        jQuery("#btnOptionBLineBreak").on('click', function () {
+            var caretPos = document.getElementById("OptionB").selectionStart;
+            var textAreaTxt = jQuery("#OptionB").val();
+            var txtToAdd = "}\\\\\\mbox{";
+            jQuery("#OptionB").val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos));
+        });
+        jQuery("#btnOptionCLineBreak").on('click', function () {
+            var caretPos = document.getElementById("OptionC").selectionStart;
+            var textAreaTxt = jQuery("#OptionC").val();
+            var txtToAdd = "}\\\\\\mbox{";
+            jQuery("#OptionC").val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos));
+        });
+        jQuery("#btnOptionDLineBreak").on('click', function () {
+            var caretPos = document.getElementById("OptionD").selectionStart;
+            var textAreaTxt = jQuery("#OptionD").val();
+            var txtToAdd = "}\\\\\\mbox{";
+            jQuery("#OptionD").val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos));
+        });
+        jQuery("#btnHintLineBreak").on('click', function () {
+            var caretPos = document.getElementById("Hint").selectionStart;
+            var textAreaTxt = jQuery("#Hint").val();
+            var txtToAdd = "}\\\\\\mbox{";
+            jQuery("#Hint").val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos));
+        });
+
+        jQuery("#btnNumerical_AnswerLineBreak").on('click', function () {
+            var caretPos = document.getElementById("Numerical_Answer").selectionStart;
+            var textAreaTxt = jQuery("#Numerical_Answer").val();
+            var txtToAdd = "}\\\\\\mbox{";
+            jQuery("#Numerical_Answer").val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos));
+        });
+
+        jQuery("#btnUnitLineBreak").on('click', function () {
+            var caretPos = document.getElementById("Unit").selectionStart;
+            var textAreaTxt = jQuery("#Unit").val();
+            var txtToAdd = "}\\\\\\mbox{";
+            jQuery("#Unit").val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos));
+        });
+
+    </script>
+    @*
+        <script src="~/Scripts/jquery.fileupload.js"></script>*@
+    @*<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+        <script src="~/Scripts/fileinput.min.js"></script>
+        <script src="~/Scripts/dependent-dropdown.min.js"></script>*@
+    @Scripts.Render("~/bundles/QuestionJS")
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+        tex2jax:{inlineMath:[['$','$'],['\\(','\\)']]}
+        });
+    </script>
+    <script type="text/javascript">
+        var qid = 0;
+        var textarea;
+
+        var QuestionImgSelected = false;
+        var OptionImgSelected = false;
+        var HintImgSelected = false;
+
+        var IsOptionSelectionCorrect = false;
+        $(document).ready(function () {
+            $("#Qimage,#Oimage,#Himage").find(":input").prop("disabled", true);
+        });
+
+        $("#QuestionImage").fileinput({
+            uploadUrl: "/Question/SaveQuestionImage", // server upload action
+            uploadAsync: false,
+            showUpload: false,
+            uploadExtraData: function (previewId, index) {
+                var data = {
+                    questionId: $("#QuestionId").val(),
+                    isDelete: false
+                };
+                return data;
+            },
+            showCaption: true,
+            showPreview: false,
+            showCancel: false,
+            showRemove: true,
+            browseLabel: "Question Image",
+            msgSizeTooLarge: 'File "{name}" ({size} KB) exceeds maximum allowed upload size of {maxSize} KB. Please retry your upload!',
+            maxFileSize: 1024 * 4,
+            'allowedFileExtensions': ['jpg', 'png', 'jpeg'],
+            slugCallback: function (text) {
+                return isEmpty(text) ? '' : String(text).replace(/[\-\[\]\/\{}:;#%=\(\)\*\+\?\\\^\$\|<>&"']/g, '_');
+            }
+        }).on("filebatchselected", function (event, files) {
+            // trigger upload method immediately after files are selected
+            //  $("#QuestionImage").fileinput("upload");
+            QuestionImgSelected = true;
+        }).on('filecleared', function (event) {
+            QuestionImgSelected = false;
+        }).on("filebatchuploaderror", function (event, data, previewId, index) {
+
+        }).on("filebatchuploadsuccess", function (event, data, previewId, index) {
+            //var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+            //$("#message").html("");
+            //$("#message").append(divMessage);
+            //$('#msg').html("");
+            for (var i = 0; i < data.jqXHR.responseJSON.Results.length; i++) {
+                if (data.jqXHR.responseJSON.Results[i].IsSuccessful == true) {
+                    var path = "/Images/QuestionImage/";
+                    $("#imgQues, #imgOption, #imgHint").css({ "width": "200", "Height": "200" });
+                    $("#imgQues").prop("src", (path + "Q" + $("#QuestionId").val() + ".jpg" + "?" + new Date().getTime()));
+                    $("#qdel").removeClass("hidden");
+                    QuestionImgSelected = false;
+                    $("#QuestionImage").fileinput('clear');
+                    $("#QuestionImage").fileinput('refresh');
+                    $('#QuestionImage').fileinput('enable');
+                    $('#msg').append('<div>' + data.jqXHR.responseJSON.Results[i].Message + '</div>');
+                    $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                }
+                else {
+                    $('#errorMsg').append('<div>' + data.jqXHR.responseJSON.Results[i].Message + '</div>');
+                    $("#alertErrorMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                    QuestionImgSelected = false;
+                }
+            }
+        });
+
+        $("#OptionImage").fileinput({
+            uploadUrl: "/Question/SaveOptionImage", // server upload action
+            uploadAsync: false,
+            showUpload: false,
+            uploadExtraData: function (previewId, index) {
+                var data = {
+                    questionId: $("#QuestionId").val(),
+                    isDelete: false
+                };
+                return data;
+            },
+            showCaption: true,
+            showPreview: false,
+            showCancel: false,
+            showRemove: true,
+            browseLabel: "Option Image",
+            'allowedFileExtensions': ['jpg', 'png', 'jpeg']
+        }).on("filebatchselected", function (event, files) {
+            $("#OptionA,#OptionB,#OptionC,#OptionD").val('');
+            RenderLatex();
+            //   $("#OptionBoxA,#OptionBoxB,#OptionBoxC,#OptionBoxD").text('');
+            $("#OptionA, #OptionB, #OptionC, #OptionD").attr("disabled", "disabled");
+            // trigger upload method immediately after files are selected
+            //$("#OptionImage").fileinput("upload");
+            OptionImgSelected = true;
+
+        }).on("filebatchuploaderror", function (event, data, previewId, index) {
+
+        }).on('filecleared', function (event) {
+            //  clearImage($("#odel"))
+            // $("#imgOption").prop("src", "");
+            $("#OptionA, #OptionB, #OptionC, #OptionD").removeAttr("disabled");
+        }).on("filebatchuploadsuccess", function (event, data, previewId, index) {
+            //var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+            //$("#message").html("");
+            //$("#message").append(divMessage);
+            //$('#msg').html("");
+            for (var i = 0; i < data.jqXHR.responseJSON.Results.length; i++) {
+                if (data.jqXHR.responseJSON.Results[i].IsSuccessful == true) {
+                    var path = "/Images/QuestionImage/";
+                    $("#imgQues, #imgOption, #imgHint").css({ "width": "200", "Height": "200" });
+                    $("#imgOption").prop("src", (path + "O" + $("#QuestionId").val() + ".jpg" + "?" + new Date().getTime()));
+                    $("#odel").removeClass("hidden");
+                    $('#msg').append('<div>' + data.jqXHR.responseJSON.Results[i].Message + '</div>');
+                    $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                    OptionImgSelected = false;
+                    $("#OptionImage").fileinput('clear');
+                    // $("#Oimage").find(":input").prop("disabled", false);
+                    $('#OptionImage').fileinput('refresh');
+                    $('#OptionImage').fileinput('enable');
+                    $("#OptionA, #OptionB, #OptionC, #OptionD").attr("disabled", "disabled");
+                }
+                else {
+                    $('#errorMsg').append('<div>' + data.jqXHR.responseJSON.Results[i].Message + '</div>');
+                    $("#alertErrorMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                    OptionImgSelected = false;
+                }
+            }
+        });
+
+        $("#HintImage").fileinput({
+            uploadUrl: "/Question/SaveHintImage", // server upload action
+            uploadAsync: false,
+            showUpload: false,
+            uploadExtraData: function (previewId, index) {
+                var data = {
+                    questionId: $("#QuestionId").val(),
+                    isDelete: false
+                };
+                return data;
+            },
+            showCaption: true,
+            showPreview: false,
+            showCancel: false,
+            showRemove: true,
+            browseLabel: "Hint Image",
+            'allowedFileExtensions': ['jpg', 'png', 'jpeg']
+        }).on("filebatchselected", function (event, files) {
+            // trigger upload method immediately after files are selected
+            //$("#HintImage").fileinput("upload");
+
+            HintImgSelected = true;
+        }).on("filebatchuploaderror", function (event, data, previewId, index) {
+        }).on("filebatchuploadsuccess", function (event, data, previewId, index) {
+            //var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+            //$("#message").html("");
+            //$("#message").append(divMessage);
+            //$('#msg').html("");
+            for (var i = 0; i < data.jqXHR.responseJSON.Results.length; i++) {
+                if (data.jqXHR.responseJSON.Results[i].IsSuccessful == true) {
+                    var path = "/Images/QuestionImage/";
+                    $("#imgQues, #imgOption, #imgHint").css({ "width": "200", "Height": "200" });
+                    $("#imgHint").prop("src", (path + "H" + $("#QuestionId").val() + ".jpg" + "?" + new Date().getTime()));
+                    $("#hdel").removeClass("hidden");
+                    $('#msg').append('<div>' + data.jqXHR.responseJSON.Results[i].Message + '</div>');
+                    $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                    HintImgSelected = false;
+                    $("#HintImage").fileinput('clear');
+                    $("#HintImage").fileinput('refresh');
+                    $('#HintImage').fileinput('enable');
+                }
+                else {
+                    $('#errorMsg').append('<div>' + data.jqXHR.responseJSON.Results[i].Message + '</div>');
+                    $("#alertErrorMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                    HintImgSelected = false;
+                }
+            }
+        });
+
+        function isEmpty(text) {
+            if (text === '')
+                return true;
+            else
+                return false;
+        }
+
+        $(document).ready(function () {
+
+            $("#btnZoomUpdate").click(function () {
+                if (textarea != null && textarea != "Undefined") {
+                    textarea.val($("#txt_zoom").val());
+                    $('#myModal').modal('hide');
+                    RenderLatex();
+                }
+            });
+
+            $("#QuestionInfo, #OptionA, #OptionB, #OptionC, #OptionD, #Hint, #Numerical_Answer, #Unit").bind("dbclick blur", RenderLatex);
+
+            $("#OptionA, #OptionB, #OptionC, #OptionD").on('change', function () {
+                $("#imgOption").prop("src", "")
+                $("#odel").addClass("hidden");
+                OptionImgSelected = false;
+            });
+
+            $(window).keydown(function (event) {
+                if (event.keyCode == 13) {
+                    event.preventDefault();
+                    return false;
+                }
+            });
+
+            $("#QuestionImage, #OptionImage, #HintImage").prop("data-allowed-file-extensions", '["png", "jpg", "jpeg"]');
+
+            //$(".file-preview").hide();
+            //$('#questionFile,#optionFile,#hintFile ').on('fileloaded', function (event, file, previewId, index, reader) {
+            //    $("#" + previewId).parent().parent().parent().remove();
+            //});
+
+            $(".btn-group > .btn").click(function () {
+                $(this).addClass("active").siblings().removeClass("active");
+            });
+
+            $('#QLevel button').click(function () {
+                $('#Level').val($(this).attr("data-value"));
+            });
+
+            $('#QType button').click(function () {
+                $('#Type').val($(this).attr("data-value"));
+            });
+
+            $('#update').click(function () {
+                IsOptionSelectionCorrect = false;
+                GetOptionPattern();
+                if (IsOptionSelectionCorrect) {
+                    $("#message").html("");
+                    $("#errorMessage").html("");
+                    var arrSelected = [];
+                    $('#AnswerOption input:checked').each(function () {
+                        arrSelected.push($(this).val());
+                    });
+                    $('#Answer').val(arrSelected.toString());
+
+
+                    //var jqxhr = $.post("/Question/UpdateQuestion",
+                    //    {
+                    //        QuestionId: $("#QuestionId").val(),
+                    //        QuestionInfo: $("#QuestionInfo").val(),
+                    //        OptionA: $("#OptionA").val(),
+                    //        OptionB: $("#OptionB").val(),
+                    //        OptionC: $("#OptionC").val(),
+                    //        OptionD: $("#OptionD").val(),
+                    //        Answer: $("#Answer").val(),
+                    //        Hint: $("#Hint").val(),
+                    //        Year: $("#Year").val(),
+                    //        Type: $("#Type").val(),
+                    //        Level: $("#Level").val(),
+                    //        ChapterId: $("#ChapterId").val(),
+                    //        ClassId: $("#ClassId").val(),
+                    //        SubjectId: $("#SubjectId").val()
+                    //    }, function (data) {
+                    //        var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+                    //        $("#message").html("");
+                    //        $("#message").append(divMessage);
+                    //        if (data.Success == true) {
+                    //            $('#msg').html('<div>' + data.Results[0].Message + '</div>');
+                    //            $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+
+                    //            $("#QuestionImage").fileinput("upload");
+                    //            $("#HintImage").fileinput("upload");
+                    //            $("#OptionImage").fileinput("upload");
+                    //        }
+                    //        else {
+                    //            var m = "";
+                    //            for (var i = 0; i < data.Results.length; i++) {
+                    //                m = m + data.Results[i].Message + "</br>";
+                    //            }
+                    //            $('#msg').html('<div>' + m + '</div>');
+                    //            $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                    //        }
+                    //    }).done(function () {
+
+                    //    }).fail(function () {
+                    //        $('#msg').html('<div">Something went wrong! Please try again.</div>');
+                    //        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                    //    }).always(function () {
+                    //    });
+
+                    $.ajax({
+                        url: "/Question/UpdateQuestion",
+                        type: "POST",
+                        data: {
+                            QuestionId: $("#QuestionId").val(),
+                            QuestionInfo: $("#QuestionInfo").val(),
+                            OptionA: $("#OptionA").val(),
+                            OptionB: $("#OptionB").val(),
+                            OptionC: $("#OptionC").val(),
+                            OptionD: $("#OptionD").val(),
+                            Answer: $("#Answer").val(),
+                            Hint: $("#Hint").val(),
+                            Numerical_Answer: $("#Numerical_Answer").val(),
+                            Unit: $("#Unit").val(),
+                            Year: $("#Year").val(),
+                            Type: $("#Type").val(),
+                            Level: $("#Level").val(),
+                            ChapterId: $("#ChapterId").val(),
+                            ClassId: $("#ClassId").val(),
+                            SubjectId: $("#SubjectId").val(),
+                            //OptionImage :  $("#imgOption").val()
+                        },
+                        success: function (data) {
+                            var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+                            $("#message").html("");
+                            $("#message").append(divMessage);
+                            var divErrorMessage = '<div id="alertErrorMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="errorMsg"></div></div>';
+                            $("#errorMessage").html("");
+                            $("#errorMessage").append(divErrorMessage);
+                            if (data.Success == true) {
+                                $('#msg').html('<div>' + data.Results[0].Message + '</div>');
+                                $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                                if ($("#QuestionId").val() != "0") {
+                                    if (QuestionImgSelected)
+                                        $("#QuestionImage").fileinput("upload");
+                                    $("#questionImageWithDelete").removeClass("hidden");
+                                    if (OptionImgSelected) {
+                                        $("#OptionA, #OptionB, #OptionC, #OptionD").attr("disabled", "disabled");
+                                        $("#OptionImage").fileinput("upload");
+                                    }
+                                    else {
+                                        $("#OptionA, #OptionB, #OptionC, #OptionD").removeAttr("disabled");
+                                    }
+                                    $("#optionImageWithDelete").removeClass("hidden");
+                                    if (HintImgSelected)
+                                        $("#HintImage").fileinput("upload");
+                                    $("#hintImageWithDelete").removeClass("hidden");
+                                }
+
+
+                            }
+                            else {
+                                var m = "";
+                                for (var i = 0; i < data.Results.length; i++) {
+                                    m = m + data.Results[i].Message + "</br>";
+                                }
+                                $('#errorMsg').html('<div>' + m + '</div>');
+                                $("#alertErrorMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                            }
+                        },
+                        dataType: "json",
+                        async: false
+                    });
+                }
+            });
+
+            $("#create").on('click', function () {
+                IsOptionSelectionCorrect = false;
+                GetOptionPattern();
+                if (IsOptionSelectionCorrect) {
+                    $("#message").html("");
+                    $("#errorMessage").html("");
+                    var arrSelected = [];
+                    $('#AnswerOption input:checked').each(function () {
+                        arrSelected.push($(this).val());
+                    });
+                    $('#Answer').val(arrSelected.toString());
+
+                    //var jqxhr = $.post("/Question/SaveQuestion",
+                    //    {
+                    //        QuestionInfo: $("#QuestionInfo").val(),
+                    //        OptionA: $("#OptionA").val(),
+                    //        OptionB: $("#OptionB").val(),
+                    //        OptionC: $("#OptionC").val(),
+                    //        OptionD: $("#OptionD").val(),
+                    //        Answer: $("#Answer").val(),
+                    //        Hint: $("#Hint").val(),
+                    //        Year: $("#Year").val(),
+                    //        Type: $("#Type").val(),
+                    //        Level: $("#Level").val(),
+                    //        ChapterId: $("#ChapterId").val(),
+                    //        ClassId: $("#ClassId").val(),
+                    //        SubjectId: $("#SubjectId").val()
+                    //    }, function (data) {
+                    //        var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+                    //        $("#message").html("");
+                    //        $("#message").append(divMessage);
+                    //        if (data.Success == true) {
+                    //            $('#msg').html('<div>' + data.Results[0].Message +  '</div>');
+                    //            $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                    //            $("#update, #clear").removeClass("hidden");
+                    //            $("#create").attr("disabled", "disabled");
+                    //            $("#Qimage, #Oimage, #Himage").removeClass("hidden");
+                    //            $("#QuestionId").val(data.Data);
+                    //        }
+                    //        else {
+                    //            var m = "";
+                    //            for (var i = 0; i < data.Results.length; i++) {
+                    //                m = m + data.Results[i].Message + "</br>";
+                    //            }
+                    //            $('#msg').html('<div>' + m + '</div>');
+                    //            $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                    //        }
+                    //    }).done(function (data) {
+                    //        if (data.Success == true) {
+                    //            $("#QuestionImage").fileinput("upload");
+                    //            $("#HintImage").fileinput("upload");
+                    //            $("#OptionImage").fileinput("upload");
+                    //        }
+                    //    }).fail(function () {
+                    //        $('#msg').html('<div>Something went wrong! Please try again.</div>');
+                    //        $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                    //    }).always(function () {
+                    //    });
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "/Question/SaveQuestion",
+                        data: {
+                            QuestionInfo: $("#QuestionInfo").val(),
+                            OptionA: $("#OptionA").val(),
+                            OptionB: $("#OptionB").val(),
+                            OptionC: $("#OptionC").val(),
+                            OptionD: $("#OptionD").val(),
+                            Answer: $("#Answer").val(),
+                            Hint: $("#Hint").val(),
+                            Year: $("#Year").val(),
+                            Numerical_Answer: $("#Numerical_Answer").val(),
+                            Unit: $("#Unit").val(),
+                            Type: $("#Type").val(),
+                            Level: $("#Level").val(),
+                            ChapterId: $("#ChapterId").val(),
+                            ClassId: $("#ClassId").val(),
+                            SubjectId: $("#SubjectId").val()
+                        },
+                        success: function (data) {
+                            var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+                            $("#message").html("");
+                            $("#message").append(divMessage);
+                            var divErrorMessage = '<div id="alertErrorMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="errorMsg"></div></div>';
+                            $("#errorMessage").html("");
+                            $("#errorMessage").append(divErrorMessage);
+                            if (data.Success == true) {
+                                $('#msg').html('<div>' + data.Results[0].Message + '</div>');
+                                $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                                $("#update, #clear").removeClass("hidden");
+                                $("#create").attr("disabled", "disabled");
+                                $("#Qimage, #Oimage, #Himage").removeClass("hidden");
+                                $("#QuestionId").val(data.Data);
+                                if ($("#QuestionId").val() != "0") {
+                                    if (QuestionImgSelected)
+                                        $("#QuestionImage").fileinput("upload");
+                                    $("#questionImageWithDelete").removeClass("hidden");
+                                    if (OptionImgSelected)
+                                        $("#OptionImage").fileinput("upload");
+                                    $("#optionImageWithDelete").removeClass("hidden");
+                                    if (HintImgSelected)
+                                        $("#HintImage").fileinput("upload");
+                                    $("#hintImageWithDelete").removeClass("hidden");
+                                }
+                            }
+                            else {
+                                var m = "";
+                                for (var i = 0; i < data.Results.length; i++) {
+                                    m = m + data.Results[i].Message + "</br>";
+                                }
+                                $('#errorMsg').html('<div>' + m + '</div>');
+                                $("#alertErrorMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                            }
+                        },
+                        dataType: "json",
+                        async: false
+                    });
+                }
+            })
+
+            $("#clear").on('click', function () {
+                ClearHtml();
+                $("#Qimage, #Oimage, #Himage").removeClass("hidden");
+                $("#create").removeAttr("disabled");
+                $("#update, #clear").addClass("hidden");
+                $("#qdel, #odel, #hdel").addClass("hidden");
+                $("#QuestionImage").fileinput('clear');
+                $("#OptionImage").fileinput('clear');
+                $("#HintImage").fileinput('clear');
+            })
+
+            $("#qdel, #odel, #hdel").on('click', function (e) {
+                var $form = $(this).closest('form');
+                var imageType = $(this).attr("data-value");
+                var questionId = $("#QuestionId").val();
+                e.preventDefault();
+                $('#confirm').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                }).show()
+                  .one('click', '#delete', function (e) {
+
+                      var jqxhr = $.post("/Question/DeleteImage",
+                          {
+                              questionId: questionId,
+                              imageType: imageType
+
+                          }, function (data) {
+                              if (data.Success == true) {
+                                  if (imageType == 1) {
+                                      $("#imgQues").prop("src", "")
+                                      $("#qdel").addClass("hidden");
+                                  }
+                                  if (imageType == 2) {
+                                      $("#imgOption").prop("src", "")
+                                      $("#odel").addClass("hidden");
+                                      $("#OptionA, #OptionB, #OptionC, #OptionD").removeAttr("disabled");
+                                  }
+                                  if (imageType == 3) {
+                                      $("#imgHint").prop("src", "")
+                                      $("#hdel").addClass("hidden");
+                                  }
+                                  $('#msg').html('<div>' + data.Results[0].Message + '</div>');
+                                  $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                              }
+                              else {
+                                  $('#msg').html('<div>' + data.Results[0].Message + '</div>');
+                                  $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                              }
+                          }).done(function () {
+
+                          }).fail(function () {
+                              $('#msg').html('<div">Something went wrong! Please try again.</div>');
+                              $("#alertMessage").removeClass("hidden").removeClass("alert-Success").addClass("alert-danger");
+                          }).always(function () {
+                          });
+                  });
+            });
+
+            function clearImage(odel) {
+                var $form = $(odel).closest('form');
+                var imageType = $(odel).attr("data-value");
+                var questionId = $("#QuestionId").val();
+                e.preventDefault();
+                $('#confirm').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                }).show()
+                  .one('click', '#delete', function (e) {
+
+                      var jqxhr = $.post("/Question/DeleteImage",
+                          {
+                              questionId: questionId,
+                              imageType: imageType
+
+                          }, function (data) {
+                              if (data.Success == true) {
+                                  if (imageType == 1) {
+                                      $("#imgQues").prop("src", "")
+                                      $("#qdel").addClass("hidden");
+                                  }
+                                  if (imageType == 2) {
+                                      $("#imgOption").prop("src", "")
+                                      $("#odel").addClass("hidden");
+                                  }
+                                  if (imageType == 3) {
+                                      $("#imgHint").prop("src", "")
+                                      $("#hdel").addClass("hidden");
+                                  }
+                                  $('#msg').html('<div>' + data.Results[0].Message + '</div>');
+                                  $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                              }
+                              else {
+                                  $('#msg').html('<div>' + data.Results[0].Message + '</div>');
+                                  $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                              }
+                          }).done(function () {
+
+                          }).fail(function () {
+                              $('#msg').html('<div">Something went wrong! Please try again.</div>');
+                              $("#alertMessage").removeClass("hidden").removeClass("alert-Success").addClass("alert-danger");
+                          }).always(function () {
+                          });
+                  });
+            }
+
+            functionDisabled();
+
+            FillClasses();
+
+            $("#SubjectId").depdrop({
+                url: '/Subject/QGetSubjects',
+                depends: ['ClassId']
+            });
+
+            $("#ChapterId").depdrop({
+                url: '/Chapter/QGetChapters',
+                depends: ['SubjectId']
+            });
+
+            $("#ClassId").on("change", function () {
+                // $("#Qimage, #Oimage, #Himage").removeClass("active").addClass("hidden");
+                disabledHtml();
+                functionDisabled();
+                $("#qdel, #odel, #hdel").addClass("hidden");
+                $("#create, #update, #clear").addClass("hidden");
+                $("#btnActive input").removeClass('btn-primary');
+                $("#activeCreate, #activeUpdate").attr("disabled", "disabled");
+                ClearHtml();
+            })
+
+            $("#SubjectId").on("change", function () {
+                // $("#Qimage, #Oimage, #Himage").removeClass("active").addClass("hidden");
+                disabledHtml();
+                functionDisabled();
+                $("#qdel, #odel, #hdel").addClass("hidden");
+                $("#create, #update, #clear").addClass("hidden");
+                $("#btnActive input").removeClass('btn-primary');
+                $("#activeCreate, #activeUpdate").attr("disabled", "disabled");
+                ClearHtml();
+            })
+
+            $("#ChapterId").on("change", function () {
+                $("#activeCreate, #activeUpdate").removeAttr("disabled");
+                $("#qdel, #odel, #hdel").addClass("hidden");
+            })
+
+            $("#btnPrev").on("click", function () {
+                GetQuestion((parseInt($("#QuestionNo").val()) - 1), $(this));
+                $("#alertMessage").addClass("hidden");
+            })
+
+            $("#btnNext").on("click", function () {
+                GetQuestion((parseInt($("#QuestionNo").val()) + 1), $(this));
+                $("#alertMessage").addClass("hidden");
+            })
+
+            $("#btnActive").on('click', '.btn', function () {
+                $("#btnQueLineBreak,#btnOptionALineBreak,#btnOptionBLineBreak,#btnOptionCLineBreak, #btnOptionDLineBreak,#btnHintLineBreak,#btnNumerical_AnswerLineBreak,#btnUnitLineBreak").css("pointer-events", " all");
+                $(this).addClass('btn-primary').siblings().removeClass('btn-primary').addClass('btn-default');
+                if ($(this).val() == "New") {
+                    $("#create").removeClass("hidden");
+                    $("#update").addClass("hidden");
+                    enabledHtml();
+                    ClearHtml();
+                    functionDisabled();
+                    //$("#QuestionImage").parent().removeAttr("disabled");
+                    //$("#QuestionImage").removeAttr("disabled");
+                    // $('#QuestionImage, #OptionImage, #HintImage').removeAttr("disabled");
+                    //$('#QuestionImage, #OptionImage, #HintImage').attr('disabled', 'disabled');
+                    $("#qdel, #odel, #hdel").addClass("hidden");
+                    $("#create").removeAttr("disabled");
+                    $("#Qimage,#Oimage,#Himage").find(":input").prop("disabled", false);
+                    $("#QuestionImage").fileinput('clear');
+                    $("#OptionImage").fileinput('clear');
+                    $("#HintImage").fileinput('clear');
+                }
+                else {
+                    $("#questionImageWithDelete,#optionImageWithDelete,#hintImageWithDelete").removeClass("hidden");
+                    if ($("#imgOption").attr("src") == "") {
+                        $("#OptionA, #OptionB, #OptionC, #OptionD").removeAttr("disabled");
+                    }
+                    else {
+                        $("#OptionA, #OptionB, #OptionC, #OptionD").attr("disabled", "disabled");
+                    }
+                    $("#create").addClass("hidden");
+                    $("#update").removeClass("hidden");
+                    $("#btnPrev, #btnNext, #QuestionNo").removeAttr("disabled");
+                    enabledHtml();
+                    getFirstQuestion();
+                    $("#qdel, #odel, #hdel").addClass("hidden");
+                    $("#Qimage,#Oimage,#Himage").find(":input").prop("disabled", false);
+                }
+            })
+
+            $('#QuestionNo').bind("enterKey", function (e) {
+                //ClearHtml();
+                GetQuestion($(this).val(), null)
+                //console.log("asd");
+            });
+
+            $('#QuestionNo').keyup(function (e) {
+                if (e.keyCode == 13) {
+                    $(this).trigger("enterKey");
+                }
+            });
+
+            $("#Year").on("change", function () {
+                $('#CorrectYear').text($("#Year").val());
+            });
+
+            
+
+            $("#AnswerOption").on("change", function () {
+                var correctAnswerSelected = [];
+                $('#AnswerOption input:checked').each(function () {
+                    if ($(this).val() == "1")
+                        correctAnswerSelected.push("A");
+                    else if ($(this).val() == "2")
+                        correctAnswerSelected.push("B");
+                    else if ($(this).val() == "3")
+                        correctAnswerSelected.push("C");
+                    else if ($(this).val() == "4")
+                        correctAnswerSelected.push("D");
+                });
+                $('#CorrectAnswer').text(correctAnswerSelected.toString());
+            });
+
+        });
+
+        function enabledHtml() {
+            $("#QuestionInfo, #OptionA, #OptionB, #OptionC, #OptionD, #Hint, #Year,#Numerical_Answer,#Unit, #o1, #o2, #o3, #o4, #levelEasy, #levelMedium, #levelHard, #typeTheory, #typeNumeric,#typeNewPatternNumerical,.cursor-zoomin")
+                .removeAttr("disabled");
+           // $("#btnQueLineBreak,#btnOptionALineBreak,#btnOptionBLineBreak,#btnOptionCLineBreak, #btnOptionDLineBreak,#btnHintLineBreak").css("pointer-events", " all");
+            $(".cursor-zoomin").bind("click", ZoomIn);
+        }
+
+        function disabledHtml() {
+            $("#QuestionInfo, #OptionA, #OptionB, #OptionC, #OptionD, #Hint, #Year,#Numerical_Answer,#Unit, #o1, #o2, #o3, #o4, #levelEasy, #levelMedium, #levelHard, #typeTheory, #typeNumeric,#typeNewPatternNumerical, .cursor-zoomin")
+                .attr("disabled", "disabled");
+            $("#btnQueLineBreak,#btnOptionALineBreak,#btnOptionBLineBreak,#btnOptionCLineBreak, #btnOptionDLineBreak,#btnHintLineBreak,#btnNumerical_AnswerLineBreak,#btnUnitLineBreak").css("pointer-events", "none");
+            $(".cursor-zoomin").unbind("click", ZoomIn);
+        }
+
+        function ZoomIn() {
+            textarea = $(this).parent().find(".multi-line");
+            $(".modal-title").text(textarea.attr("id"));
+            $("#txt_zoom").val(textarea.val());
+            $('#myModal').modal('show');
+        }
+
+        function getFirstQuestion() {
+            //$("#Qimage, #Oimage, #Himage").addClass("active").removeClass("hidden");
+            $("#qdel, #odel, #hdel").removeClass("hidden");
+            GetQuestionCount($("#ClassId").val(), $("#SubjectId").val(), $("#ChapterId").val());
+            $("#alertMessage").addClass("hidden");
+            $("#alertErrorMessage").addClass("hidden");
+            if ($("#qCount").text() != "0") {
+                GetQuestion(1, $("#btnPrev"));
+                $("#Qimage").attr("disabled", "disabled");
+            }
+            $("#btnPrev").attr("disabled", "disabled");
+        }
+
+        function changeDisable() {
+            $("#btnPrev").attr("disabled", "disabled");
+            $("#btnNext").attr("disabled", "disabled");
+            $("#QuestionNo").attr("disabled", "disabled");
+        }
+
+        function CMSOnSuccess(data) {
+            if (data.Success) {
+                $('#msg').html('<div class="alert alert-success">' + data.Results[0].Message + '</div>').removeClass("hidden");
+            }
+            else {
+                $('#msg').html('<div class="alert alert-danger">' + data.Results[0].Message + '</div>').removeClass("hidden");
+            }
+        }
+
+        function CMSOnFailure(data) {
+            $('#msg').html('<div class="alert alert-danger">Something went wrong! Please try again.</div>').removeClass("hidden");
+        }
+
+        function CMSOnBegin() {
+            var arrSelected = [];
+            $('#AnswerOption input:checked').each(function () {
+                arrSelected.push($(this).val());
+            });
+            $('#Answer').val(arrSelected.toString());
+        }
+
+        function ClearHtml() {
+           // $("#btnQueLineBreak,#btnOptionALineBreak,#btnOptionBLineBreak,#btnOptionCLineBreak, #btnOptionDLineBreak,#btnHintLineBreak").css("pointer-events", "none");
+            $("#QuestionInfo, #OptionA, #OptionB, #OptionC, #OptionD, #Hint, #Year,#Numerical_Answer,#Unit, #Type, #Level").val("");
+            $("#CorrectYear,#CorrectAnswer,#Numerical_Answer1,#Unit1").text("");
+            $('#QLevel button').removeClass("active");
+            $('#QType button').removeClass("active");
+            $('#QuestionNo').val("0");
+            $("#qCount").text("0");
+            $('#QuestionId').val("");
+            $('#AnswerOption input:checkbox').prop('checked', false);
+            RenderLatex();
+            $("#imgQues").prop("src", "")
+            $("#imgOption").prop("src", "")
+            $("#imgHint").prop("src", "")
+            $("#alertMessage").addClass("hidden");
+            $("#alertErrorMessage").addClass("hidden");
+        }
+
+        function functionDisabled() {
+            $("#btnPrev, #btnNext, #QuestionNo").attr("disabled", "disabled");
+        }
+
+        function RenderLatex() {
+            /// $("#imgOption").prop("src", "");
+            UpdateContent($("#QuestionInfo").val(), "QuestionBox");
+            UpdateContent($("#OptionA").val(), "OptionBoxA");
+            UpdateContent($("#OptionB").val(), "OptionBoxB");
+            UpdateContent($("#OptionC").val(), "OptionBoxC");
+            UpdateContent($("#OptionD").val(), "OptionBoxD");
+            UpdateContent($("#Hint").val(), "HintBox");
+            UpdateContent($("#Numerical_Answer").val(), "Numerical_AnswerBox");
+            UpdateContent($("#Unit").val(), "UnitBox");
+        }
+
+        function UpdateContent(latexText, element) {
+            var math = MathJax.Hub.getAllJax(element)[0];
+            MathJax.Hub.Queue(["Text", math, "\\mbox{" + latexText + "}"]);
+        }
+
+        function FillClasses() {
+            $.ajax({
+                url: '/Class/GetClasses',
+                type: "GET",
+                dataType: "JSON",
+                async: false,
+                success: function (classes) {
+                    $("#ClassId").html(""); // clear before appending new list
+                    $("#ClassId").append($('<option></option>').val("").html("Class"));
+                    $.each(classes, function (i, cls) {
+                        $("#ClassId").append(
+                            $('<option></option>').val(cls.ClassId).html(cls.Name));
+                    });
+                }
+            });
+        }
+
+        function ResolveUrl(url) {
+            url = (url != null) ? url.substring(32, url.length) : ""
+            return url;
+        }
+
+        function GetQuestion(id, e) {
+
+            $("#questionImageWithDelete,#optionImageWithDelete,#hintImageWithDelete").removeClass("hidden");
+            $("#btnPrev").attr("disabled", "disabled");
+            $("#btnNext").attr("disabled", "disabled");
+            $.getJSON("/Question/GetQuestion",
+                   { id: id, chapterId: $("#ChapterId").val() },
+                   function (data, status, xhr) {
+                       $('#QuestionInfo').val(data.QuestionInfo);
+                       $('#OptionA').val(data.OptionA);
+                       $('#OptionB').val(data.OptionB);
+                       $('#OptionC').val(data.OptionC);
+                       $('#OptionD').val(data.OptionD);
+                       $('#Hint').val(data.Hint)
+                       $('#Year').val(data.QuestionYear);
+                       $('#Numerical_Answer').val(data.Numerical_Answer);
+                       $('#Unit').val(data.Unit);
+                       $('#QuestionId').val(data.QuestionId);
+                       $('#Answer').val(data.Answer);
+                       $('#Type').val(data.QuestionType);
+                       $('#Level').val(data.QuestionLevel);
+                       $('#CorrectYear').text($("#Year").val())
+                      
+                       qid = data.QuestionId;
+                       $('#AnswerOption input:checkbox').prop('checked', false);
+                       var arr = data.Answer.split(',');
+                       var correctAnswerSelected = [];
+                       arr.forEach(function (i) {
+                           $("#o" + i).prop("checked", true);
+                           if (i == "1")
+                               correctAnswerSelected.push("A");
+                           else if (i == "2")
+                               correctAnswerSelected.push("B");
+                           else if (i == "3")
+                               correctAnswerSelected.push("C");
+                           else if (i == "4")
+                               correctAnswerSelected.push("D");
+                       })
+                       $('#CorrectAnswer').text(correctAnswerSelected.toString());
+
+                       var path = "/Images/QuestionImage/";
+
+                       $("#QuestionNo").val(id);
+                       if (data.QuestionImagePath) {
+                           $("#imgQues").prop("src", ((path + data.QuestionImagePath) + "?" + new Date().getTime()));
+                           $("#qdel").removeClass("hidden");
+                           QuestionImgSelected = true;
+                       }
+                       else {
+                           $("#imgQues").prop("src", "");
+                           $("#qdel").addClass("hidden");
+                       }
+
+                       //if ($("#imgOption").attr("src") == "") {
+                       //    $("#OptionA, #OptionB, #OptionC, #OptionD").removeAttr("disabled");
+                       //}
+                       //else {
+                       //    $("#OptionA, #OptionB, #OptionC, #OptionD").attr("disabled", "disabled");
+                       //}
+                       if (data.OptionImagePath) {
+
+                           $("#imgOption").prop("src", ((path + data.OptionImagePath) + "?" + new Date().getTime()));
+                           $("#odel").removeClass("hidden");
+                           $("#OptionA, #OptionB, #OptionC, #OptionD").attr("disabled", "disabled");
+                           OptionImgSelected = true;
+                       }
+                       else {
+                           $("#imgOption").prop("src", "");
+                           $("#OptionA, #OptionB, #OptionC, #OptionD").removeAttr("disabled");
+                           $("#odel").addClass("hidden");
+                       }
+
+                       if (data.HintImagePath) {
+                           $("#imgHint").prop("src", ((path + data.HintImagePath) + "?" + new Date().getTime()));
+                           $("#hdel").removeClass("hidden");
+                           HintImgSelected = true;
+                       }
+                       else {
+                           $("#imgHint").prop("src", "");
+                           $("#hdel").addClass("hidden");
+                       }
+
+
+                       $("#imgQues, #imgOption, #imgHint").css({ "width": "200", "Height": "200" });
+
+                       $('#QLevel button[data-value="' + data.QuestionLevel + '"]').addClass("active").siblings().removeClass("active");
+                       $('#QType button[data-value="' + data.QuestionType + '"]').addClass("active").siblings().removeClass("active");
+
+
+                       RenderLatex();
+                   }).done(function () {
+                       $("#btnPrev").removeAttr("disabled");
+                       $("#btnNext").removeAttr("disabled");
+                       $("#QuestionNo").removeAttr("disabled");
+                   }).fail(function () {
+                       if (e != null) {
+                           e.attr("disabled", "disabled");
+                           if (e.prop("id") == "btnNext") {
+                               $("#btnPrev").removeAttr("disabled");
+                           } else if (e.prop("id") == "btnPrev") {
+                               $("#btnNext").removeAttr("disabled");
+                           }
+                       }
+                   });
+        }
+
+        function GetQuestionCount(ClassId, SubjectId, ChapterId) {
+            $.ajax({
+                url: '/Question/GetQuestionCount',
+                type: "GET",
+                dataType: "JSON",
+                data: { ClassId: ClassId, SubjectId: SubjectId, ChapterId: ChapterId },
+                async: false,
+                success: function (data) {
+                    $("#qCount").text(data);
+                    if (data == 0) {
+                        $("#QuestionNo").text("0");
+                        $("#create, #update, #clear").addClass("hidden");
+                        changeDisable();
+                        disabledHtml();
+                    }
+                    else {
+                        $("#QuestionNo").text("1");
+                    }
+                }
+            });
+        }
+
+        function GetOptionPattern() {
+            var m = "";
+            var divErrorMessage = '<div id="alertErrorMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="errorMsg"></div></div>';
+            $("#errorMessage").html("");
+            $("#errorMessage").append(divErrorMessage);
+
+            if (($("#OptionA").val().trim() == "" && $("#OptionB").val().trim() == "" &&
+                                                                  $("#OptionC").val().trim() == "" && $("#OptionD").val().trim() == "") && (!OptionImgSelected)) {
+                m = "Options are required.";
+                IsOptionSelectionCorrect = false;
+            }
+                //else if (($("#OptionA").val().trim() != "" && $("#OptionB").val().trim() != "" &&
+                //                             $("#OptionC").val().trim() != "" && $("#OptionD").val().trim() != "") && (OptionImgSelected)) {
+                //     m = "Please select either option image or fill options.";
+                //     IsOptionSelectionCorrect = false;
+                // }
+            else if (($("#OptionA").val().trim() != "" && $("#OptionB").val().trim() != "" &&
+                        $("#OptionC").val().trim() != "" && $("#OptionD").val().trim() != "")) {
+                IsOptionSelectionCorrect = true;
+            }
+            else if (OptionImgSelected) {
+                IsOptionSelectionCorrect = true;
+            }
+            else {
+                m = "Options are required.";
+                IsOptionSelectionCorrect = false;
+            }
+            $('#errorMsg').html('<div>' + m + '</div>');
+            if (IsOptionSelectionCorrect == false) {
+                $("#alertErrorMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+            }
+            else {
+                $("#alertErrorMessage").addClass("hidden");
+            }
+        }
+    </script>
+    @Styles.Render("~/Content/QuestionCSS")
+}
+

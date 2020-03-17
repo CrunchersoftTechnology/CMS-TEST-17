@@ -1,0 +1,2007 @@
+﻿@model CMS.Web.ViewModels.TestPaperViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<br />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+<style>
+    .chapterbtn {
+        width: 18%;
+        white-space: pre-line !important;
+        margin-bottom: 5px !important;
+    }
+
+    #chapterSelection .modal-dialog {
+        width: 100%;
+        max-height: 90%;
+        overflow-y: auto;
+    }
+
+    #chapterList {
+        text-align: center !important;
+    }
+
+    #chapterSelection {
+        padding: 0px !important;
+    }
+
+    #tblChapters {
+        width: 90%;
+        margin: 5%;
+        margin-bottom: 1%;
+        margin-top: 1%;
+    }
+
+    .review-margin {
+        margin-bottom: 1%;
+        margin-top: 1%;
+    }
+
+    .numberCircle {
+        border-radius: 50%;
+        width: 42px;
+        font-size: 15px;
+        border: 2px solid #666;
+        margin: 1%;
+        display: inline-block;
+    }
+
+        .numberCircle span {
+            text-align: center;
+            line-height: 38px;
+            display: block;
+        }
+
+    #review-dialog .modal-dialog {
+        width: 70%;
+    }
+
+    #dialog-form {
+        overflow-x: hidden;
+    }
+
+    /*.sp1 {
+        width: 100% !important;
+        overflow-x: auto;
+        max-width: 100% !important;
+    }*/
+    .jstree-default a { 
+    white-space:normal !important; 
+}
+.jstree-anchor {
+    height: auto !important;
+}
+</style>
+
+<div id="message">
+</div>
+
+<div id="createPaper">
+    @Html.DropDownListFor(m => m.ClassId, new SelectList(ViewBag.ClassList, "Value", "Text"),
+            "Select Class", new { @class = "form-control" })
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-default" type="button" id="unitWise" aria-haspopup="true" aria-expanded="false">Unit Wise</button>
+        </div>
+    </div>
+    <div class="row review-margin">
+        <div class="col-md-12">
+            <button class="btn btn-default" type="button" id="groupWise" aria-haspopup="true" aria-expanded="false">Group Wise</button>
+        </div>
+    </div>
+    <div class="row review-margin">
+        <div class="col-md-12">
+            <button class="btn btn-default" type="button" id="subjectWise" aria-haspopup="true" aria-expanded="false">Subject Wise</button>
+        </div>
+    </div>
+</div>
+
+<div id="testPaper">
+
+    <div class="row">
+        <div class="col-md-3">
+            <div>
+                <input id="search_field" class="search-input form-control" value="" placeholder="Search" />
+            </div>
+
+            <br />
+
+            <div id="jstree">
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="row">
+                @*<div class="hidden">
+                            @Html.DropDownList("SubjectId", new SelectList(Enumerable.Empty<SelectListItem>(), "SubjectId", "SubjectName"),
+                    new { @class = "form-control" })
+                        </div>*@
+
+                <div class="hidden">
+                    @Html.DropDownList("ChapterId", new SelectList(Enumerable.Empty<SelectListItem>(), "ChapterId", "ChapterName"),
+            new { @class = "form-control", @onchange = "getChapters()" })
+                </div>
+
+                <div class="col-md-6">
+                    <div class="col-md-7">
+                        <div class="input-group col-md-12">
+                            <div class="input-group-btn">
+                                <button class="btn btn-primary" id="chapterCountDetails">Chapter Details</button>
+                            </div>
+                            <label class="form-control" placeholder="No." aria-describedby="basic-addon1" value="0" readonly="readonly"><span id="QuestionChapterNo">0</span>/<span id="qChapterCount"></span></label>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="input-group col-md-12">
+                            <span class="input-group-addon" id="basic-addon1">Total</span>
+                            <label class="form-control" placeholder="No." aria-describedby="basic-addon1" value="0" readonly="readonly"><span id="QuestionTotalNo">0</span>/<span id="qTotalCount"></span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="col-lg-3"><span id="basic-addon1">Test Name: </span></div>
+                    <div class="col-lg-9"><label id="testName"></label></div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="col-md-4"><span id="cEasy"></span></div>
+                    <div class="col-md-4"><span id="cMedium"></span></div>
+                    <div class="col-md-4"><span id="cHard"></span></div>
+                </div>
+                <div class="col-md-5">
+                    <div class="col-md-3"><span id="cTheoretical"></span></div>
+                    <div class="col-md-3"><span id="cNumerical"></span></div>
+                    <div class="col-md-3"><span id="cNewPatternNumerical"></span></div>
+                </div>
+                <div class="col-md-3" style="width:auto">
+                    <div class="col-md-6" style="width:auto"><span id="cAsked"></span></div>
+                    <div class="col-md-6" style="width:auto"><span id="cNotAsked"></span></div>
+                </div>
+                @*<div class="col-md-2">
+                        <div class="col-md-4"><span id="cUsed"></span></div>
+                        <div class="col-md-4"><span id="cNotUsed"></span></div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="col-md-4"><span id="cHint"></span></div>
+                        <div class="col-md-4"><span id="cWithoutHint"></span></div>
+                    </div>*@
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div id="QLevel" class="btn-group btn-group-sm" role="radiogroup" aria-label="...">
+                        <button id="levelEasy" type="button" class="btn btn-default" data-value="1">Easy</button>
+                        <button id="levelMedium" type="button" class="btn btn-default" data-value="2">Medium</button>
+                        <button id="levelHard" type="button" class="btn btn-default" data-value="3">Hard</button>
+                    </div>
+                </div>
+                <div class="col-md-3" style="width:auto">
+                    <div id="QType" class="btn-group btn-group-sm" role="radiogroup" aria-label="..." >
+                        <button id="typeTheory" type="button" class="btn btn-default" data-value="1">Theoretical</button>
+                        <button id="typeNumeric" type="button" class="btn btn-default" data-value="2">Numerical</button>
+                        <button id="typeNewPatternNumerical" type="button" class="btn btn-default" data-value="3">NewPatternNumerical</button>
+
+                    </div>
+                </div>
+                <div class="col-md-3" style="width:auto">
+                    <div id="QAsked" class="btn-group btn-group-sm" role="radiogroup" aria-label="..." >
+                        <button id="typeAsked" type="button"  class="btn btn-default" data-value="1">Asked</button>
+                        <button id="typeNotAsked" type="button"  class="btn btn-default" data-value="2">Not Asked</button>
+                    </div>
+                </div>
+                @*<div class="col-md-2">
+                        <div id="QUsed" class="btn-group btn-group-sm" role="radiogroup" aria-label="...">
+                            <button id="typeUsed" type="button" class="btn btn-default" data-value="1">Used</button>
+                            <button id="typeNotUsed" type="button" class="btn btn-default" data-value="2">Not Used</button>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div id="QHints" class="btn-group btn-group-sm" role="radiogroup" aria-label="...">
+                            <button id="typeHint" type="button" class="btn btn-default" data-value="1">Hint</button>
+                            <button id="typeWithoutHint" type="button" class="btn btn-default" data-value="2">Without Hint</button>
+                        </div>
+                    </div>*@
+            </div>
+
+            <br />
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="col-md-4"><span id="cUsed"></span></div>
+                    <div class="col-md-4"><span id="cNotUsed"></span></div>
+                </div>
+                <div class="col-md-3">
+                    <div class="col-md-4"><span id="cHint"></span></div>
+                    <div class="col-md-4"><span id="cWithoutHint"></span></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div id="QUsed" class="btn-group btn-group-sm" role="radiogroup" aria-label="...">
+                        <button id="typeUsed" type="button" class="btn btn-default" data-value="1">Used</button>
+                        <button id="typeNotUsed" type="button" class="btn btn-default" data-value="2">Not Used</button>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div id="QHints" class="btn-group btn-group-sm" role="radiogroup" aria-label="...">
+                        <button id="typeHint" type="button" class="btn btn-default" data-value="1">Hint</button>
+                        <button id="typeWithoutHint" type="button" class="btn btn-default" data-value="2">Without Hint</button>
+                    </div>
+                </div>
+            </div>
+
+            <br />
+            <div class="row">
+                <div class="col-md-2">
+                    <button id="btnAdd" type="button" class="btn btn-default hidden">
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
+                    </button>
+                    <button id="btnRemove" type="button" class="btn btn-default ">
+                        <span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span> Remove
+                    </button>
+                    @*<button type="button" class="btn btn-default">
+                            <span class="glyphicon" aria-hidden="true"></span> Advanced Selection
+                        </button>*@
+                </div>
+
+                <div class="col-md-7">
+                    <div class="row" id="prevNextgroup">
+                        <div class="col-md-3" style="text-align: right;">
+                            <button id="btnFirst" type="button" class="btn btn-default" aria-label="Left Align">
+                                <span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span>
+                            </button>
+                            <button id="btnPrev" type="button" class="btn btn-default" aria-label="Left Align">
+                                <span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div class="col-md-3 nopadding">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1"><span id="qCount">0</span> of </span>
+                                <input type="text" id="QuestionNo" class="form-control" placeholder="No." aria-describedby="basic-addon1" value="0">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <button id="btnNext" type="button" class="btn btn-default" aria-label="Right Align">
+                                <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+                            </button>
+                            <button id="btnLast" type="button" class="btn btn-default" aria-label="Right Align">
+                                <span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <button id="review" type="button" class="btn btn-default">
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Review
+                    </button>
+                    <button id="savePaper" type="button" class="btn btn-default">
+                        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save
+                    </button>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <label>Easy - <span id="tEasy"></span>,</label>
+                    <label>Medium - <span id="tMedium"></span>,</label>
+                    <label>Hard - <span id="tHard"></span></label>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="sp1"><strong>Q. <span id="qSeq"></span></strong>&nbsp; <span id="QuestionBox">$\mbox{}$</span></div>
+                    <div id="qi" class="wrapper">
+                        <img src="" class="file-preview-image kv-preview-data rotate-1" id="imgQues" />
+                        <span id="qdel" class="glyphicon hidden" data-value="1"></span>
+                    </div>
+                    <br />
+                    <span><b>Options:</b></span>
+                    <div class="sp1" id="DivOptionA"><strong>A :</strong>&nbsp; <span id="OptionBoxA">$\mbox{}$</span></div>
+                    <div class="sp1" id="DivOptionB"><strong>B :</strong> &nbsp;<span id="OptionBoxB">$\mbox{}$</span></div>
+                    <div class="sp1"><strong id="DivOptionC">C :</strong>&nbsp; <span id="OptionBoxC">$\mbox{}$</span></div>
+                    <div class="sp1" id="DivOptionD"><strong>D :</strong>&nbsp; <span id="OptionBoxD">$\mbox{}$</span></div>
+                    <div class="wrapper">
+                        <img src="" class="file-preview-image kv-preview-data rotate-1" id="imgOption" />
+                        <span id="odel" class="glyphicon hidden" data-value="2"></span>
+                    </div>
+                    <br />
+                    <div class="sp1"><strong>Answer :</strong>&nbsp; <span id="AnswerBox">$\mbox{}$</span></div>
+                    <br />
+                    <div class="sp1"><strong>Numerical_Answer :</strong>&nbsp; <span id="Numerical_AnswerBox">$\mbox{}$</span></div>
+                    <br />
+                    <div class="sp1"><strong>Unit :</strong>&nbsp; <span id="UnitBox">$\mbox{}$</span></div>
+                    <br />
+                    <div class="sp1"><strong>Hint :</strong>&nbsp; <span id="HintBox">$\mbox{}$</span></div>
+                    <div class="wrapper">
+                        <img src="" class="file-preview-image kv-preview-data rotate-1" id="imgHint" />
+                        <span id="hdel" class="glyphicon hidden" data-value="3"></span>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id='subjectSelection' class='modal fade'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" id="close" class="close" data-dismiss="modal" style="color:black; opacity:1 !important;">
+                    X
+                </button>
+                <h3 id="SubjectListHeading" class="text-center" style="margin-top:0px !important;"></h3>
+            </div>
+            <div class="modal-footer">
+                <div id="subjectListError" class="hidden text-danger text-center">
+
+                </div>
+                <div id="subjectList">
+                </div>
+                <button id="btnSelectionNext" type='button' class='btn btn-primary review-margin'>Next</button>
+                <button id="btnSelectionStart" type='button' class='btn btn-primary review-margin'>Start</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id='chapterSelection' class='modal fade'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="glyphicon glyphicon-arrow-left" id="backTodialog-form" style="font-size: 2.1em;"></span>
+                @*  <input type='button' class='fa fa-arrow-left' value='Back' id="backTodialog-form" />*@
+                <button type="button" id="close" class="close" data-dismiss="modal" style="color:black; opacity:1 !important;">
+                    X
+                </button>
+                <h3 id="chapterHeader" class="text-center" style="margin-top:0px !important;"></h3>
+                <hr />
+
+                <button id="startPaper" type='button' class='btn btn-primary btn-md btn-block'>
+                    Start Paper
+                </button>
+                <div class="col-md-12 text-center">
+                    <span class="text-danger" id="errorStart"></span>
+                </div>
+            </div>
+            <div>
+                <ul id="subjectsTab" class="nav nav-tabs nav-justified"></ul>
+            </div>
+            <div id="chapterList" class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id='chapterListWithCount' class='modal fade'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" id="close" class="close" data-dismiss="modal" style="color:black; opacity:1 !important;">
+                    X
+                </button>
+                <h3 id="chapterHeader" class="text-center" style="margin-top:0px !important;"> Chapter Details</h3>
+            </div>
+            <div id="chapterCount" class="modal-footer">
+                <table class="table" id="tblChapters"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dialog-form" title="Save Test Title" style="display:none;">
+    <div class="row">
+        @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-lg-10"><span id="errorMsg" class="text-danger"></span></div>
+    </div>
+</div>
+
+<br />
+
+<div id='review-dialog' class='modal fade'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" id="close" class="close" data-dismiss="modal" style="color:black; opacity:1 !important;">
+                    X
+                </button>
+                <h3 class="text-center" style="margin-top:0px !important;">
+                    Review of Test Paper
+                </h3>
+            </div>
+            <div class="modal-footer" style="text-align: -webkit-center;">
+                <div class="row review-margin">
+                    <div class="form-group">
+                        <div class="col-md-3"></div>
+                        @Html.Label("Subject", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.DropDownList("SubjectId", new SelectList(Enumerable.Empty<SelectListItem>(), "SubjectId", "SubjectName"),
+                            new { @class = "form-control" })
+                        </div>
+                        <div class="col-md-3"></div>
+                    </div>
+                </div>
+                <div class="row review-margin">
+                    <div class="form-group">
+                        <div class="col-md-3"></div>
+                        @Html.Label("Chapter", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.DropDownList("ReviewChapterId", new SelectList(Enumerable.Empty<SelectListItem>(), "ChapterId", "ChapterName"),
+                            new { @class = "form-control" })
+                        </div>
+                        <div class="col-md-3"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2">Easy:<span id="cREasy"></span>/<span id="cREasyOutof"></span></div>
+                    <div class="col-md-2">Medium:<span id="cRMedium"></span>/<span id="cRMediumOutof"></span></div>
+                    <div class="col-md-2">Hard:<span id="cRHard"></span>/<span id="cRHardOutof"></span></div>
+                    <div class="col-md-2">Total:<span id="cRTotal"></span>/<span id="cRTotalOutof"></span></div>
+                    <div class="col-md-2"></div>
+                </div>
+                <hr />
+                <div class="col-md-12" id="reviewlist">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div>
+    @Html.ActionLink("Back to Paper List", "Index")
+</div>
+
+@Html.Hidden("QuestionInfo")
+@Html.Hidden("OptionA")
+@Html.Hidden("OptionB")
+@Html.Hidden("OptionC")
+@Html.Hidden("OptionD")
+@Html.Hidden("Hint")
+@Html.Hidden("Answer")
+@Html.Hidden("Numerical_Answer")
+@Html.Hidden("Unit")
+@Html.Hidden("QuestionId")
+@Html.HiddenFor(m => m.TestPaperId)
+@Html.HiddenFor(m => m.TestType)
+@Html.HiddenFor(m => m.DelimitedQuestionIds)
+@Html.HiddenFor(m => m.DelimitedChapterIds)
+@Html.HiddenFor(m => m.SubjectName)
+@Html.HiddenFor(m => m.QuestionCount)
+
+
+@section scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+        tex2jax:{inlineMath:[['$','$'],['\\(','\\)']]}
+        });
+
+        if ($("#TestPaperId").val() != "0"){
+        MathJax.Hub.Register.StartupHook("End", function () {
+        GetQuestionFilterTree(1, $("#ChapterId"), SelectedchapterId);
+        });
+        }
+    </script>
+    <script>
+        var arr = [];
+        var arrQuestionList = [];
+        var arrChapterList = [];
+        var clickedButtonId = "";
+        var testType = 0;
+        var JSONObjQue = [];
+        var JSONObjQueReview = [];
+        var selectedSubjectsJsonObject = [];
+        var chaptersJsonObject = [];
+        var jsonObjectTreeMenu = [];
+        var SelectedchapterId;
+        var CountShow = "CountShow";
+        var QuestionId = 1;
+        $(document).ready(function () {
+            //$('#jstree').jstree('select_node', '1');
+            //$('#jstree').jstree("deselect_all");
+            $('#jstree').jstree({
+                "search": {
+                    "case_insensitive": true,
+                    "show_only_matches": false
+                },
+                "plugins": ["themes", "types", "search"]
+            }).bind("select_node.jstree", function (e, data) {
+                var isNumber = $.isNumeric(data.node.id);
+                if (isNumber) {
+                    $(".btn-group > .btn").removeClass("active");
+                    SelectedchapterId = data.node.id;
+                    var jsonData = JSON.parse(JSON.stringify(JSONObjQue));
+                    var addedQuestionLength = $(JSONObjQue).filter(function (i, n) { return n.chapterId === '' + SelectedchapterId }).length;
+                    $("#QuestionChapterNo").text(addedQuestionLength);
+                    GetQuestionFilterTree(QuestionId, $("#ChapterId"), SelectedchapterId);
+                }
+            });
+
+            $("#search_field").keyup(function () {
+
+                var searchString = $(this).val();
+                $('#jstree').jstree('search', searchString);
+            });
+
+            $("#TestPaperId").val(@ViewBag.TestPaperId);
+
+            if ($("#TestPaperId").val() == "0") {
+                $("#testPaper").addClass("hidden");
+                $("#createPaper").removeClass("hidden");
+            }
+            else {
+                getTestPaper();
+            }
+
+            $("#unitWise").on('click', function () {
+                $("#btnSelectionStart").addClass("hidden");
+                $("#btnSelectionNext").addClass("hidden");
+                $("#errorMsg").text("");
+                $("#TestType").val("1");
+                $("#btnSelectionNext").addClass("hidden");
+                btnTestType();
+            });
+
+            $(".btn-group > .btn").click(function () {
+                var idselect = $(this).attr("id");
+                var activeornot = $(this).hasClass('active');
+                if (activeornot)
+                    $(this).removeClass("active");
+                else
+                    $(this).addClass("active").siblings().removeClass("active");
+
+                clickedButtonId = $(this).parent().attr("id");
+                if (clickedButtonId != "QLevelReview") {
+                    CountShow = clickedButtonId;
+                    GetQuestionFilterTree(1, $("#btnPrev"), SelectedchapterId);
+                }
+            });
+
+            $("#startPaper").on('click', function () {
+                Save($("#startPaper"));
+                if ($("#TestPaperId").val() != "") {
+                    jsonObjectTreeMenu = [];
+                    jsonObjectTreeMenu = [
+                        { "id": "root", "parent": "#", "text": $("#ClassId :selected").text(), "icon": "//jstree.com/tree.png", "data": { "jstree": { "opened": true, "selected": true } } }
+                    ];
+                    JSONObjQue = [];
+                    JSONObjQueReview = [];
+                    $("#ChapterId").html("");
+                    $("#ReviewChapterId").html("");
+                    var count = 0;
+
+                    var selectedSubjects = $('.subjectbtn.btn-success').find();
+                    for (var i = 0; i < selectedSubjects.prevObject.length; i++) {
+                        var item = {
+                            "parent": "root",
+                            "id": selectedSubjects.prevObject[i].innerText,
+                            "text": selectedSubjects.prevObject[i].innerText,
+                            "icon": "glyphicon glyphicon-book",
+                            "data": { "jstree": { "opened": true } },
+                        };
+                        jsonObjectTreeMenu.push(item);
+                    }
+
+                    arrChapterList = [];
+                    var c = 1;
+                    $('.chapterbtn input:checked').each(function () {
+                        count = parseInt(count) + parseInt($(this).attr("data-value"));
+                        $("#ChapterId").append($('<option name=' + $(this).attr("alt") + ' data-value=' + $(this).attr("data-value") + '></option>').val($(this).attr("value")).html($(this).attr("name")));
+                        //$("#ReviewChapterId").append($('<option name=' + $(this).attr("alt") + ' data-value=' + $(this).attr("data-value") + '></option>').val($(this).attr("value")).html($(this).attr("name")));
+
+                        var index = arrChapterList.indexOf($(this).attr("value"));
+                        if (index == -1)
+                            arrChapterList.push($(this).attr("value"));
+
+                        if (c == 1) {
+                            SelectedchapterId = $(this).attr("value");
+                            var item = {};
+                            item["parent"] = $(this).attr("alt");
+                            item["id"] = $(this).attr("value");
+                            item["text"] = $(this).attr("name");
+                            item["icon"] = "glyphicon glyphicon-file";
+                            item["data"] = { "jstree": { "selected": true } };
+                            jsonObjectTreeMenu.push(item);
+                        }
+                        else {
+                            var item = {};
+                            item["parent"] = $(this).attr("alt");
+                            item["id"] = $(this).attr("value");
+                            item["text"] = $(this).attr("name");
+                            item["icon"] = "glyphicon glyphicon-file";
+                            jsonObjectTreeMenu.push(item);
+                        }
+
+                        c = parseInt(c) + 1;
+                    });
+
+                    $('#jstree').jstree(true).settings.core.data = jsonObjectTreeMenu;
+                    $('#jstree').jstree(true).refresh();
+                    $("#SubjectId").html("");
+                    $("#SubjectId").append($('<option></option>').val(0).html("Select Subject"));
+                    $.each(selectedSubjectsJsonObject, function (index, item) {
+                        $("#SubjectId").append($('<option></option>').val(item.subjectId).html(item.subjectName));
+                    });
+
+                    var data = $("#ChapterId :selected").attr("data-value");
+                    $("#errorStart").text("");
+
+                    if (!isEmpty(SelectedchapterId)) {
+                        var tree = "";
+                        oneChapterCount(SelectedchapterId);
+                        selectedChapterCount();
+                        $("#qTotalCount").text(count);
+                        $("#qChapterCount").text(data);
+                        $("#qCount").text(data);
+                        if (data == 0) {
+                            $("#QuestionNo").val("0");
+                        }
+                        else {
+                            $("#QuestionNo").val("1");
+                        }
+                        $("#message").html("");
+                        $("#createPaper").addClass("hidden");
+                        $("#testPaper").removeClass("hidden");
+                        $('#chapterSelection').modal('hide');
+                        //GetQuestionFilter(1, $("#btnPrev"));
+                        //var treeChapterId = $("#jstree").find('ul li ul li');
+                        //console.log($('#jstree').jstree('select_node', "#" + chapterId + "", false));
+                        //$('#jstree').jstree('select_node', 'ul > li:first');
+                        //$('#jstree').jstree("deselect_all");
+                        //$('#jstree').jstree('select_node', "#" + chapterId);
+                        GetQuestionFilterTree(1, $("#ChapterId"), SelectedchapterId);
+                        $("#qSeq").text($("#QuestionNo").val());
+                        $("#testName").text($("#Title").val());
+                    }
+                    else {
+                        $("#errorStart").text("Please select atleast one chapter.");
+                    }
+                }
+            });
+
+            $("#ChapterId").on('change', function () {
+                var chapterId = $("#ChapterId :selected").attr("value");
+                oneChapterCount(chapterId);
+                GetQuestionFilter(1, $(this));
+                onChangeChapterId();
+            });
+
+            $("#btnPrev").on("click", function () {
+                CountShow = $(this).attr("id");
+                GetQuestionFilterTree((parseInt($("#QuestionNo").val()) - 1), $(this), SelectedchapterId);
+            });
+
+            $("#btnNext").on("click", function () {
+                CountShow = $(this).attr("id");
+                GetQuestionFilterTree((parseInt($("#QuestionNo").val()) + 1), $(this), SelectedchapterId);
+            });
+
+            $("#btnFirst").on("click", function () {
+                GetQuestionFilterTree(1, $(this), SelectedchapterId);
+            });
+
+            $("#btnLast").on("click", function () {
+                GetQuestionFilterTree($("#qCount").text(), $(this), SelectedchapterId);
+            });
+
+            $("#chapterCountDetails").on('click', function () {
+                getDropDownValues();
+                $("#chapterListWithCount").modal({
+                    backdrop: 'static',
+                    keyboard: false
+                }).show();
+            });
+
+            $("#btnAdd").on('click', function () {
+                btnAddClick()
+            });
+
+            $("#btnRemove").on('click', function () {
+                btnRemove();
+            });
+
+            $("#savePaper").on('click', function () {
+                $("#Title").val($("#testName").text());
+                $("#errorMsg").text("");
+                var arrLength = JSONObjQue.length;
+                if (arrLength == 0) {
+                    var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+                    $("#message").html("");
+                    $("#message").append(divMessage);
+                    $("#msg").append("<div>Atleast one question must be added in test paper!</div>")
+                    $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+                }
+                else {
+                    if ($("#TestType").val() == 1)
+                        $("#dialog-form").dialog({ "title": "Save Test (Unit Wise)" });
+                    else if ($("#TestType").val() == 2)
+                        $("#dialog-form").dialog({ "title": "Save Test (Group Wise)" });
+                    else if ($("#TestType").val() == 3)
+                        $("#dialog-form").dialog({ "title": "Save Test (Subject Wise)" });
+                    $("#dialog-form").dialog({
+                        autoOpen: true,
+                        height: 180,
+                        width: 400,
+                        modal: true,
+                        position: {
+                            my: "center",
+                            at: "center",
+                            of: window
+                        },
+                        resizable: false,
+                        buttons: {
+                            "Save": function () {
+                                if ($("#Title").val().trim() == "") {
+                                    $("#Title").focus();
+                                    $("#errorMsg").text("The Title field is required.");
+                                }
+                                else {
+                                    update($("#savePaper"));
+                                }
+                            },
+                            Cancel: function () {
+                                $(this).dialog("close");
+                            }
+                        },
+                        close: function () {
+                        }
+                    });
+                }
+            });
+
+            $("#review").on('click', function () {
+                $("#ReviewChapterId").val(0);
+                $("#SubjectId").val(0);
+                $("#cREasy").html("");
+                $("#cREasyOutof").html("");
+                $("#cRMedium").html("");
+                $("#cRMediumOutof").html("");
+                $("#cRHard").html("");
+                $("#cRHardOutof").html("");
+                $("#cRTotal").html("");
+                $("#cRTotalOutof").html("");
+                $("#qn").html("");
+                getChaptersOnReview();
+                $('#review-dialog').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                }).show();
+                $("#qn").html("");
+            });
+
+            $("#ReviewChapterId").on('change', function () {
+                showQuestionNumberDiv();
+            });
+
+            $("#groupWise").on('click', function () {
+                $("#errorMsg").text("");
+                $("#TestType").val("2");
+                btnTestType();
+                $("#btnSelectionStart").addClass("hidden");
+                $("#btnSelectionNext").addClass("hidden");
+            });
+
+            $("#btnSelectionNext").on('click', function () {
+                if ($("#TestType").val() == 2) {
+                    var arrSelectedSubjects = [];
+                    selectedSubjectsJsonObject = [];
+                    var tabMenu = "";
+                    var header = [];
+                    var selectedSubjects = $('.subjectbtn.btn-success').find();
+                    for (var i = 0; i < selectedSubjects.prevObject.length; i++) {
+                        var item = {};
+                        item["subjectName"] = selectedSubjects.prevObject[i].innerText;
+                        item["subjectId"] = selectedSubjects.prevObject[i].dataset.value;
+                        header.push(selectedSubjects.prevObject[i].innerText);
+                        selectedSubjectsJsonObject.push(item);
+                        arrSelectedSubjects.push(selectedSubjects.prevObject[i].dataset.value);
+                        if (i == 0)
+                            tabMenu += "<li class='active'><a data-toggle='tab' href='#" + selectedSubjects.prevObject[i].innerText + "'>" + selectedSubjects.prevObject[i].innerText + "</a></li>";
+                        else
+                            tabMenu += "<li><a data-toggle='tab' href='#" + selectedSubjects.prevObject[i].innerText + "'>" + selectedSubjects.prevObject[i].innerText + "</a></li>";
+                    }
+
+                    $("#chapterHeader").html("");
+                    $("#chapterHeader").append(header.toString() + " Chapter List");
+                    $("#subjectsTab").html("");
+                    $("#subjectsTab").html(tabMenu);
+                    getChapterBySubject(arrSelectedSubjects.toString());
+                    $("#SubjectName").text(header.toString());
+                }
+                else if ($("#TestType").val() == 1) {
+                    getChapterBySubject($('.subjectbtn.btn-success').attr("data-value"));
+                }
+            });
+
+            $("#subjectWise").on('click', function () {
+                $("#errorMsg").text("");
+                $("#TestType").val("3");
+                btnTestType();
+                $("#btnSelectionStart").addClass("hidden");
+                $("#btnSelectionNext").addClass("hidden");
+            });
+
+            $("#btnSelectionStart").on('click', function () {
+                selectedSubjectsJsonObject = [];
+                var selectedSubjects = $('.subjectbtn.btn-success').find();
+                var item = {};
+                item["subjectName"] = selectedSubjects.prevObject[0].innerText;
+                item["subjectId"] = selectedSubjects.prevObject[0].dataset.value;
+                selectedSubjectsJsonObject.push(item);
+                $("#TestType").val()
+                $("#SubjectId").html("");
+                $("#SubjectId").append($('<option></option>').val(0).html("Select Subject"));
+                $("#SubjectId").append($('<option></option>').val(selectedSubjects.prevObject[0].dataset.value).html(selectedSubjects.prevObject[0].innerText));
+                getChapterBySubject($('.subjectbtn.btn-success')[0].dataset.value);
+                $("#SubjectName").text(selectedSubjects.prevObject[0].innerText);
+            });
+
+            $("#SubjectId").on('change', function () {
+                $("#cREasy").html("");
+                $("#cREasyOutof").html("");
+                $("#cRMedium").html("");
+                $("#cRMediumOutof").html("");
+                $("#cRHard").html("");
+                $("#cRHardOutof").html("");
+                $("#cRTotal").html("");
+                $("#cRTotalOutof").html("");
+                $("#qn").html("");
+                getChaptersOnReview();
+            });
+
+            $('#QuestionNo').bind("enterKey", function (e) {
+                if (parseInt($("#QuestionNo").val()) <= parseInt($("#qCount").text())) {
+                    GetQuestionFilterTree((parseInt($("#QuestionNo").val())), $("#btnNext"), SelectedchapterId);
+                }
+            });
+
+            $('#QuestionNo').keyup(function (e) {
+                if (e.keyCode == 13) {
+                    $(this).trigger("enterKey");
+                }
+            });
+
+            $("#backTodialog-form").on('click', function () {
+                $('#subjectSelection').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                }).show();
+
+                $('#chapterSelection').modal('hide');
+            });
+        });
+
+        function getDropDownValues() {
+            var dropdownChapters = $('#ChapterId option').find();
+            $("#tblChapters").html("");
+            var chapterTable = "";
+            chapterTable = "<tr><th>Chapter Name</th><th style='text-align: center;'>Total Questions</th></tr>";
+            for (var i = 0; i < dropdownChapters.prevObject.length; i++) {
+                var Item = dropdownChapters.prevObject[i].value;
+                objectcount = 0;
+                $.each(JSONObjQue, function (index, item) {
+                    if (item.chapterId == Item) {
+                        objectcount = parseInt(objectcount) + 1;
+                    }
+                });
+
+                chapterTable += "<tr><td style='width:70%; text-align: left;'>" + dropdownChapters.prevObject[i].innerText + "</td><td style='text-align: center;'><span id='selectedQuestion'>" + objectcount + "</span>/" + dropdownChapters.prevObject[i].dataset.value + "</td></tr>";
+            }
+            $("#tblChapters").append(chapterTable);
+        }
+
+        function oneChapterCount(chapterId) {
+            var oneChapter = $(".chapterbtn[data-value='" + chapterId + "'] span").find();
+
+            var easyCount = 0;
+            var mediumCount = 0;
+            var hardCount = 0;
+            var theoryCount = 0;
+            var numericCount = 0;
+            var NewPatternNumericalCount = 0;
+            var askedCount = 0;
+            var hintCount = 0;
+            var totalCount = 0;
+
+            for (var i = 0; i < oneChapter.prevObject.length; i++) {
+                if ((oneChapter.prevObject[i].id) == 'easy')
+                    easyCount = parseInt(oneChapter.prevObject[i].innerText);
+                if ((oneChapter.prevObject[i].id) == 'medium')
+                    mediumCount = parseInt(oneChapter.prevObject[i].innerText);
+                if ((oneChapter.prevObject[i].id) == 'hard')
+                    hardCount = parseInt(oneChapter.prevObject[i].innerText);
+                if ((oneChapter.prevObject[i].id) == 'theoretical')
+                    theoryCount = parseInt(oneChapter.prevObject[i].innerText);
+                if ((oneChapter.prevObject[i].id) == 'numerical')
+                    numericCount = parseInt(oneChapter.prevObject[i].innerText);
+                if ((oneChapter.prevObject[i].id) == 'NewPatternNumerical')
+                    NewPatternNumericalCount = parseInt(oneChapter.prevObject[i].innerText);
+                if ((oneChapter.prevObject[i].id) == 'asked')
+                    askedCount = parseInt(oneChapter.prevObject[i].innerText);
+                if ((oneChapter.prevObject[i].id) == 'hint')
+                    hintCount = parseInt(oneChapter.prevObject[i].innerText);
+                if ((oneChapter.prevObject[i].id) == 'total')
+                    totalCount = parseInt(oneChapter.prevObject[i].innerText);
+            };
+
+            var notAskedCount = parseInt(totalCount) - parseInt(askedCount);
+            var withoutHintCount = parseInt(totalCount) - parseInt(hintCount);
+
+            $("#cEasy").text(easyCount);
+            $("#cMedium").text(mediumCount);
+            $("#cHard").text(hardCount);
+            $("#cTheoretical").text(theoryCount);
+            $("#cNumerical").text(numericCount);
+            $("#cNewPatternNumerical").text(NewPatternNumericalCount);
+            $("#cAsked").text(askedCount);
+            $("#cNotAsked").text(notAskedCount);
+            $("#cHint").text(hintCount);
+            $("#cWithoutHint").text(withoutHintCount);
+            $("#cUsed").text('0');
+            $("#cNotUsed").text(totalCount);
+        }
+
+        function selectedChapterCount() {
+            var selectChapter = $(".chapterbtn.btn-success span").find();
+            var tEasyCount = 0;
+            var tMediumCount = 0;
+            var tHardCount = 0;
+
+            for (var i = 0; i < selectChapter.prevObject.length; i++) {
+                if ((selectChapter.prevObject[i].id) == 'easy')
+                    tEasyCount = parseInt(tEasyCount) + parseInt(selectChapter.prevObject[i].innerText);
+                if ((selectChapter.prevObject[i].id) == 'medium')
+                    tMediumCount = parseInt(tMediumCount) + parseInt(selectChapter.prevObject[i].innerText);
+                if ((selectChapter.prevObject[i].id) == 'hard')
+                    tHardCount = parseInt(tHardCount) + parseInt(selectChapter.prevObject[i].innerText);
+            };
+
+            $("#tEasy").text(tEasyCount);
+            $("#tMedium").text(tMediumCount);
+            $("#tHard").text(tHardCount);
+        }
+
+        function isEmpty(value) {
+            return (value == null || value.length === 0);
+        }
+
+        function getSubject(data) {
+            if ($('#ClassId :selected').text() != "Select Class") {
+                var subjects = "";
+                $("#subjectList").html(""); // clear before appending new list
+                $.each(data, function (i, sub) {
+                    if ($("#TestType").val() == 1) {
+                        subjects += "<button type='button' class='btn btn-default btn-lg btn-block subjectbtn' data-value='" + sub.SubjectId + "'>" + sub.Name + "</button>"
+                    }
+                    else if ($("#TestType").val() == 2) {
+                        subjects += "<button type='button' class='btn btn-default btn-lg btn-block subjectbtn' data-value='" + sub.SubjectId + "'>" + sub.Name + "</button>"
+                    }
+                    else if ($("#TestType").val() == 3) {
+                        subjects += "<button type='button' class='btn btn-default btn-lg btn-block subjectbtn' data-value='" + sub.SubjectId + "'>" + sub.Name + "</button>"
+                    }
+                });
+                $("#subjectList").append(subjects);
+                $(".subjectbtn").unbind("click");
+                if ($("#TestType").val() == 1) {
+                    $(".subjectbtn").bind("click", btnSubjectClick);
+                }
+                else if ($("#TestType").val() == 2) {
+                    $(".subjectbtn").bind("click", btnMultiSubjectClick);
+                }
+                else if ($("#TestType").val() == 3) {
+                    $(".subjectbtn").bind("click", btnSubjectWiseClick);
+                }
+            }
+        }
+
+        function btnSubjectClick() {
+            $(this).removeClass("btn-default").addClass("btn-success");
+            $(this).siblings().removeClass("btn-success").addClass("btn-default");
+
+            var subjectIds = $(this).attr("data-value");
+            $("#chapterHeader").html("");
+            $("#chapterHeader").append($(this).text() + " Chapter List");
+
+            selectedSubjectsJsonObject = [];
+            var item = {};
+            item["subjectName"] = $(this).text();
+            item["subjectId"] = subjectIds;
+            selectedSubjectsJsonObject.push(item);
+            $("#btnSelectionNext").removeClass("hidden");
+            $("#SubjectName").text($(this).text());
+        }
+
+        function btnChapterClick() {
+            var chapterId = $(this).attr("data-value");
+            if ($("[data-value=" + chapterId + "] input:checkbox").is(':checked')) {
+                $("[data-value=" + chapterId + "] input:checkbox").attr("checked", false);
+                $(this).removeClass("btn-success").addClass("btn-default");
+            }
+            else {
+                $("[data-value=" + chapterId + "] input:checkbox").attr("checked", true);
+                $(this).removeClass("btn-default").addClass("btn-success");
+            }
+
+            arrChapterList = [];
+
+            $('.chapterbtn input:checked').each(function () {
+                var index = arrChapterList.indexOf($(this).attr("value"));
+                if (index == -1)
+                    arrChapterList.push($(this).attr("value"));
+            });
+            // update($("#btnPrev"));
+        }
+
+        function RenderLatex() {
+            UpdateContent($("#QuestionInfo").val(), "QuestionBox");
+            UpdateContent($("#OptionA").val(), "OptionBoxA");
+            UpdateContent($("#OptionB").val(), "OptionBoxB");
+            UpdateContent($("#OptionC").val(), "OptionBoxC");
+            UpdateContent($("#OptionD").val(), "OptionBoxD");
+            UpdateContent($("#Answer").val(), "AnswerBox");
+            UpdateContent($("#Numerical_Answer").val(), "Numerical_AnswerBox");
+            UpdateContent($("#Unit").val(), "UnitBox");
+            UpdateContent($("#Hint").val(), "HintBox");
+        }
+
+        function UpdateContent(latexText, element) {
+            var math = MathJax.Hub.getAllJax(element)[0];
+            MathJax.Hub.Queue(["Text", math, "\\mbox{" + latexText + "}"]);
+        }
+
+        function addRemoveQuestion(questionId) {
+            var data = JSON.parse(JSON.stringify(JSONObjQue));
+            var index = data.map(function (d) { return d['questionId']; }).indexOf($('#QuestionId').val());
+            if (index == -1) {
+                $("#btnAdd").removeClass("hidden");
+                $("#btnRemove").addClass("hidden");
+            } else {
+                $("#btnAdd").addClass("hidden");
+                $("#btnRemove").removeClass("hidden");
+            }
+        }
+
+        function GetQuestionFilter(id, e) {
+            //var chapterId = parseInt($('#jstree').jstree('get_selected')[0]);
+            var chapterId = $("#ReviewChapterId :selected").val();
+            var level = $("#QLevel > .btn.active").attr("data-value");
+            var type = $("#QType > .btn.active").attr("data-value");
+            var asked = $("#QAsked > .btn.active").attr("data-value");
+            var hint = $("#QHints > .btn.active").attr("data-value");
+            var count = 0;
+            $.getJSON("/Paper/GetQuestion",
+                   { id: id, chapterId: chapterId, level: level, type: type, asked: asked, hint: hint, count: count },
+                   function (data, status, xhr) {
+                       if (data.question != null && data.count != 0) {
+                           renderDataOnGetQuestion(data, id, e);
+                       }
+                       else if (data.count == 0) {
+                           $("#cNotUsed").text(data.count);
+                           $("#cAsked").text(data.count);
+                           $("#cNotAsked").text(data.count);
+                           $("#cHint").text(data.count);
+                           $("#cWithoutHint").text(data.count);
+                           $('#QuestionInfo, #OptionA, #OptionB, #OptionC, #OptionD, #Hint, #QuestionId, #Answer,#Numerical_Answer,#Unit').val("");
+                           $("#imgQues").prop("src", "");
+                           $("#imgHint").prop("src", "");
+                           $("#imgOption").prop("src", "");
+                           $("#qSeq").text("");
+                           RenderLatex();
+                           if (e != null && e.prop("id") == "ChapterId") {
+                               e.attr("disabled", "disabled");
+                               if (e.prop("id") == "btnNext") {
+                                   $("#btnPrev").removeAttr("disabled");
+                               } else if (e.prop("id") == "btnPrev") {
+                                   $("#btnNext").removeAttr("disabled");
+                               }
+                           }
+                       }
+
+                   }).done(function () {
+                       //console.log("done");
+                       //$("#btnPrev").removeAttr("disabled");
+                       //$("#btnNext").attr("disabled");
+                       //$("#QuestionNo").removeAttr("disabled");
+                   }).fail(function () {
+                       if (e != null) {
+                           e.attr("disabled", "disabled");
+                           if (e.prop("id") == "btnNext") {
+                               $("#btnPrev").removeAttr("disabled");
+                           } else if (e.prop("id") == "btnPrev") {
+                               $("#btnNext").removeAttr("disabled");
+                           }
+                       }
+                   });
+        }
+
+        function getChapterCount() {
+            objectcount = 0;
+            $.each(JSONObjQue, function (index, item) {
+                if (item.chapterId == SelectedchapterId) {
+                    objectcount = parseInt(objectcount) + 1;
+                }
+            });
+            $("#QuestionChapterNo").text(objectcount);
+            //  $("#cUsed").text($("#QuestionChapterNo").text());
+            //  $("#cNotUsed").text($("#qChapterCount").text() - $("#QuestionChapterNo").text());
+        }
+
+        function Save(e) {
+            var selectedQuestionList = JSON.stringify(JSONObjQue);
+            $("#DelimitedQuestionIds").val(selectedQuestionList);
+            $("#DelimitedChapterIds").val(arrChapterList.toString());
+
+            //var jqxhr = $.post("/Paper/Save",
+            //           {
+            //               ClassId: $("#ClassId").val(),
+            //               TestType: $("#TestType").val(),
+            //               DelimitedQuestionIds: $("#DelimitedQuestionIds").val(),
+            //               Title: $("#Title").val(),
+            //               DelimitedChapterIds: $("#DelimitedChapterIds").val(),
+            //               SubjectName: $("#SubjectName").text()
+            //           }, function (data) {
+            //               if (data.Data == 0) {
+            //                   $("#errorMsg").text("Test Paper not save!");
+            //               }
+            //               else {
+            //                   $("#TestPaperId").val(data.Data);
+            //               }
+            //           }).done(function () {
+            //           }).fail(function () {
+            //           }).always(function () {
+            //           });
+            $.ajax({
+                url: '/Paper/Save',
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    ClassId: $("#ClassId").val(),
+                    TestType: $("#TestType").val(),
+                    DelimitedQuestionIds: $("#DelimitedQuestionIds").val(),
+                    Title: $("#Title").val(),
+                    DelimitedChapterIds: $("#DelimitedChapterIds").val(),
+                    SubjectName: $("#SubjectName").text()
+                },
+                async: false,
+                success: function (data) {
+                    if (data.Data == 0) {
+                        $("#errorMsg").text("Test Paper not save!");
+                    }
+                    else {
+                        $("#TestPaperId").val(data.Data);
+                    }
+                }
+            });
+        }
+
+        function update(e) {
+            var selectedQuestionList = JSON.stringify(JSONObjQue);
+            $("#DelimitedQuestionIds").val(selectedQuestionList);
+            $("#DelimitedChapterIds").val(arrChapterList.toString());
+            //var jqxhr = $.post("/Paper/updateQuestion",
+            //            {
+            //                TestPaperId: $("#TestPaperId").val(),
+            //                ClassId: $("#ClassId").val(),
+            //                TestType: $("#TestType").val(),
+            //                DelimitedQuestionIds: $("#DelimitedQuestionIds").val(),
+            //                Title: $("#Title").val(),
+            //                DelimitedChapterIds: $("#DelimitedChapterIds").val(),
+            //                QuestionCount: $("#QuestionTotalNo").text(),
+            //                SubjectName: $("#chapterHeader").text()
+            //            }, function (data) {
+            //                if (e.prop("id") == "savePaper") {
+            //                    if (data.Results[0].IsSuccessful == true) {
+            //                        var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+            //                        $("#message").html("");
+            //                        $("#message").append(divMessage);
+            //                        $('#msg').html('<div>' + data.Results[0].Message + '</div>');
+            //                        $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+            //                        $("#dialog-form").dialog("close");
+            //                        $("#testName").text($("#Title").val());
+            //                    }
+            //                    else {
+            //                        $("#errorMsg").text("Test Paper already exists!");
+            //                    }
+            //                }
+            //            }).done(function () {
+            //            }).fail(function () {
+            //            }).always(function () {
+            //            });
+
+            $.ajax({
+                url: '/Paper/updateQuestion',
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    TestPaperId: $("#TestPaperId").val(),
+                    ClassId: $("#ClassId").val(),
+                    TestType: $("#TestType").val(),
+                    DelimitedQuestionIds: $("#DelimitedQuestionIds").val(),
+                    Title: $("#Title").val(),
+                    DelimitedChapterIds: $("#DelimitedChapterIds").val(),
+                    QuestionCount: $("#QuestionTotalNo").text(),
+                    SubjectName: $("#chapterHeader").text()
+                },
+                async: false,
+                success: function (data) {
+                    if (e.prop("id") == "savePaper") {
+                        if (data.Results[0].IsSuccessful == true) {
+                            var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+                            $("#message").html("");
+                            $("#message").append(divMessage);
+                            $('#msg').html('<div>' + data.Results[0].Message + '</div>');
+                            $("#alertMessage").removeClass("hidden").removeClass("alert-danger").addClass("alert-success");
+                            $("#dialog-form").dialog("close");
+                            $("#testName").text($("#Title").val());
+                        }
+                        else {
+                            $("#errorMsg").text("Test Paper already exists!");
+                        }
+                    }
+                }
+            });
+        }
+
+        function removeReadonly(title) {
+            if (title != "")
+                $("#modalButtons").removeClass("hidden");
+            else
+                $("#modalButtons").addClass("hidden");
+        }
+
+        function btnAddClick() {
+            var data = JSON.parse(JSON.stringify(JSONObjQue));
+            var index = data.map(function (d) { return d['questionId']; }).indexOf($('#QuestionId').val());
+            if (index == -1) {
+                var item = {};
+
+                item["chapterId"] = SelectedchapterId;
+                item["questionId"] = $("#QuestionId").val();
+                item["chapterName"] = $("#ChapterId option:selected").text();
+
+                JSONObjQue.push(item);
+
+                $("#QuestionTotalNo").text(JSONObjQue.length);
+                $("#selectedQuestion").text(JSONObjQue.length);
+                $("#btnAdd").addClass("hidden");
+                $("#btnRemove").removeClass("hidden");
+                getChapterCount();
+                //  update($("#btnAdd"));
+            }
+            else {
+            }
+        }
+
+        function btnRemove() {
+            var data = JSON.parse(JSON.stringify(JSONObjQue));
+            var index = data.map(function (d) { return d['questionId']; }).indexOf($('#QuestionId').val());
+            if (index == -1) {
+            } else {
+                JSONObjQue.splice(index, 1);
+                $("#selectedQuestion").text(JSONObjQue.length);
+                $("#QuestionTotalNo").text(JSONObjQue.length);
+                $("#btnRemove").addClass("hidden");
+                $("#btnAdd").removeClass("hidden");
+
+                getChapterCount();
+                //  update($(this));
+            }
+        }
+
+        function getTestPaper() {
+            $("#testPaper").removeClass("hidden");
+            $("#createPaper").addClass("hidden");
+            var level = $("#QLevel > .btn.active").attr("data-value");
+            var type = $("#QType > .btn.active").attr("data-value");
+            var asked = $("#QAsked > .btn.active").attr("data-value");
+            var hint = $("#QHints > .btn.active").attr("data-value");
+            var count = 0;
+            $.ajax({
+                url: '/Paper/GetTestPaper',
+                type: "GET",
+                dataType: "JSON",
+                data: { TestPaperId: $("#TestPaperId").val(), level: level, type: type, asked: asked, hint: hint, count: count },
+                async: false,
+                success: function (data) {
+                    if (data != "") {
+                        JSONObjQue = jQuery.parseJSON(data.testPaper.DelimitedQuestionIds);
+                        renderDataOnEdit(data);
+                    }
+                    else {
+                        window.location.href = '/Paper/Index/';
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                }
+            });
+        }
+
+        function renderDataOnEdit(data) {
+            jsonObjectTreeMenu = [];
+            $("#ClassId").val(data.testPaper.ClassId);
+            $("#Title").val(data.testPaper.Title);
+            jsonObjectTreeMenu = [
+                { "id": "root", "parent": "#", "text": $("#ClassId :selected").text(), "icon": "//jstree.com/tree.png", "data": { "jstree": { "opened": true, "selected": true } } }
+            ];
+            //var chapterId = $("#ChapterId :selected").val();
+            var easyCount = 0;
+            var mediumCount = 0;
+            var hardCount = 0;
+            var id = 1;
+
+            $("#ChapterId").html("");
+            $("#ReviewChapterId").html("");
+            var count = 0;
+            var c = 1;
+            $("#SubjectId").html("");
+            $("#SubjectId").append($('<option></option>').val(0).html("Select Subject"));
+            $.each(data.countChapterWise, function (index, item) {
+
+                if (c == 1) {
+                    SelectedchapterId = item.ChapterId;
+                }
+
+                c = parseInt(c) + 1;
+
+                var jsonData = JSON.parse(JSON.stringify(jsonObjectTreeMenu));
+                var searchIndex = jsonData.map(function (d) { return d['id']; }).indexOf("" + item.SubjectName);
+                if (searchIndex == -1) {
+
+                    $("#SubjectId").append($('<option></option>').html("" + item.SubjectName));
+                    var itemSubject = {
+                        "parent": "root",
+                        "id": item.SubjectName,
+                        "text": item.SubjectName,
+                        "icon": "glyphicon glyphicon-book",
+                        "data":
+                            {
+                                "jstree": { "opened": true }
+                            }
+                    };
+                    jsonObjectTreeMenu.push(itemSubject);
+
+                }
+
+                count = parseInt(count) + parseInt(item.TotalQuestion);
+                easyCount = parseInt(easyCount) + parseInt(item.Easy);
+                mediumCount = parseInt(mediumCount) + parseInt(item.Medium);
+                hardCount = parseInt(hardCount) + parseInt(item.Hard);
+                $("#ChapterId").append($('<option name=' + item.SubjectName + ' data-value=' + item.TotalQuestion + '></option>').val(item.ChapterId).html(item.ChapterName));
+                //$("#ReviewChapterId").append($('<option data-value=' + item.TotalQuestion + '></option>').val(item.ChapterId).html(item.ChapterName));
+                arrChapterList.push(item.ChapterId);
+
+                var itemChapter = {};
+                itemChapter["parent"] = item.SubjectName;
+                itemChapter["id"] = item.ChapterId;
+                itemChapter["text"] = item.ChapterName;
+                itemChapter["icon"] = "glyphicon glyphicon-file";
+                jsonObjectTreeMenu.push(itemChapter);
+
+            });
+
+            getChapterCount();
+            if (JSONObjQue == null)
+                $("#QuestionTotalNo").text("0");
+            else
+                $("#QuestionTotalNo").text(JSONObjQue.length);
+            $("#tEasy").text(easyCount);
+            $("#tMedium").text(mediumCount);
+            $("#tHard").text(hardCount);
+            var countOfChapter = $('#ChapterId option:selected').find();
+            if (data.countChapterWise.length != 0)
+                $("#qChapterCount").text(countOfChapter.prevObject[0].dataset.value);
+
+            $("#TestType").val(data.testPaper.TestType);
+
+
+            $("#qTotalCount").text(count);
+            $("#qSeq").text($("#QuestionNo").val());
+            $("#testName").text(data.testPaper.Title);
+
+            $('#jstree').jstree(true).settings.core.data = jsonObjectTreeMenu;
+            $('#jstree').jstree(true).refresh();
+        }
+
+        function showQuestionNumberDiv() {
+            var questionList = [];
+            $.each(JSONObjQue, function (index, item) {
+                questionList.push(item.questionId);
+            });
+
+            var getQuestionIdList = questionList.toString();
+            $.ajax({
+                url: '/Paper/GetQuestionIdByChapterId',
+                type: "GET",
+                dataType: "JSON",
+                data: { ChapterId: $("#ReviewChapterId :selected").val(), questionId: getQuestionIdList },
+                async: false,
+                success: function (data) {
+                    var cREasy = 0;
+                    var cRMedium = 0;
+                    var cRHard = 0;
+                    var cREasyOutof = 0;
+                    var cRMediumOutof = 0;
+                    var cRHardOutof = 0;
+                    //console.log(data.allQuestions);
+                    for (var i = 0; i < data.allQuestions.length; i++) {
+                        if (data.allQuestions[i].QuestionLevel == 1)
+                            cREasyOutof = parseInt(cREasyOutof) + 1;
+                        if (data.allQuestions[i].QuestionLevel == 2)
+                            cRMediumOutof = parseInt(cRMediumOutof) + 1;
+                        if (data.allQuestions[i].QuestionLevel == 3)
+                            cRHardOutof = parseInt(cRHardOutof) + 1;
+                    }
+
+                    var cRTotal = 0;
+                    var NumberDiv = "";
+                    $("#reviewlist").html("");
+                    var n = $("#ReviewChapterId option:selected").attr("data-value");
+                    var jsonData = JSON.parse(JSON.stringify(JSONObjQue));
+                    for (var i = 0; i < data.allQuestions.length; i++) {
+                        var index = jsonData.map(function (d) { return d['questionId']; }).indexOf("" + data.allQuestions[i].QuestionId);
+                        if (index != -1) {
+                            cRTotal = parseInt(cRTotal) + 1;
+                            if (data.allQuestions[i].QuestionLevel == 1)
+                                cREasy = parseInt(cREasy) + 1;
+                            if (data.allQuestions[i].QuestionLevel == 2)
+                                cRMedium = parseInt(cRMedium) + 1;
+                            if (data.allQuestions[i].QuestionLevel == 3)
+                                cRHard = parseInt(cRHard) + 1;
+                            var sequence = (parseInt(i) + 1);
+                            NumberDiv += "<div class='numberCircle' id=" + data.allQuestions[i].QuestionId + " style='background:#2ECC40;color:#FFFFFF;' name=" + data.allQuestions[i].QuestionLevel + "><span>" + sequence + "</span></div>";
+                        }
+                        else {
+                            var sequence = (parseInt(i) + 1);
+                            NumberDiv += "<div class='numberCircle' id=" + data.allQuestions[i].QuestionId + " name=" + data.allQuestions[i].QuestionLevel + "><span>" + sequence + "</span></div>";
+                        }
+                    }
+
+                    var selectedChapterLength = $(JSONObjQue).filter(function (i, n) { return n.chapterId === '' + $("#ReviewChapterId :selected").val() }).length;
+                    $("#cREasy").text(cREasy);
+                    $("#cRMedium").text(cRMedium);
+                    $("#cRHard").text(cRHard);
+                    $("#cREasyOutof").text(cREasyOutof);
+                    $("#cRMediumOutof").text(cRMediumOutof);
+                    $("#cRHardOutof").text(cRHardOutof);
+                    var TotalOutof = parseInt($("#cREasyOutof").text()) + parseInt($("#cRMediumOutof").text()) + parseInt($("#cRHardOutof").text());
+                    $("#cRTotalOutof").text(TotalOutof);
+                    var Total = parseInt($("#cREasy").text()) + parseInt($("#cRMedium").text()) + parseInt($("#cRHard").text());
+                    $("#cRTotal").text(Total);
+
+                    $("#reviewlist").append("<div id='qn'>" + NumberDiv + "</div>");
+                    $("#qn div").unbind("click");
+                    $("#qn div").bind("click", btnGotoQuestion);
+                }
+            });
+
+
+        }
+
+        function onChangeChapterId() {
+            $(".btn-group > .btn").removeClass("active");
+            var data = $("#ChapterId :selected").attr("data-value");
+            QuestionId = data;
+            $("#qChapterCount").text(data);
+            $("#qCount").text(data);
+            getChapterCount();
+        }
+
+        function btnGotoQuestion() {
+            var chapterId = $("#ReviewChapterId :selected").val();
+            QuestionId = $(this).text();
+            SelectedchapterId = chapterId;
+            //GetQuestionFilter($(this).text(), $("#ChapterId"));
+            //GetQuestionFilterTree($(this).text(), $("#ChapterId"), chapterId);
+            $('#jstree').jstree("deselect_all");
+            $('#jstree').jstree('select_node', chapterId);
+            $("#ChapterId").val(chapterId);
+            $("#review-dialog").modal('hide');
+            onChangeChapterId();
+        }
+
+        function GetQuestionFilterReview(id, e) {
+            var chapterId = $("#ReviewChapterId :selected").val();
+            var level = $("#QLevel > .btn.active").attr("data-value");
+            var type = $("#QType > .btn.active").attr("data-value");
+            var asked = $("#QAsked > .btn.active").attr("data-value");
+            var hint = $("#QHints > .btn.active").attr("data-value");
+            var count = 0;
+            $.getJSON("/Paper/GetQuestion",
+                   { id: id, chapterId: chapterId, level: level, type: type, asked: asked, hint: hint, count: count },
+                   function (data, status, xhr) {
+                       if (data.question != null && data.count != 0) {
+
+                           renderDataOnGetQuestion(data, id, e);
+                       }
+                       else if (data.count == 0) {
+                           $("#cNotUsed").text(data.count);
+                           $("#cAsked").text(data.count);
+                           $("#cNotAsked").text(data.count);
+                           $("#cHint").text(data.count);
+                           $("#cWithoutHint").text(data.count);
+                           $('#QuestionInfo, #OptionA, #OptionB, #OptionC, #OptionD, #Hint, #QuestionId, #Answer,#Numerical_Answer,#Unit').val("");
+                           $("#imgQues").prop("src", "");
+                           $("#imgHint").prop("src", "");
+                           $("#imgOption").prop("src", "");
+                           $("#qSeq").text("");
+                           RenderLatex();
+                           if (e != null && e.prop("id") == "ChapterId") {
+                               e.attr("disabled", "disabled");
+                               if (e.prop("id") == "btnNext") {
+                                   $("#btnPrev").removeAttr("disabled");
+                               } else if (e.prop("id") == "btnPrev") {
+                                   $("#btnNext").removeAttr("disabled");
+                               }
+                           }
+                       }
+
+                   }).done(function () {
+                   }).fail(function () {
+                       if (e != null) {
+                           e.attr("disabled", "disabled");
+                           if (e.prop("id") == "btnNext") {
+                               $("#btnPrev").removeAttr("disabled");
+                           } else if (e.prop("id") == "btnPrev") {
+                               $("#btnNext").removeAttr("disabled");
+                           }
+                       }
+                   });
+        }
+
+        function renderDataOnGetQuestion(data, id, e) {
+            getChapterCount();
+            $('#QuestionInfo').val(data.question.QuestionInfo);
+            $('#OptionA').val(data.question.OptionA);
+            $('#OptionB').val(data.question.OptionB);
+            $('#OptionC').val(data.question.OptionC);
+            $('#OptionD').val(data.question.OptionD);
+            $('#Hint').val(data.question.Hint)
+            $('#Numerical_Answer').val(data.question.Numerical_Answer)
+            $('#Unit').val(data.question.Unit)
+            $('#QuestionId').val(data.question.QuestionId);
+            var ans = (data.question.Answer).replace('1', 'A').replace('2', 'B').replace('3', 'C').replace('4', 'D');
+            $('#Answer').val(ans);
+            qid = data.question.QuestionId;
+            var path = "/Images/QuestionImage/";
+
+
+            $("#qCount").text(data.count);
+            $("#qChapterCount").text(data.count);
+
+            $("#QuestionNo").val(id);
+
+            $("#qSeq").text($("#QuestionNo").val());
+
+            if (data.question.QuestionImagePath) {
+                $("#imgQues").prop("src", ((path + data.question.QuestionImagePath) + "?" + new Date().getTime()));
+                $('#DivOptionA, #DivOptionB, #DivOptionC, #DivOptionD').addClass("hidden");
+            }
+            else {
+                $("#imgQues").prop("src", "");
+                $('#DivOptionA, #DivOptionB, #DivOptionC, #DivOptionD').removeClass("hidden");
+            }
+
+            if (data.question.OptionImagePath) {
+
+                $("#imgOption").prop("src", ((path + data.question.OptionImagePath) + "?" + new Date().getTime()));
+            }
+            else {
+                $("#imgOption").prop("src", "");
+            }
+
+            if (data.question.HintImagePath) {
+                $("#imgHint").prop("src", ((path + data.question.HintImagePath) + "?" + new Date().getTime()));
+            }
+            else {
+                $("#imgHint").prop("src", "");
+            }
+
+            $("#imgQues, #imgOption, #imgHint").css({ "width": "200", "Height": "200" });
+
+            RenderLatex();
+
+            addRemoveQuestion($("#ChapterId :selected").val() + "-" + $('#QuestionId').val());
+
+            if (e.prop("id") == "ChapterId") {
+                $("#cEasy").text(data.question.EasyCount);
+                $("#cMedium").text(data.question.MediumCount);
+                $("#cHard").text(data.question.HardCount);
+                $("#cTheoretical").text(data.question.TheoreticalCount);
+                $("#cNumerical").text(data.question.NumericalCount);
+                $("#cNewPatternNumerical").text(data.question.NewPatternNumericalCount);
+                $("#cAsked").text(data.question.AskedCount);
+                $("#cNotAsked").text(data.question.NotAskedCount);
+                $("#cHint").text(data.question.HintCount);
+                $("#cWithoutHint").text(data.question.WithoutHintCount);
+                //$("#cUsed").text($("#QuestionChapterNo").text());
+                $("#cUsed").text(data.question.UsedCount);
+                $("#cNotUsed").text($("#qChapterCount").text() -  $("#cUsed").text());
+            }
+            if (CountShow == "QLevel") {
+                $("#cTheoretical").text(data.question.TheoreticalCount);
+                $("#cNumerical").text(data.question.NumericalCount);
+                $("#cNewPatternNumerical").text(data.question.NewPatternNumericalCount);
+                $("#cAsked").text(data.question.AskedCount);
+                $("#cNotAsked").text(data.question.NotAskedCount);
+                $("#cHint").text(data.question.HintCount);
+                $("#cWithoutHint").text(data.question.WithoutHintCount);
+                $("#cUsed").text(data.question.UsedCount);
+                // $("#cUsed").text('0');
+                // $("#cNotUsed").text('0');
+            }
+            if (CountShow == "QType") {
+                $("#cAsked").text(data.question.AskedCount);
+                $("#cNotAsked").text(data.question.NotAskedCount);
+                $("#cHint").text(data.question.HintCount);
+                $("#cWithoutHint").text(data.question.WithoutHintCount);
+                $("#cUsed").text(data.question.UsedCount);
+                // $("#cUsed").text('0');
+                // $("#cNotUsed").text('0');
+            }
+            if (CountShow == "QAsked") {
+                $("#cHint").text(data.question.HintCount);
+                $("#cWithoutHint").text(data.question.WithoutHintCount);
+                $("#cUsed").text(data.question.UsedCount);
+                //  $("#cUsed").text(usedCount);
+                // $("#cNotUsed").text(data.count);
+                $("#cUsed").text('0');
+                $("#cNotUsed").text('0');
+            }
+
+            if (id == '1') {
+                $("#btnPrev").attr("disabled", "disabled");
+                $("#btnNext").removeAttr("disabled");
+            }
+            else if ($("#qCount").text() == id) {
+                $("#btnPrev").removeAttr("disabled");
+                $("#btnNext").attr("disabled", "disabled");
+            }
+            else {
+                $("#btnPrev").removeAttr("disabled");
+                $("#btnNext").removeAttr("disabled");
+            }
+        }
+
+        function btnTestType() {
+            $("#subjectsTab").html("");
+            $("#chapterList").html("");
+            if ($("#ClassId :selected").text() != "Select Class") {
+                $("#message").html("");
+                if ($("#TestType").val() == 1)
+                    $("#dialog-form").dialog({ "title": "Save Test (Unit Wise)" });
+                else if ($("#TestType").val() == 2)
+                    $("#dialog-form").dialog({ "title": "Save Test (Group Wise)" });
+                else if ($("#TestType").val() == 3)
+                    $("#dialog-form").dialog({ "title": "Save Test (Subject Wise)" });
+                $("#Title").val("");
+                $("#dialog-form").dialog({
+                    autoOpen: true,
+                    height: 180,
+                    width: 400,
+                    modal: true,
+                    position: {
+                        my: "center",
+                        at: "center",
+                        of: window
+                    },
+                    resizable: false,
+                    buttons: {
+                        "Create": function () {
+                            if ($("#Title").val().trim() == "") {
+                                $("#Title").focus();
+                                $("#errorMsg").text("The Title field is required.");
+                            }
+                            else {
+                                $.ajax({
+                                    url: '/Paper/saveQuestion',
+                                    type: "POST",
+                                    dataType: "JSON",
+                                    data: {
+                                        ClassId: $("#ClassId").val(),
+                                        TestType: $("#TestType").val(),
+                                        DelimitedQuestionIds: $("#DelimitedQuestionIds").val(),
+                                        Title: $("#Title").val()
+                                    },
+                                    async: false,
+                                    success: function (data) {
+                                        if (data.Data == 0) {
+                                            $("#errorMsg").text("Test Paper already exists!");
+                                        }
+                                        else if (data.Subjects.length == 0) {
+                                            $("#errorMsg").text("Please add subject in this class!");
+                                        }
+                                        else {
+                                            getSubject(data.Subjects);
+                                            $("#errorMsg").text("");
+                                            $("#TestPaperId").val(data.Data);
+                                            $("#subjectListError").html("");
+                                            $("#subjectListError").addClass("hidden");
+                                            $('#subjectSelection').modal({
+                                                backdrop: 'static',
+                                                keyboard: false
+                                            }).show();
+                                            if ($("#TestType").val() == 1 || $("#TestType").val() == 3) {
+                                                $("#SubjectListHeading").text("Select Subject");
+                                                $("#testName").text($("#Title").val());
+                                            }
+                                            else if ($("#TestType").val() == 2) {
+                                                $("#SubjectListHeading").text("Select more than one subject");
+                                            }
+
+                                            $("#dialog-form").dialog("close");
+                                        }
+                                    }
+                                });
+                            }
+                        },
+                        Cancel: function () {
+                            $(this).dialog("close");
+                        }
+                    },
+                    close: function () {
+                    }
+                });
+
+            }
+            else {
+                var divMessage = '<div id="alertMessage" class="alert hidden"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><div id="msg"></div></div>';
+                $("#message").html("");
+                $("#message").append(divMessage);
+                $('#msg').html('<div>The Class field is required.</div>');
+                $("#alertMessage").removeClass("hidden").removeClass("alert-success").addClass("alert-danger");
+            }
+        }
+
+        function btnMultiSubjectClick() {
+            var activeornot = $(this).hasClass('btn-success');
+            if (!activeornot)
+                $(this).removeClass("btn-default").addClass("btn-success");
+            else
+                $(this).removeClass("btn-success").addClass("btn-default");
+            var count = $('.subjectbtn.btn-success').length;
+            if (count >= 2)
+                $("#btnSelectionNext").removeClass("hidden");
+            else
+                $("#btnSelectionNext").addClass("hidden");
+        }
+
+        function getChapterBySubject(subjectIds) {
+            $.ajax({
+                url: '/Paper/getChapterWithCount',
+                type: "GET",
+                dataType: "JSON",
+                data: { subjectIds: subjectIds },
+                success: function (data) {
+                    if (data.length > 0) {
+                        $("#subjectListError").html("");
+                        $("#subjectListError").addClass("hidden");
+                        var SubjectWiseTotalQuestion = 0;
+                        arrChapterList = [];
+                        var chapters = "";
+                        if ($("#TestType").val() == 2) {
+                            var subjectTabDiv = "";
+
+                            $.each(selectedSubjectsJsonObject, function (index, item) {
+                                subjectTabDiv += "<div class='tab-pane fade' id=" + item.subjectName + "></div>";
+                            });
+                            $("#chapterList").html("");
+                            $("#chapterList").append("<div class='tab-content'>" + subjectTabDiv + "</div>");
+
+                            $("#chapterList div").find("id");
+
+                            chaptersJsonObject = [];
+
+                            $.each(data, function (i, sub) {
+
+                                chapters = "<button type='button' class='btn btn-default btn-md chapterbtn' data-value='" + sub.ChapterId + "'><input type='checkbox' data-value='" + sub.TotalQuestion + "' value='" + sub.ChapterId + "' name='" + sub.ChapterName + "' alt='" + sub.SubjectName + "'><b> " + sub.ChapterName + "</b><hr /><label>Total Questions: <span id='total' data-value='" + sub.TotalQuestion + "'>" + sub.TotalQuestion + "</span></label><br><label>Easy: <span id='easy'>" + sub.Easy + "</span></label><br><label>Medium: <span id='medium'>" + sub.Medium + "</span></label><br><label>Hard: <span id='hard'>" + sub.Hard + "</span></label><br><label>Numerical: <span id='numerical'>" + sub.Numerical + "</span></label><br><label>Theoretical: <span id='theoretical'>" + sub.Theoretical + "</span></label><br><label>NewPatternNumerical: <span id='NewPatternNumerical'>" + sub.NewPatternNumerical + "</span></label><br><label>Used: <span id='used'>0</span></label><br><label>Previously Asked: <span id='asked'>" + sub.Asked + "</span></label><br><label>Available Hints: <span id='hint'>" + sub.WithHint + "</span></label><br><div></div></button>";
+                                var item = {};
+                                item["subjectName"] = sub.SubjectName;
+                                item["chapterDetails"] = chapters;
+                                var chaptersData = JSON.parse(JSON.stringify(chaptersJsonObject));
+                                var index = chaptersData.map(function (d) { return d['subjectName']; }).indexOf(sub.SubjectName);
+                                if (index == -1) {
+                                    chaptersJsonObject.push(item);
+                                    $("#" + sub.SubjectName).html("");
+                                    $("#" + sub.SubjectName).append(chapters);
+                                }
+                                else {
+                                    var getChapters = chaptersJsonObject[index].chapterDetails;
+                                    chapters = getChapters + chapters;
+                                    chaptersJsonObject[index].chapterDetails = chapters;
+                                    $("#" + sub.SubjectName).html("");
+                                    $("#" + sub.SubjectName).append(chapters);
+                                }
+                            });
+
+                            var tabs = $("#subjectsTab li.active").find();
+                            var id = tabs.prevObject[0].textContent;
+                            $("#" + id).addClass("active in");
+                        }
+                        else if ($("#TestType").val() == 1) {
+                            var chapters = "";
+                            $("#chapterList").html(""); // clear before appending new list
+                            $.each(data, function (i, sub) {
+                                chapters += "<button type='button' class='btn btn-default btn-md chapterbtn' data-value='" + sub.ChapterId + "'><input type='checkbox' data-value='" + sub.TotalQuestion + "' value='" + sub.ChapterId + "' name='" + sub.ChapterName + "' alt='" + sub.SubjectName + "'><b> " + sub.ChapterName + "</b><hr /><label>Total Questions: <span id='total' data-value='" + sub.TotalQuestion + "'>" + sub.TotalQuestion + "</span></label><br><label>Easy: <span id='easy'>" + sub.Easy + "</span></label><br><label>Medium: <span id='medium'>" + sub.Medium + "</span></label><br><label>Hard: <span id='hard'>" + sub.Hard + "</span></label><br><label>Numerical: <span id='numerical'>" + sub.Numerical + "</span></label><br><label>Theoretical: <span id='theoretical'>" + sub.Theoretical + "</span></label><br><label>NewPatternNumerical: <span id='NewPatternNumerical'>" + sub.NewPatternNumerical + "</span></label><br><label>Used: <span id='used'>0</span></label><br><label>Previously Asked: <span id='asked'>" + sub.Asked + "</span></label><br><label>Available Hints: <span id='hint'>" + sub.WithHint + "</span></label><br><div></div></button>"
+                            });
+                            $("#chapterList").append(chapters);
+                        }
+                        else if ($("#TestType").val() == 3) {
+                            jsonObjectTreeMenu = [];
+                            jsonObjectTreeMenu = [
+                                { "id": "root", "parent": "#", "text": $("#ClassId :selected").text(), "icon": "//jstree.com/tree.png", "data": { "jstree": { "opened": true } } }
+                            ];
+                            var tEasyCount = 0;
+                            var tMediumCount = 0;
+                            var tHardCount = 0;
+
+                            $.each(data, function (i, sub) {
+                                tEasyCount = parseInt(tEasyCount) + parseInt(sub.Easy);
+                                tMediumCount = parseInt(tMediumCount) + parseInt(sub.Medium);
+                                tHardCount = parseInt(tHardCount) + parseInt(sub.Hard);
+                                SubjectWiseTotalQuestion = parseInt(SubjectWiseTotalQuestion) + sub.TotalQuestion;
+                                $("#ChapterId").append($('<option name=' + sub.SubjectName + ' data-value=' + sub.TotalQuestion + '></option>').val(sub.ChapterId).html(sub.ChapterName));
+                                //$("#ReviewChapterId").append($('<option name=' + sub.SubjectId + ' data-value=' + sub.TotalQuestion + '></option>').val(sub.ChapterId).html(sub.ChapterName));
+                                arrChapterList.push(sub.ChapterId);
+                                if (i == 0) {
+                                    SelectedchapterId = sub.ChapterId;
+                                    var item = {};
+                                    item["parent"] = "root";
+                                    item["id"] = sub.SubjectName;
+                                    item["text"] = sub.SubjectName;
+                                    item["icon"] = "glyphicon glyphicon-book";
+                                    item["data"] = { "jstree": { "opened": true } };
+                                    jsonObjectTreeMenu.push(item);
+
+                                    item = {};
+                                    item["parent"] = sub.SubjectName;
+                                    item["id"] = sub.ChapterId;
+                                    item["text"] = sub.ChapterName;
+                                    item["icon"] = "glyphicon glyphicon-file";
+                                    item["data"] = { "jstree": { "selected": true } };
+                                    jsonObjectTreeMenu.push(item);
+                                }
+                                else {
+                                    var item = {};
+                                    item["parent"] = sub.SubjectName;
+                                    item["id"] = sub.ChapterId;
+                                    item["text"] = sub.ChapterName;
+                                    item["icon"] = "glyphicon glyphicon-file";
+                                    jsonObjectTreeMenu.push(item);
+                                }
+
+                                $('#jstree').jstree(true).settings.core.data = jsonObjectTreeMenu;
+                                $('#jstree').jstree(true).refresh();
+                                //GetQuestionFilterTree(1, $("#ChapterId"), $("#ChapterId :selected").val());
+                                //chapters += "<button type='button' class='btn btn-default btn-md chapterbtn' data-value='" + sub.ChapterId + "'><input type='checkbox' data-value='" + sub.TotalQuestion + "' value='" + sub.ChapterId + "' name='" + sub.ChapterName + "' alt='" + sub.SubjectId + "'><b> " + sub.ChapterName + "</b><hr /><label>Total Questions: <span id='total' data-value='" + sub.TotalQuestion + "'>" + sub.TotalQuestion + "</span></label><br><label>Easy: <span id='easy'>" + sub.Easy + "</span></label><br><label>Medium: <span id='medium'>" + sub.Medium + "</span></label><br><label>Hard: <span id='hard'>" + sub.Hard + "</span></label><br><label>Numerical: <span id='numerical'>" + sub.Numerical + "</span></label><br><label>Theoretical: <span id='theoretical'>" + sub.Theoretical + "</span></label><br><label>Used: <span id='used'>0</span></label><br><label>Previously Asked: <span id='asked'>" + sub.Asked + "</span></label><br><label>Available Hints: <span id='hint'>" + sub.WithHint + "</span></label><br><div></div></button>"
+                            });
+                            $("#tEasy").text(tEasyCount);
+                            $("#tMedium").text(tMediumCount);
+                            $("#tHard").text(tHardCount);
+                            $("#qTotalCount").text(SubjectWiseTotalQuestion);
+                            Save($("#btnPrev"));
+                            $('#subjectSelection').modal('hide');
+                            $("#createPaper").addClass("hidden");
+                            $("#testPaper").removeClass("hidden");
+                            GetQuestionFilterTree(1, $("#ChapterId"), SelectedchapterId);
+                        }
+
+                        if ($("#TestType").val() == 1 || $("#TestType").val() == 2) {
+                            $(".chapterbtn").unbind("click");
+                            $(".chapterbtn").bind("click", btnChapterClick);
+                            $('#chapterSelection').modal({
+                                backdrop: 'static',
+                                keyboard: false
+                            }).show();
+                            $('#subjectSelection').modal('hide');
+                        }
+                    }
+                    else if (data.length == 0) {
+                        $("#subjectListError").removeClass("hidden");
+                        $("#subjectListError").html("It has not chapters.");
+                    }
+                }
+            });
+        }
+
+        function GetQuestionFilterTree(id, e, cId) {
+            var chapterId = parseInt(cId);
+            var level = $("#QLevel > .btn.active").attr("data-value");
+            var type = $("#QType > .btn.active").attr("data-value");
+            var asked = $("#QAsked > .btn.active").attr("data-value");
+            var hint = $("#QHints > .btn.active").attr("data-value");
+            var count = 0;
+            $.getJSON("/Paper/GetQuestion",
+                   { id: id, chapterId: chapterId, level: level, type: type, asked: asked, hint: hint, count: count },
+                   function (data, status, xhr) {
+                       if (data.question != null && data.count != 0) {
+                           renderDataOnGetQuestion(data, id, e);
+                       }
+                       else if (data.count == 0) {
+                           //  $("#cNotUsed").text(data.count);
+                           $("#cAsked").text(data.count);
+                           $("#qCount").text(data.count);
+                           $("#QuestionNo").val(data.count);
+                           $("#cTheoretical").text(data.count);
+                           $("#cNumerical").text(data.count);
+                           $("#cNewPatternNumerical").text(data.count);
+                           $("#cNotAsked").text(data.count);
+                           $("#cHint").text(data.count);
+                           $("#cWithoutHint").text(data.count);
+                           $('#QuestionInfo, #OptionA, #OptionB, #OptionC, #OptionD, #Hint, #QuestionId, #Answer,#Numerical_Answer,#Unit').val("");
+                           $("#imgQues").prop("src", "");
+                           $("#imgHint").prop("src", "");
+                           $("#imgOption").prop("src", "");
+                           $("#qSeq").text("");
+                           RenderLatex();
+                           if (e != null && e.prop("id") == "ChapterId") {
+                               e.attr("disabled", "disabled");
+                               if (e.prop("id") == "btnNext") {
+                                   $("#btnPrev").removeAttr("disabled");
+                               } else if (e.prop("id") == "btnPrev") {
+                                   $("#btnNext").removeAttr("disabled");
+                               }
+                           }
+                       }
+
+                   }).done(function () {
+                   }).fail(function () {
+                       if (e != null) {
+                           e.attr("disabled", "disabled");
+                           if (e.prop("id") == "btnNext") {
+                               $("#btnPrev").removeAttr("disabled");
+                           } else if (e.prop("id") == "btnPrev") {
+                               $("#btnNext").removeAttr("disabled");
+                           }
+                       }
+                   });
+        }
+
+        function btnSubjectWiseClick() {
+            $(this).removeClass("btn-default").addClass("btn-success");
+            $(this).siblings().removeClass("btn-success").addClass("btn-default");
+
+            var count = $('.subjectbtn.btn-success').length;
+            if (count == 1) {
+                //getChapterBySubject($('.subjectbtn.btn-success')[0].dataset.value);
+                $("#btnSelectionStart").removeClass("hidden");
+            }
+            else {
+                $("#btnSelectionStart").addClass("hidden");
+            }
+        }
+
+        function getChaptersOnReview() {
+            if ($("#SubjectId :selected").text() != "Select Subject") {
+                var dropdownChapters = $('#ChapterId option').find();
+                $("#ReviewChapterId").html("");
+                $("#ReviewChapterId").append($('<option data-value=0></option>').val(0).html("Select Chapter"));
+                for (var i = 0; i < dropdownChapters.prevObject.length; i++) {
+                    if (dropdownChapters.prevObject[i].attributes[0].value == $("#SubjectId :selected").text()) {
+                        $("#ReviewChapterId").append($('<option data-value=' + dropdownChapters.prevObject[i].dataset.value + '></option>').val(dropdownChapters.prevObject[i].value).html(dropdownChapters.prevObject[i].innerText));
+                    }
+                }
+                //showQuestionNumberDiv();
+            }
+            else {
+                $("#ReviewChapterId").html("");
+            }
+        }
+    </script>
+}

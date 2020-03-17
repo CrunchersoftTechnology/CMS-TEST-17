@@ -1,0 +1,75 @@
+﻿@model CMS.Web.ViewModels.DailyPracticePaperEditViewModel
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Details Daily Practice Problem</h2>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SelectedBranches)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SelectedBranches)
+        </dd>
+        <br />
+        <dt>
+            @Html.DisplayNameFor(model => model.SelectedClasses)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SelectedClasses)
+        </dd>
+        <br />
+        <dt>
+            @Html.DisplayNameFor(model => model.SelectedBatches)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SelectedBatches)
+        </dd>
+        <br />
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <br />
+        @if (ViewBag.fileName != "" && ViewBag.fileName != null)
+            {
+            <dt>
+                @Html.DisplayNameFor(model => model.FileName)
+            </dt>
+
+            <dd>
+                <a href='@Url.Action("DownloadPDF", "DailyPracticePaper", new { id = Model.DailyPracticePaperId})' target="_blank"><span class='glyphicon glyphicon-download-alt'></span></a>
+            </dd>
+            <br />
+            <dt>
+                @Html.DisplayNameFor(model => model.AttachmentDescription)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.AttachmentDescription)
+            </dd>
+            <br />
+        }
+        <dt>
+            @Html.DisplayNameFor(model => model.DailyPracticePaperDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DailyPracticePaperDate)
+        </dd>
+        <br />
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Back to Daily Practice Problems List", "Index")<br />
+    @Html.ActionLink("Edit this record", "Edit", new { id = Model.DailyPracticePaperId })
+</p>

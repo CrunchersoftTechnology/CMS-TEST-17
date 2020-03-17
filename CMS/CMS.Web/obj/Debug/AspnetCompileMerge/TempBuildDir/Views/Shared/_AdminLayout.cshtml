@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Class Management System</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/ckeditor")
+    
+    
+    <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+    <style>
+        .asterisk_input:before {
+            content: " *";
+            color: 	#0000FF;
+            position: absolute;
+            margin: 0px 0px 0px -20px;
+            font-size: large;
+            padding: 0 5px 0 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @*@Html.ActionLink("Class Management System", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
+                @* @Html.ActionLink("Class Management System", "", "", new { area = "" }, new { @class = "navbar-brand" })*@
+            </div>
+        
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Admin")</li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Register <i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Clients", "Index", "Client")</li>
+                            <li>@Html.ActionLink("Client Admin", "Index", "ClientAdmin")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Course <i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Branches", "Index", "Branch")</li>
+                            <li>@Html.ActionLink("Boards", "Index", "Board")</li>
+                            <li>@Html.ActionLink("Schools", "Index", "School")</li>
+                            <li>@Html.ActionLink("Classes", "Index", "Class")</li>
+                            <li>@Html.ActionLink("Subjects", "Index", "Subject")</li>
+                            <li>@Html.ActionLink("Batches", "Index", "Batch")</li>
+                            <li>@Html.ActionLink("Chapters", "Index", "Chapter")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Fees <i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Master Fees", "Index", "MasterFee")</li>
+                            <li>@Html.ActionLink("Payment", "Index", "Installment")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Users <i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu">
+
+                            <li>@Html.ActionLink("Branch Admin", "Index", "BranchAdmin")</li>
+                            <li>@Html.ActionLink("Teacher", "Index", "Teacher")</li>
+                            <li>@Html.ActionLink("Student", "Index", "Student")</li>
+                           
+                        </ul>
+                    </li>
+                   
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">PDF <i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Upload Category", "Index", "PDFCategory")</li>
+                            <li>@Html.ActionLink("Student Upload", "Index", "PDFUpload")</li>
+                            <li>@Html.ActionLink("Brochure", "Create", "Brochure")</li>
+                            <li>@Html.ActionLink("Notes", "Index", "UploadNotes")</li>
+                            <li>@Html.ActionLink("Assignments", "Index", "UploadAssignments")</li>
+                            <li>@Html.ActionLink("Referencebooks", "Index", "UploadReferencebooks")</li>
+                            <li>@Html.ActionLink("Inbuiltquestionbank", "Index", "UploadInbuiltquestionbank")</li>
+                            <li>@Html.ActionLink("Practicepapers", "Index", "UploadPracticepapers")</li>
+                            <li>@Html.ActionLink("Questionpapers", "Index", "UploadQuestionpapers")</li>
+                            <li>@Html.ActionLink("Textbooks", "Index", "UploadTextbooks")</li>
+                            @* <li>@Html.ActionLink("Announcements", "Index", "Announcement")</li>*@
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Attendance <i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Machine", "Index", "Machine")</li>
+                            <li>@Html.ActionLink("Attendance Entry", "Index", "Attendance")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Paper <i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Questions", "Index", "Question")</li>
+                            <li>@Html.ActionLink("Test Paper", "Index", "Paper")</li>
+                            <li>@Html.ActionLink("Arrange Test Paper Result", "Index", "ArrangeTestResult")</li>
+                            <li>@Html.ActionLink("Daily Practice Problems", "Index", "DailyPracticePaper")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Offline Test<i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Exam Schedule", "Index", "OfflineTestPaper")</li>
+                            <li>@Html.ActionLink("Upload Marks", "Index", "UploadOfflineMarks")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Timetable<i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Exam Timetable", "Index", "StudentTimetable")</li>
+                            <li>@Html.ActionLink("Class Timetable", "Index", "StudentClassTimetable")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Notification<i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Notification", "Index", "Notification")</li>
+                            <li>@Html.ActionLink("Clear Punch Id", "Create", "ClearPunchId")</li>
+                            <li>@Html.ActionLink("Setting", "Index", "Configure")</li>
+                        </ul>
+                    </li>
+
+                 @*  <li>@Html.ActionLink("Setting", "Index", "Configure")</li>
+    @*<li class="dropdown">
+             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admistrative Tool <i class="fa fa-angle-down"></i></a>
+             <ul class="dropdown-menu">
+                 <li>@Html.ActionLink("Clear Punch Id", "Create", "ClearPunchId")</li>
+             </ul>
+         </li>*@
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @{ Html.RenderPartial("_Alerts"); }
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.UtcNow.Year - Class Management System, Version- @typeof(CMS.Web.MvcApplication).Assembly.GetName().Version</p>
+        </footer>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
+    <script>
+
+        if ($(".datepicker").val() == "01-01-0001") {
+            $(".datepicker").val("");
+        }
+
+        $(".datepicker").datepicker({
+            dateFormat: 'dd-mm-yy',
+            changeYear: true,
+            changeMonth: true,
+            yearRange: "-100:+10",
+        });
+
+        $('.datepicker').keydown(function (e) {
+            var afterValue;
+            if (e.keyCode != 8) {
+                if ($(".datepicker").val().length == 2 || $(".datepicker").val().length == 5) {
+                    var beforeValue = $(".datepicker").val();
+                    if ($(".datepicker").val().length == 2) {
+                        if ((parseInt(beforeValue) > 30 || parseInt(beforeValue) == 0)) {
+                            afterValue = "01";
+                        } else {
+                            afterValue = beforeValue;
+                        }
+                    }
+
+                    if ($(".datepicker").val().length == 5) {
+                        if ((parseInt(beforeValue.split('-')[1]) > 12 || parseInt(beforeValue.split('-')[1]) == 0)) {
+                            afterValue = beforeValue.split('-')[0] + "-" + "01";
+                        } else {
+                            afterValue = beforeValue;
+                        }
+                    }
+                    $(".datepicker").val(afterValue + "-");
+
+                } else if ($(".datepicker").val().length == 10) {
+                    var dateDetails = $(".datepicker").val().split('-');
+                    if (parseInt(dateDetails[1]) > 12) {
+                        dateDetails[1] = "01";
+                    }
+                    if (parseInt(dateDetails[0]) > 30) {
+                        dateDetails[0] = "01";
+                    }
+                    var finalDate = dateDetails[0] + "-" + dateDetails[1] + "-" + dateDetails[2];
+                    $(".datepicker").val(finalDate);
+                }
+            }
+        });
+
+        $(".datepicker").keyup(function (e) {
+            var date2 = $(".datepicker").datepicker('getDate', '+1d');
+            if (e.keyCode == 38) {
+                date2.setDate(date2.getDate() + 1);
+                $(".datepicker").datepicker('setDate', date2);
+            }
+            if (e.keyCode == 40) {
+                date2.setDate(date2.getDate() - 1);
+                $(".datepicker").datepicker('setDate', date2);
+            }
+        });
+
+        function RequiredValidation(txtId, lblId) {
+            if ($(txtId).val() != "") {
+                $(lblId).removeClass('asterisk_input');
+            }
+            else {
+                $(lblId).addClass('asterisk_input');
+            }
+        }
+    </script>
+    <script src="~/MVCGridHandler.axd/script.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

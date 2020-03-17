@@ -1,0 +1,233 @@
+﻿@model CMS.Web.ViewModels.TeacherViewModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Create Teacher</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.CurrentUserRole)
+    @Html.HiddenFor(m => m.BranchName)
+    @Html.HiddenFor(m=>m.ClientId)
+    @Html.HiddenFor(m => m.ClientName)
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @if (Model.CurrentUserRole == "Admin")
+        {
+            <div class="form-group">
+                @Html.LabelFor(m => m.Branches, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblBranchId" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.BranchId, new SelectList(Model.Branches, "Value", "Text"),
+                    "Select Branch", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.BranchId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        }
+        else if (Model.CurrentUserRole == "Client")
+        {
+            <div class="form-group">
+                @Html.LabelFor(m => m.ClientName, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblClientName" })
+                <div class="col-md-10">
+                    @Html.EditorFor(m => m.ClientName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.ValidationMessageFor(model => model.ClientId, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(m => m.ClientId)
+                </div>
+            </div>
+        }
+        else if (Model.CurrentUserRole == "BranchAdmin")
+        {
+            <div class="form-group">
+                @Html.LabelFor(m => m.BranchName, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblBranchName" })
+                <div class="col-md-10">
+                    @Html.EditorFor(m => m.BranchName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.ValidationMessageFor(model => model.BranchId, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(m => m.BranchId)
+                </div>
+            </div>
+        }
+        <div class="form-group">
+            @Html.LabelFor(model => model.Qualification, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblQualification" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Qualification, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.Qualification, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblFirstName" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MiddleName, htmlAttributes: new { @class = "control-label col-md-2 " })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MiddleName, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.MiddleName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblLastName" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblEmail" })
+            <span class="control-label glyphicon glyphicon-info-sign" title="Add correct email id ,
+             you can't edit it after adding. " id="tooltipemail"></span>
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ConfirmEmail, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblConfirmEmail" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ConfirmEmail, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.ConfirmEmail, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContactNo, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblContactNo" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ContactNo, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @maxlength = "10" } })
+                @Html.ValidationMessageFor(model => model.ContactNo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2 asterisk_input", @id = "lblDescription" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "control-label col-md-2" })
+            <span class="control-label glyphicon glyphicon-info-sign" title="Check the active status if Teacher is part of
+             institute or class.,Uncheck if Teacher is not  willing to continue the class." id="tooltipIsActive"></span>
+            <div class="col-md-3">
+                <div class="checkbox checkbox-inline check-box">
+                    @Html.EditorFor(model => model.IsActive)
+                    @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+<div>
+    @Html.ActionLink("Back to Teachers List", "Index")
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            $("#ContactNo").keypress(function (e) {
+                //if the letter is not digit then display error and don't type anything
+                if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    //display error message
+
+                    $("#errmsg").html("Digits Only").show().fadeOut("slow");
+                    alert("Please enter the 10 digits number");
+                    return false;
+
+                }
+            });
+            $("#tooltipemail").tooltip({ track: true });
+            $("#tooltipIsActive").tooltip({ track: true });
+            $('#BranchId').on('change', function () {
+                RequiredValidation('#BranchId', '#lblBranchId')
+                $("#BranchName").val($('#BranchId :selected').text());
+            });
+            $('#BranchName').on('change', function () {
+                RequiredValidation('#BranchName', '#lblBranchName')
+            });
+            $('#FirstName').on('change', function () {
+                RequiredValidation('#FirstName', '#lblFirstName')
+            });
+            $('#Qualification').on('change', function () {
+                RequiredValidation('#Qualification', '#lblQualification')
+            });
+            $('#LastName').on('change', function () {
+                RequiredValidation('#LastName', '#lblLastName')
+            });
+            $('#Email').on('change', function () {
+                RequiredValidation('#Email', '#lblEmail')
+            });
+            $('#ConfirmEmail').on('change', function () {
+                RequiredValidation('#ConfirmEmail', '#lblConfirmEmail')
+            });
+            $('#ContactNo').on('change', function () {
+                RequiredValidation('#ContactNoContactNo', '#lblContactNo')
+            });
+            $('#Description').on('change', function () {
+                RequiredValidation('#Description', '#lblDescription')
+            });
+            if (parseInt(@ViewBag.ClassId) > 0) {
+                $("#ClassId").val(@ViewBag.ClassId);
+                FillSubjects(@ViewBag.ClassId);
+            }
+            if (parseInt(@ViewBag.SubjectId) > 0) {
+                FillSubjects(@ViewBag.ClassId);
+            }
+            var year = (new Date().getFullYear()) - 2;
+            $('.yrselectdesc').yearselect({ start: year, order: 'asc', end: (parseInt(year) + 10) });
+
+
+            if ($("#Year").val() == "") {
+                var yr = $("#years").val();
+                $("#Year").val($("#years").val() + "-" + (parseInt(yr) + 1))
+            }
+            else
+                $("#years").val($("#Year").val().split('-')[0])
+
+        });
+
+        function changeYear(yr) {
+            $("#Year").val($("#years").val() + "-" + (parseInt(yr) + 1))
+        }
+
+        function FillSubjects(classId) {
+            if ($('#ClassId :selected').text() != "Select Class") {
+                $.ajax({
+                    url: '/Subject/GetSubjects',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { classId: classId },
+                    success: function (subjects) {
+                        $("#SubjectId").html(""); // clear before appending new list
+                        $("#SubjectId").append($('<option></option>').val("").html("Select Subject"));
+                        $.each(subjects, function (i, sub) {
+                            $("#SubjectId").append(
+                                $('<option></option>').val(sub.SubjectId).html(sub.Name));
+                        });
+                        $("#SubjectId").val(@ViewBag.SubjectId);
+                    }
+                });
+            } else {
+                $("#SubjectId").html("");
+            }
+        }
+    </script>
+}

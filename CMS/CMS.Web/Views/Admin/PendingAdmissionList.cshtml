@@ -1,0 +1,46 @@
+﻿@model IEnumerable<CMS.Web.ViewModels.PendingStudentAdmissionViewModel>
+
+@{
+    ViewBag.Title = "PendingAdmissionList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>PendingAdmissionList</h2>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MiddleName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatedOn)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.FirstName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MiddleName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedOn)
+        </td>
+        <td>
+         @Html.ActionLink("Admission", "Create", "Student", new { id = item.AdmissionId }, null)
+        </td>
+    </tr>
+}
+
+</table>
